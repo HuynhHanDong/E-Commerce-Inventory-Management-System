@@ -8,7 +8,7 @@ public class Customer {
     private int id;
     private String name;
     private String email;
-    private String password; 
+    private String password;
     private List<Order> orderHistory;
 
     public Customer(int id, String name, String email, String password) {
@@ -68,10 +68,9 @@ public class Customer {
 
     public void placeOrder(Order order) {
         orderHistory.add(order);
-        System.out.println("Đã đặt hàng thành công. Tổng giá: " + order.getTotalPrice());
+        System.out.println("Order Successfully, Total: " + order.getTotalPrice());
     }
 
-    // Phương thức để xem lịch sử đặt hàng
     public void viewOrderHistory() {
         System.out.println("History of ordered:");
         for (Order order : orderHistory) {
@@ -80,20 +79,18 @@ public class Customer {
         }
     }
 
-    // Phương thức login
     public boolean login(String email, String password) {
-        // Giả định mã hóa mật khẩu và xác minh thông tin
+
         if (this.email.equals(email) && this.password.equals(password)) {
-            System.out.println("Đăng nhập thành công");
+            System.out.println("Login Success!!!");
             return true;
         } else {
-            System.out.println("Đăng nhập thất bại");
+            System.out.println("Login Fail!!!");
             return false;
         }
     }
 
-    // Phương thức logout
     public void logout() {
-        System.out.println("Đã đăng xuất thành công");
+        System.out.println("Logout Success!!!");
     }
 }
