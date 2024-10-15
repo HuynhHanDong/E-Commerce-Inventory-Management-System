@@ -22,7 +22,7 @@ public class JDBCConnection {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JDBCConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Connection connection = DriverManager.getConnection(url, username, password);
+            Connection con = DriverManager.getConnection(url, username, password);
 
         } catch (SQLException ex) {
             Logger.getLogger(JDBCConnection.class.getName()).log(Level.SEVERE, null, ex);
