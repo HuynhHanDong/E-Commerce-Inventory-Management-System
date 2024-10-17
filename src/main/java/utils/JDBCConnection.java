@@ -7,30 +7,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JDBCConnection {
-    private final String hostname = "DESKTOP-AJ4PPFA\\SQLEXPRESS01";
-    private final String databaseName = "ECommerceDB";
-    private final String port = "1433";
-    private final String username = "sa";
-    private final String password = "123123123";
-    
-    private Connection con;
 
-    public void connect() {
-        String url = "jdbc:sqlserver://" + hostname + ":" + port + ";databaseName=" + databaseName + ";trustServerCertificate=true";
+    private static final String hostname = "localhost";
+    private static final String port = "1433";
+    private static final String databaseName = "ECommerceDB";
+    private static final String username = "sa";
+    private static final String password = "123123123";
+
+    private static final String url = "jdbc:sqlserver://" + hostname + ":" + port + ";databaseName=" + databaseName;
+
+    public static Connection getConnection() {
+        Connection con = null;
         try {
-            try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(JDBCConnection.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = DriverManager.getConnection(url, username, password);
-            System.out.println("Connected to sql");
-
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(JDBCConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    public Connection getConnect(){
         return con;
     }
 }

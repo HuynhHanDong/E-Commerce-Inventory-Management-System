@@ -2,22 +2,22 @@ package models;
 
 import java.util.Date;
 
-public class Order extends Product{
-    private int orderId;
+public class Order extends Product {
+    private String orderId;
     private Date orderDate;
     private double totalPrice;
 
-    public Order(int orderId, Date orderDate, double totalPrice) {
+    public Order(String orderId, Date orderDate, double totalPrice) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -36,18 +36,9 @@ public class Order extends Product{
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
-    
-    public void placeOrder(Order order) {
-        System.out.println("Order Successfully, Total: " + order.getTotalPrice());
-    }
 
     public void addToCart(Product product, int quantity) {
-    }
-    
-    public void viewOrderHistory() {
-        System.out.println("History of ordered:");
-        //System.out.println("Order's ID: " + order.getOrderId() + " - Date: " + order.getOrderDate() + " - Total: " + order.getTotalPrice());
-        
+
     }
 
     public void confirmOrder() {

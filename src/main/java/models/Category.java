@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Category implements Displayable {
-    private int categoryID;
+    private String categoryID;
     private String categoryName;
 
     private static List<Category> categories = new ArrayList<>();
@@ -12,16 +12,16 @@ public class Category implements Displayable {
     public Category() {
     }
 
-    public Category(int categoryID, String categoryName) {
+    public Category(String categoryID, String categoryName) {
         this.categoryID = categoryID;
         this.categoryName = categoryName;
     }
 
-    public int getCategoryID() {
+    public String getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(String categoryID) {
         this.categoryID = categoryID;
     }
 
@@ -41,7 +41,7 @@ public class Category implements Displayable {
         return categories;
     }
 
-    public static boolean updateCategory(int categoryID, String newName) {
+    public static boolean updateCategory(String categoryID, String newName) {
         for (Category category : categories) {
             if (category.getCategoryID() == categoryID) {
                 category.setCategoryName(newName);
@@ -51,7 +51,7 @@ public class Category implements Displayable {
         return false;
     }
 
-    public static boolean deleteCategory(int categoryID) {
+    public static boolean deleteCategory(String categoryID) {
         return categories.removeIf(category -> category.getCategoryID() == categoryID);
     }
 

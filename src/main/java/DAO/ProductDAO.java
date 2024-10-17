@@ -28,7 +28,7 @@ public class ProductDAO {
     
     public int addProduct(Product product) {
         int result = 0;
-        try ( Connection conn = new JDBCConnection().getConnect();  PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT)) {
+        try ( Connection conn = new JDBCConnection().getConnection();  PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT)) {
             statement.setString(1, product.getProductId());
             statement.setString(2, product.getName());
             statement.setString(3, product.getCategory());
@@ -45,7 +45,7 @@ public class ProductDAO {
     
     public int updateProduct(Product product) {
         int result = 0;
-        try ( Connection conn = new JDBCConnection().getConnect();  PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT)) {
+        try ( Connection conn = new JDBCConnection().getConnection();  PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT)) {
             statement.setString(1, product.getName());
             statement.setString(2, product.getCategory());
             statement.setDouble(3, product.getPrice());
@@ -62,7 +62,7 @@ public class ProductDAO {
     
     public int updateStockLevel(String id, int newStockLevel) {
         int result = 0;
-        try ( Connection conn = new JDBCConnection().getConnect();  PreparedStatement statement = conn.prepareStatement(UPDATE_STOCK_LEVEL)) {
+        try ( Connection conn = new JDBCConnection().getConnection();  PreparedStatement statement = conn.prepareStatement(UPDATE_STOCK_LEVEL)) {
             statement.setInt(1, newStockLevel);
             statement.setString(2, id);
 
@@ -75,7 +75,7 @@ public class ProductDAO {
     
     public int deleteProduct(String id) {
         int result = 0;
-        try ( Connection conn = new JDBCConnection().getConnect();  PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
+        try ( Connection conn = new JDBCConnection().getConnection();  PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
             statement.setString(1, id);
             result = statement.executeUpdate();
         } catch (SQLException e) {
@@ -85,7 +85,7 @@ public class ProductDAO {
     }
     
     public void searchProductsById(String id){
-        try( Connection conn = new JDBCConnection().getConnect(); PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_ID)){
+        try( Connection conn = new JDBCConnection().getConnection(); PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_ID)){
             statement.setString(1, id);
             
             ResultSet result = statement.executeQuery();
@@ -108,7 +108,7 @@ public class ProductDAO {
     }
     
     public void searchProductsByCategory(String category){
-        try( Connection conn = new JDBCConnection().getConnect(); PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)){
+        try( Connection conn = new JDBCConnection().getConnection(); PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)){
             statement.setString(1, category);
             
             ResultSet result = statement.executeQuery();
@@ -131,7 +131,7 @@ public class ProductDAO {
     }
     
     public void viewAllProducts(){
-        try( Connection conn = new JDBCConnection().getConnect(); PreparedStatement statement = conn.prepareStatement(GET_ALL_PRODUCTS)){
+        try( Connection conn = new JDBCConnection().getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ALL_PRODUCTS)){
             ResultSet result = statement.executeQuery();
             
             if (result != null){
