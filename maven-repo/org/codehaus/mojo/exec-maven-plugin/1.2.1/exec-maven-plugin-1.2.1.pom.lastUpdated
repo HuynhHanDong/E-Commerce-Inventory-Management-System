@@ -1,0 +1,6 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Wed Oct 16 00:54:16 ICT 2024
+default-http\://repo.maven.apache.org/maven2/.lastUpdated=1729012975741
+https\://repo.maven.apache.org/maven2/.lastUpdated=1729014856174
+http\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.codehaus.mojo\:exec-maven-plugin\:pom\:1.2.1 from/to HTTP (http\://repo.maven.apache.org/maven2)\: proxyhost
+0e457066c91fff7265565a4b26662058120af9dd@proxyhost\:8080>default-http\://repo.maven.apache.org/maven2/.lastUpdated=1729013852150
