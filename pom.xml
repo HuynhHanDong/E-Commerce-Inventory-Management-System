@@ -72,6 +72,13 @@
             <artifactId>mssql-jdbc</artifactId>
             <version>9.4.0.jre8</version> <!-- Use a compatible version with Java 8 -->
         </dependency>
+
+        <dependency>
+    <groupId>org.mindrot</groupId>
+    <artifactId>jbcrypt</artifactId>
+    <version>0.4</version>
+</dependency>
+
     </dependencies>
 
     <repositories>
@@ -80,4 +87,5 @@
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
     </repositories>
+
 </project>
