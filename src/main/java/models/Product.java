@@ -1,5 +1,7 @@
 package models;
 
+import java.util.*
+
 public class Product implements Displayable {
     private String productId;
     private String name;
@@ -8,6 +10,8 @@ public class Product implements Displayable {
     private String description;
     private String category;
 
+    private static List<Product> products = new ArrayList<>();
+    
     public Product() {
     }
 
@@ -68,6 +72,24 @@ public class Product implements Displayable {
         this.category = category;
     }
 
+    public static boolean updateProduct(int productId, String newName, double newPrice, int newStockLevel, String newDescription, Category newCategory) {
+        for (Product product : products) {
+            if (product.getProductId() == productId) {
+                product.setName(newName);
+                product.setPrice(newPrice);
+                product.setStockLevel(newStockLevel);
+                product.setDescription(newDescription);
+                product.setCategory(newCategory);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean deleteProduct(int productId) {
+        return products.removeIf(product -> product.getProductId() == productId);
+    }
+    
     @Override
     public String toTableString() {
         return String.format("| %-10s | %-20s | %-10.2f | %-10d | %-25s | %-20s |", 
