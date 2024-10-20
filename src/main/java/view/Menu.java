@@ -40,8 +40,9 @@ public class Menu {
         System.out.println("1. Add product");
         System.out.println("2. Update product details");
         System.out.println("3. Delete product");
-        System.out.println("4. Search product");
-        System.out.println("5. View all products");
+        System.out.println("4. Search product by id");
+        System.out.println("5. Search product by category");
+        System.out.println("6. View all products");
         System.out.println("0. Go back");
     }
     

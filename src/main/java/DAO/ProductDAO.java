@@ -23,17 +23,17 @@ public class ProductDAO {
     private static final String UPDATE_PRODUCT = "UPDATE products SET productName = ?, categoryId = ?, price = ?, stock = ?, description = ? WHERE productId = ?;";
     private static final String UPDATE_STOCK_LEVEL = "UPDATE products SET stock = ? WHERE productId = ?;";
     private static final String DELETE_PRODUCT = "DELETE FROM products WHERE productId = ?;";
-    private static final String GET_PRODUCT_BY_ID = "SELECT * FROM products WHERE productId = ?;";
-    private static final String GET_PRODUCT_BY_CATEGORY = "SELECT * FROM products WHERE categoryId = ?;";
-    private static final String GET_ALL_PRODUCTS = "SELECT * FROM products;";
-
+    private static final String GET_PRODUCT_BY_ID = "SELECT productId, productname, categoryname, price, stock, description FROM products, category WHERE  productId = ?;";
+    private static final String GET_PRODUCT_BY_CATEGORY = "SELECT productId, productname, categoryname, price, stock, description FROM products, category WHERE categoryname = ?;";
+    private static final String GET_ALL_PRODUCTS = "SELECT productId, productname, categoryname, price, stock, description FROM products p, category c WHERE p.categoryId = c.categoryId;";
+    
     public int addProduct(Product product) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT)) {
             statement.setString(1, product.getProductId());
             statement.setString(2, product.getName());
-            statement.setString(3, product.getCategory());
+            statement.setString(3, product.getCategory()); 
             statement.setDouble(4, product.getPrice());
             statement.setInt(5, product.getStockLevel());
             statement.setString(6, product.getDescription());
@@ -95,17 +95,16 @@ public class ProductDAO {
             statement.setString(1, id);
 
             ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    String productId = result.getString("productId");
-                    String productName = result.getString("productname");
-                    String categoryId = result.getString("categoryId");
-                    float price = result.getFloat("price");
-                    int stock = result.getInt("stock");
-                    String description = result.getString("description");
-                    System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + categoryId
-                            + "; Price: " + price + "; Stock: " + stock + "; Description" + description);
+            
+            if (result != null){
+                while(result.next()) {
+                String productId = result.getString("productId");
+                String productName = result.getString("productname");
+                String category = result.getString("categoryname");
+                float price = result.getFloat("price");
+                int stock = result.getInt("stock");
+                String description = result.getString("description");
+                System.out.println("ID: " + productId + "; Name: "+ productName + "; Category: " + category + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
                 }
             }
             conn.close();
@@ -113,24 +112,22 @@ public class ProductDAO {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-
-    public void searchProductsByCategory(String category) {
-        try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)) {
-            statement.setString(1, category);
-
+    
+    public void searchProductsByCategory(String categoryName){
+        try( Connection conn = new JDBCConnection().getConnection(); PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)){
+            statement.setString(1, categoryName);
+            
             ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    String productId = result.getString("productId");
-                    String productName = result.getString("productname");
-                    String categoryId = result.getString("categoryId");
-                    float price = result.getFloat("price");
-                    int stock = result.getInt("stock");
-                    String description = result.getString("description");
-                    System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + categoryId
-                            + "; Price: " + price + "; Stock: " + stock + "; Description" + description);
+            
+            if (result != null){
+                while(result.next()) {
+                String productId = result.getString("productId");
+                String productName = result.getString("productname");
+                String category = result.getString("categoryname");
+                float price = result.getFloat("price");
+                int stock = result.getInt("stock");
+                String description = result.getString("description");
+                System.out.println("ID: " + productId + "; Name: "+ productName + "; Category: " + category + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
                 }
             }
             conn.close();
@@ -143,17 +140,16 @@ public class ProductDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_PRODUCTS)) {
             ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    String productId = result.getString("productId");
-                    String productName = result.getString("productname");
-                    String categoryId = result.getString("categoryId");
-                    float price = result.getFloat("price");
-                    int stock = result.getInt("stock");
-                    String description = result.getString("description");
-                    System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + categoryId
-                            + "; Price: " + price + "; Stock: " + stock + "; Description" + description);
+            
+            if (result != null){
+                while(result.next()) {
+                String productId = result.getString("productId");
+                String productName = result.getString("productname");
+                String category = result.getString("categoryname");
+                float price = result.getFloat("price");
+                int stock = result.getInt("stock");
+                String description = result.getString("description");
+                System.out.println("ID: " + productId + "; Name: "+ productName + "; Category: " + category + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
                 }
             }
             conn.close();
