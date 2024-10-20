@@ -6,18 +6,18 @@ public class Product implements Displayable {
     private double price;
     private int stockLevel;
     private String description;
-    private String category;
+    private String categoryName;
 
     public Product() {
     }
 
-    public Product(String productId, String name, double price, int stockLevel, String description, String category) {
+    public Product(String productId, String name, double price, int stockLevel, String description, String categoryName) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.stockLevel = stockLevel;
         this.description = description;
-        this.category = category;
+        this.categoryName = categoryName;
     }
 
     public String getProductId() {
@@ -61,16 +61,16 @@ public class Product implements Displayable {
     }
 
     public String getCategory() {
-        return category;
+        return categoryName;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     @Override
     public String toTableString() {
-        return String.format("| %-10s | %-20s | %-10.2f | %-10d | %-25s | %-20s |",
-                productId, name, price, stockLevel, description, category);
+        return String.format("| %-10s | %-20s | %-10.2f | %-10d | %-25s | %-20s |", 
+                             productId, name, price, stockLevel, description, categoryName);
     }
 }
