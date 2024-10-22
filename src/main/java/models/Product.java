@@ -61,11 +61,11 @@ public class Product {
         this.description = description;
     }
 
-    public String getCategoryName() {
+    public String getCategory() {
         return categoryName;
     }
 
-    public void setCategoryName(String categoryName) {
+    public void setCategory(String categoryName) {
         this.categoryName = categoryName;
     }
 

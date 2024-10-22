@@ -77,7 +77,8 @@ public class Menu {
         System.out.println("1. Add to cart");
         System.out.println("2. Change product amount");
         System.out.println("3. Remove product");
-        System.out.println("4. Confirm order");
+        System.out.println("4. View order details");
+        System.out.println("5. Confirm order");
         System.out.println("0. Go back");
     }
 }
