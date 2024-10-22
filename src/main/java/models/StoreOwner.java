@@ -1,27 +1,27 @@
 package models;
 
-public class Customer {
-    protected String CustomerID;
+public class StoreOwner {
+    private String StoreOwnerID;
     private String email;
     private String username;
     private String password;
 
-    public Customer() {
+    public StoreOwner() {
     }
 
-    public Customer(String CustomerID, String email, String username, String password) {
-        this.CustomerID = CustomerID;
+    public StoreOwner(String StoreOwnerID, String email, String username, String password) {
+        this.StoreOwnerID = StoreOwnerID;
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
-    public String getCustomerID() {
-        return CustomerID;
+    public String getStoreOwnerID() {
+        return StoreOwnerID;
     }
 
-    public void setCustomerID(String CustomerID) {
-        this.CustomerID = CustomerID;
+    public void setStoreOwnerID(String storeOwnerID) {
+        this.StoreOwnerID = storeOwnerID;
     }
 
     public String getEmail() {
@@ -50,11 +50,11 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "customerID=" + CustomerID +
+        return "StoreOwner{" +
+                "StoreOwnerID=" + StoreOwnerID +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password= " + password + '\'' +
                 '}';
     }
 

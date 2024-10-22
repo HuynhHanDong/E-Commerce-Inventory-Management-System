@@ -1,6 +1,6 @@
 package models;
 
-public class Product implements Displayable {
+public class Product {
     private String productId;
     private String name;
     private double price;
@@ -11,7 +11,8 @@ public class Product implements Displayable {
     public Product() {
     }
 
-    public Product(String productId, String name, double price, int stockLevel, String description, String categoryName) {
+    public Product(String productId, String name, double price, int stockLevel, String description,
+            String categoryName) {
         this.productId = productId;
         this.name = name;
         this.price = price;
@@ -60,17 +61,23 @@ public class Product implements Displayable {
         this.description = description;
     }
 
-    public String getCategory() {
+    public String getCategoryName() {
         return categoryName;
     }
 
-    public void setCategory(String categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
     @Override
-    public String toTableString() {
-        return String.format("| %-10s | %-20s | %-10.2f | %-10d | %-25s | %-20s |", 
-                             productId, name, price, stockLevel, description, categoryName);
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price + '\'' +
+                ", stockLevel=" + stockLevel +
+                ", description='" + description + '\'' +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
     }
 }

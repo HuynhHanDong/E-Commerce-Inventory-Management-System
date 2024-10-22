@@ -2,13 +2,19 @@ package models;
 
 import java.util.Date;
 
-public class Order extends Product {
+public class Order {
     private String orderId;
     private Date orderDate;
     private double totalPrice;
 
-    public Order(String orderId, Date orderDate, double totalPrice) {
+    private String customerID;
+
+    public Order() {
+    }
+
+    public Order(String orderId, String customerID, Date orderDate, double totalPrice) {
         this.orderId = orderId;
+        this.customerID = customerID;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
@@ -19,6 +25,14 @@ public class Order extends Product {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public Date getOrderDate() {
@@ -37,16 +51,13 @@ public class Order extends Product {
         this.totalPrice = totalPrice;
     }
 
-    public void addToCart(Product product, int quantity) {
-
-    }
-
-    public void confirmOrder() {
-        System.out.println("Order confirmed with ID: " + orderId + " Total Price: " + totalPrice);
-    }
-
     @Override
-    public String toTableString() {
-        return String.format("| %10d | %15s | %10.2f |", orderId, orderDate.toString(), totalPrice);
+    public String toString() {
+        return "Order{" +
+                "orderId='" + orderId + '\'' +
+                ", customerID='" + customerID + '\'' +
+                ", orderDate=" + orderDate + '\'' +
+                ", totalPrice=" + totalPrice + '\'' +
+                '}';
     }
 }
