@@ -19,7 +19,7 @@ import models.Product;
  * @author Huynh Han Dong
  */
 public class ProductDAO {
-    private static final String INSERT_PRODUCT = "INSERT INTO [dbo].[products] (productId, productName, categoryId, price, stock, description) VALUES (?,?,?,?,?,?);";
+    private static final String ADD_PRODUCT = "INSERT INTO products (productId, productName, categoryId, price, stock, description) VALUES (?,?,?,?,?,?);";
     private static final String UPDATE_PRODUCT = "UPDATE products SET productName = ?, categoryId = ?, price = ?, stock = ?, description = ? WHERE productId = ?;";
     private static final String UPDATE_STOCK_LEVEL = "UPDATE products SET stock = ? WHERE productId = ?;";
     private static final String DELETE_PRODUCT = "DELETE FROM products WHERE productId = ?;";
@@ -30,10 +30,10 @@ public class ProductDAO {
     public int addProduct(Product product) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT)) {
+                PreparedStatement statement = conn.prepareStatement(ADD_PRODUCT)) {
             statement.setString(1, product.getProductId());
             statement.setString(2, product.getName());
-            statement.setString(3, product.getCategoryName());
+            statement.setString(3, product.getCategory());
             statement.setDouble(4, product.getPrice());
             statement.setInt(5, product.getStockLevel());
             statement.setString(6, product.getDescription());
@@ -50,7 +50,7 @@ public class ProductDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT)) {
             statement.setString(1, product.getName());
-            statement.setString(2, product.getCategoryName());
+            statement.setString(2, product.getCategory());
             statement.setDouble(3, product.getPrice());
             statement.setInt(4, product.getStockLevel());
             statement.setString(5, product.getDescription());
@@ -101,7 +101,7 @@ public class ProductDAO {
                     String productId = result.getString("productId");
                     String productName = result.getString("productname");
                     String category = result.getString("categoryname");
-                    float price = result.getFloat("price");
+                    double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
                     System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + category
@@ -126,7 +126,7 @@ public class ProductDAO {
                     String productId = result.getString("productId");
                     String productName = result.getString("productname");
                     String category = result.getString("categoryname");
-                    float price = result.getFloat("price");
+                    double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
                     System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + category
@@ -149,7 +149,7 @@ public class ProductDAO {
                     String productId = result.getString("productId");
                     String productName = result.getString("productname");
                     String category = result.getString("categoryname");
-                    float price = result.getFloat("price");
+                    double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
                     System.out.println("ID: " + productId + "; Name: " + productName + "; Category: " + category
