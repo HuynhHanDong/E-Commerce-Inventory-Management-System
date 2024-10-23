@@ -1,7 +1,7 @@
 package models;
 
 public class Customer {
-    protected String CustomerID;
+    protected int customerID;
     private String email;
     private String username;
     private String password;
@@ -9,19 +9,19 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String CustomerID, String email, String username, String password) {
-        this.CustomerID = CustomerID;
+    public Customer(int customerID, String email, String username, String password) {
+        this.customerID = customerID;
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
-    public String getCustomerID() {
-        return CustomerID;
+    public int getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomerID(String CustomerID) {
-        this.CustomerID = CustomerID;
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
     }
 
     public String getEmail() {
@@ -51,7 +51,7 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "customerID=" + CustomerID +
+                "customerID=" + customerID +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

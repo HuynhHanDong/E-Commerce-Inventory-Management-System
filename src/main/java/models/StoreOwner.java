@@ -1,7 +1,7 @@
 package models;
 
 public class StoreOwner {
-    private String StoreOwnerID;
+    private int storeownerID;
     private String email;
     private String username;
     private String password;
@@ -9,19 +9,19 @@ public class StoreOwner {
     public StoreOwner() {
     }
 
-    public StoreOwner(String StoreOwnerID, String email, String username, String password) {
-        this.StoreOwnerID = StoreOwnerID;
+    public StoreOwner(int storeownerID, String email, String username, String password) {
+        this.storeownerID = storeownerID;
         this.email = email;
         this.username = username;
         this.password = password;
     }
 
-    public String getStoreOwnerID() {
-        return StoreOwnerID;
+    public int getStoreownerID() {
+        return storeownerID;
     }
 
-    public void setStoreOwnerID(String storeOwnerID) {
-        this.StoreOwnerID = storeOwnerID;
+    public void setStoreownerID(int storeownerID) {
+        this.storeownerID = storeownerID;
     }
 
     public String getEmail() {
@@ -51,11 +51,10 @@ public class StoreOwner {
     @Override
     public String toString() {
         return "StoreOwner{" +
-                "StoreOwnerID=" + StoreOwnerID +
+                "storeownerID=" + storeownerID +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password= " + password + '\'' +
                 '}';
     }
-
 }

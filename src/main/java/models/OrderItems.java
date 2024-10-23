@@ -2,50 +2,49 @@ package models;
 
 import java.io.Serializable;
 
-
 /**
  *
  * @author Huynh Han Dong
  */
 public class OrderItems implements Serializable {
-    private int orderItemId;
-    private int orderId;
-    private String productId;
+    private int orderItemID;
+    private int orderID;
+    private int productID;
     private double price;
     private int quantity;
-    
-    public OrderItems(int orderItemId, int orderId, String productId, double price, int quantity){
-        this.orderItemId = orderItemId;
-        this.orderId = orderId;
-        this.productId = productId;
+
+    public OrderItems(int orderItemID, int orderID, int productID, double price, int quantity) {
+        this.orderItemID = orderItemID;
+        this.orderID = orderID;
+        this.productID = productID;
         this.price = price;
         this.quantity = quantity;
     }
-    
-    public int getOrderItemId() {
-        return orderItemId;
+
+    public int getOrderItemID() {
+        return orderItemID;
     }
 
-    public void setOrderItemId(int orderItemId) {
-        this.orderItemId = orderItemId;
+    public void setOrderItemID(int orderItemID) {
+        this.orderItemID = orderItemID;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getOrderID() {
+        return orderID;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
     }
-    
-    public String getProductId() {
-        return productId;
+
+    public int getProductID() {
+        return productID;
     }
-    
-    public void setProductId(String productId) {
-        this.productId = productId;
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
-    
+
     public double getPrice() {
         return price;
     }
@@ -53,15 +52,15 @@ public class OrderItems implements Serializable {
     public void setPrice(double price) {
         this.price = price;
     }
-    
+
     public int getQuantity() {
         return quantity;
     }
-    
+
     public void setQuanity(int quantity) {
         this.quantity = quantity;
     }
-    
+
     public double getTotalPrice() {
         return this.quantity * this.price;
     }

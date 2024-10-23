@@ -1,8 +1,8 @@
 package models;
 
 public class Product {
-    private String productId;
-    private String name;
+    private int productID;
+    private String productName;
     private double price;
     private int stockLevel;
     private String description;
@@ -11,30 +11,30 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productId, String name, double price, int stockLevel, String description,
+    public Product(int productID, String productName, double price, int stockLevel, String description,
             String categoryName) {
-        this.productId = productId;
-        this.name = name;
+        this.productID = productID;
+        this.productName = productName;
         this.price = price;
         this.stockLevel = stockLevel;
         this.description = description;
         this.categoryName = categoryName;
     }
 
-    public String getProductId() {
-        return productId;
+    public int getProductID() {
+        return productID;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public double getPrice() {
@@ -72,8 +72,8 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "productId='" + productId +
-                ", name='" + name + '\'' +
+                "productID='" + productID +
+                ", productName='" + productName + '\'' +
                 ", price=" + price + '\'' +
                 ", stockLevel=" + stockLevel +
                 ", description='" + description + '\'' +

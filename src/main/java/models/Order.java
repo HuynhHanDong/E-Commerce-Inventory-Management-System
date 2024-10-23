@@ -4,44 +4,44 @@ import java.util.ArrayList;
 import java.sql.Date;
 
 public class Order {
-    private int orderId;
-    private String customerId;
+    private int orderID;
+    private int customerID;
     private Date orderDate;
     private ArrayList<OrderItems> items;
     private double totalPrice;
     private String status;
-    
-    public Order(){
+
+    public Order() {
     }
 
-    public Order(int orderId, String customerId, Date orderDate, ArrayList<OrderItems> items) {
-        this.orderId = orderId;
-        this.customerId = customerId;
+    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items) {
+        this.orderID = orderID;
+        this.customerID = customerID;
         this.orderDate = orderDate;
         this.items = items;
         this.status = "Pending";
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getOrderID() {
+        return orderID;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-    
-    public String getCustomerId() {
-        return customerId;
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
     }
 
-    public void setcustomerId(String customerId) {
-        this.customerId = customerId;
+    public int getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(int customerID) {
+        this.customerID = customerID;
     }
 
     public Date getOrderDate() {
         return orderDate;
     }
- 
+
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
@@ -53,7 +53,7 @@ public class Order {
     public void setItems(ArrayList<OrderItems> items) {
         this.items = items;
     }
-    
+
     public double getTotalPrice() {
         return totalPrice;
     }
@@ -61,7 +61,7 @@ public class Order {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
-    
+
     public String getStatus() {
         return status;
     }
@@ -78,7 +78,15 @@ public class Order {
         this.totalPrice = total;
     }
 
-    public String toTableString() {
-        return String.format("| %10d | %15s | %10.2f |", orderId, orderDate.toString(), totalPrice);
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID=" + orderID +
+                ", customerID=" + customerID + '\'' +
+                ", orderDate='" + orderDate + '\'' +
+                ", items=" + items + '\'' +
+                ", totalPrice=" + totalPrice + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }
