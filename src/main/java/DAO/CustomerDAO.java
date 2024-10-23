@@ -13,11 +13,13 @@ public class CustomerDAO implements AuthDAO {
     }
 
     @Override
-    public boolean authenticate(String id, String username, String email, String password) {
-        String sql = "SELECT * FROM customers WHERE CustomerID = ? AND email = ?";
+    public boolean authenticate(int id, String username, String email, String password) {
+        String sql = "SELECT * FROM Customer";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, id);
+            pstmt.setInt(1, id);
             pstmt.setString(2, email);
+            pstmt.setString(3, username);
+            pstmt.setString(4, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 String storedUsername = rs.getString("username");
@@ -31,7 +33,7 @@ public class CustomerDAO implements AuthDAO {
     }
 
     @Override
-    public void logout(String id) {
+    public void logout(int id) {
         System.out.println("Customer " + id + " logged out");
     }
 }

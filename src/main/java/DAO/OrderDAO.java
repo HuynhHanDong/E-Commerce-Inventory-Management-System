@@ -16,42 +16,43 @@ import utils.JDBCConnection;
  * @author Huynh Han Dong
  */
 public class OrderDAO {
-    private static final String ADD_ORDER = "INSERT INTO orders (orderId, customerId, orderDate, totalPrice, status) VALUES (?,?,?,?,?);";
-    private static final String GET_ALL_ORDERS = "SELECT * FROM Orders;";
-    private static final String GET_ORDER_DETAILS = "SELECT * FROM orders WHERE orderId = ?;";
-    private static final String ADD_ITEM = "INSERT INTO orderItems (orderItemId, orderId, productId, price, quantity) VALUES (?,?,?,?);";
-    private static final String GET_ITEMS_DETAILS = "SELECT orderItemId, productId, price, quantity FROM orderItems orderId = ?;";
-    
+    private static final String ADD_ORDER = "INSERT INTO orders (orderID, customerID, orderDate, totalPrice, status) VALUES (?,?,?,?,?);";
+    private static final String GET_ALL_ORDERS = "SELECT * FROM orders;";
+    private static final String GET_ORDER_DETAILS = "SELECT * FROM orders WHERE orderID = ?;";
+    private static final String ADD_ITEM = "INSERT INTO orderItems (orderItemID, orderID, productID, price, quantity) VALUES (?,?,?,?);";
+    private static final String GET_ITEMS_DETAILS = "SELECT orderItemID, productID, price, quantity FROM orderItems orderID = ?;";
+
     public int addOrder(Order order) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
-            statement.setInt(1, order.getOrderId());
-            statement.setString(2, order.getCustomerId());
+            statement.setInt(1, order.getOrderID());
+            statement.setInt(2, order.getCustomerID());
             statement.setDate(3, order.getOrderDate());
             statement.setDouble(4, order.getTotalPrice());
             statement.setString(5, order.getStatus());
-            
+
             result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return result;
     }
-    
+
     public void viewOrderHistory() {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
             ResultSet result = statement.executeQuery();
-            
-            if (result != null){
-                while(result.next()) {
-                int ordertId = result.getInt("orderId");
-                String customerId = result.getString("customerId");
-                Date orderDate = result.getDate("orderDate");
-                double totalPrice = result.getDouble("totalPrice");
-                String status = result.getString("status");
-                System.out.println("Order: " + ordertId + " CustomerID: " + customerId + " Order date: " + orderDate + " Total price: " + totalPrice + " Status: " + status);
+
+            if (result != null) {
+                while (result.next()) {
+                    int orderID = result.getInt("orderID");
+                    int customerID = result.getInt("customerID");
+                    Date orderDate = result.getDate("orderDate");
+                    double totalPrice = result.getDouble("totalPrice");
+                    String status = result.getString("status");
+                    System.out.println("Order: " + orderID + " CustomerID: " + customerID + " Order date: " + orderDate
+                            + " Total price: " + totalPrice + " Status: " + status);
                 }
             }
             conn.close();
@@ -59,22 +60,23 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    
-    public void viewOrderDetails(int orderId){
+
+    public void viewOrderDetails(int orderID) {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ORDER_DETAILS)) {
-            statement.setInt(1, orderId);
-            
+            statement.setInt(1, orderID);
+
             ResultSet result = statement.executeQuery();
-            
-            if (result != null){
-                while(result.next()) {
-                int ordertId = result.getInt("orderId");
-                String customerId = result.getString("customerId");
-                Date orderDate = result.getDate("orderDate");
-                double totalPrice = result.getDouble("totalPrice");
-                String status = result.getString("status");
-                System.out.println("Order: " + ordertId + " CustomerID: " + customerId + " Order date: " + orderDate + " Total price: " + totalPrice + " Status: " + status);
+
+            if (result != null) {
+                while (result.next()) {
+                    orderID = result.getInt("orderID");
+                    int customerID = result.getInt("customerID");
+                    Date orderDate = result.getDate("orderDate");
+                    double totalPrice = result.getDouble("totalPrice");
+                    String status = result.getString("status");
+                    System.out.println("Order: " + orderID + " CustomerID: " + customerID + " Order date: " + orderDate
+                            + " Total price: " + totalPrice + " Status: " + status);
                 }
             }
             conn.close();
@@ -82,18 +84,18 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    
-    public int AddToCart(Order order){
+
+    public int AddToCart(Order order) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_ITEM)) {
-            for (OrderItems item : order.getItems()){
-                statement.setInt(1, item.getOrderItemId());
-                statement.setInt(2, item.getOrderId());
-                statement.setString(3, item.getProductId());
+            for (OrderItems item : order.getItems()) {
+                statement.setInt(1, item.getOrderItemID());
+                statement.setInt(2, item.getOrderID());
+                statement.setInt(3, item.getProductID());
                 statement.setDouble(4, item.getPrice());
                 statement.setInt(5, item.getQuantity());
-            
+
                 result = statement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -101,21 +103,22 @@ public class OrderDAO {
         }
         return result;
     }
-    
-    public void viewItemsDetails(int orderId){
+
+    public void viewItemsDetails(int orderID) {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ITEMS_DETAILS)) {
-            statement.setInt(1, orderId);
-            
+            statement.setInt(1, orderID);
+
             ResultSet result = statement.executeQuery();
-            
-            if (result != null){
-                while(result.next()) {
-                int ordertItemId = result.getInt("ordertItemId");
-                String productId = result.getString("productId");
-                double price = result.getDouble("price");
-                int quantity = result.getInt("quantity");
-                System.out.println("OrderItemId: " + ordertItemId + " ProductID: " + productId + " Price: " + price + " Quantity: " + quantity);
+
+            if (result != null) {
+                while (result.next()) {
+                    int orderItemID = result.getInt("orderItemID");
+                    int productID = result.getInt("productID");
+                    double price = result.getDouble("price");
+                    int quantity = result.getInt("quantity");
+                    System.out.println("OrderItemID: " + orderItemID + " ProductID: " + productID + " Price: " + price
+                            + " Quantity: " + quantity);
                 }
             }
             conn.close();

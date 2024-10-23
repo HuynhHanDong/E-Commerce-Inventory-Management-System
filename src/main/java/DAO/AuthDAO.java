@@ -1,7 +1,7 @@
 package DAO;
 
 public interface AuthDAO {
-    boolean authenticate(String id, String username, String email, String password);
+    boolean authenticate(int id, String username, String email, String password);
 
-    void logout(String id);
+    void logout(int id);
 }
