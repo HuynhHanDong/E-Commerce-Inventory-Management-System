@@ -9,11 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CategoryDAO {
-    private static final String ADD_CATEGORY = "INSERT INTO category (categoryID, categoryName) VALUES (?, ?);";
-    private static final String UPDATE_CATEGORY = "UPDATE category SET categoryName = ? WHERE categoryID = ?;";
-    private static final String DELETE_CATEGORY = "DELETE FROM category WHERE categoryID = ?;";
-    private static final String GET_CATEGORY_BY_ID = "SELECT * FROM category WHERE categoryID = ?;";
-    private static final String GET_ALL_CATEGORIES = "SELECT * FROM category;";
+    private static final String ADD_CATEGORY = "INSERT INTO Category (CategoryID, CategoryName) VALUES (?, ?);";
+    private static final String UPDATE_CATEGORY = "UPDATE Category SET CategoryName = ? WHERE CategoryID = ?;";
+    private static final String DELETE_CATEGORY = "DELETE FROM Category WHERE CategoryID = ?;";
+    private static final String GET_CATEGORY_BY_ID = "SELECT * FROM Category WHERE CategoryID = ?;";
+    private static final String GET_ALL_CATEGORIES = "SELECT * FROM Category;";
 
     public int addCategory(Category category) {
         int result = 0;

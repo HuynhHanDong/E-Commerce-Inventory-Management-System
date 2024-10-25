@@ -13,11 +13,11 @@ import models.Inventory;
 import utils.JDBCConnection;
 
 public class InventoryDAO {
-    private static final String INSERT_INVENTORY_ITEM = "INSERT INTO inventory (productID, currentStock, lowStockThreshold) VALUES (?, ?, ?);";
-    private static final String UPDATE_INVENTORY_ITEM = "UPDATE inventory SET currentStock = ?, lowStockThreshold = ? WHERE productID = ?;";
-    private static final String DELETE_INVENTORY_ITEM = "DELETE FROM inventory WHERE productID = ?;";
-    private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM inventory WHERE productID = ?;";
-    private static final String GET_ALL_INVENTORY_ITEMS = "SELECT * FROM inventory;";
+    private static final String INSERT_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
+    private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET CurrentStock = ?, LowStockThreshold = ? WHERE ProductID = ?;";
+    private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE ProductID = ?;";
+    private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE ProductID = ?;";
+    private static final String GET_ALL_INVENTORY_ITEMS = "SELECT * FROM Inventory;";
 
     public boolean addInventoryItem(Inventory inventory) {
         boolean success = false;

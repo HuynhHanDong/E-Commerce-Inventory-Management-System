@@ -19,13 +19,13 @@ import models.Product;
  * @author Huynh Han Dong
  */
 public class ProductDAO {
-    private static final String ADD_PRODUCT = "INSERT INTO products (productID, productName, categoryID, price, stock, description) VALUES (?,?,?,?,?,?);";
-    private static final String UPDATE_PRODUCT = "UPDATE products SET productName = ?, categoryID = ?, price = ?, stock = ?, description = ? WHERE productID = ?;";
-    private static final String UPDATE_STOCK_LEVEL = "UPDATE products SET stock = ? WHERE productID = ?;";
-    private static final String DELETE_PRODUCT = "DELETE FROM products WHERE productID = ?;";
-    private static final String GET_PRODUCT_BY_ID = "SELECT productID, productName, categoryName, price, stock, description FROM products, category WHERE  productID = ?;";
-    private static final String GET_PRODUCT_BY_CATEGORY = "SELECT productID, productName, categoryName, price, stock, description FROM products, category WHERE categoryName = ?;";
-    private static final String GET_ALL_PRODUCTS = "SELECT productID, productName, categoryName, price, stock, description FROM products p, category c WHERE p.categoryID = c.categoryID;";
+    private static final String ADD_PRODUCT = "INSERT INTO Products (ProductID, ProductName, CategoryID, Price, StockLevel, Description) VALUES (?,?,?,?,?,?);";
+    private static final String UPDATE_PRODUCT = "UPDATE Products SET ProductName = ?, CategoryID = ?, Price = ?, StockLevel = ?, Description = ? WHERE ProductID = ?;";
+    private static final String UPDATE_STOCK_LEVEL = "UPDATE Products SET StockLevel = ? WHERE ProductID = ?;";
+    private static final String DELETE_PRODUCT = "DELETE FROM Products WHERE ProductID = ?;";
+    private static final String GET_PRODUCT_BY_ID = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE ProductID = ?;";
+    private static final String GET_PRODUCT_BY_CATEGORY = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE CategoryName = ?;";
+    private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
 
     public int addProduct(Product product) {
         int result = 0;

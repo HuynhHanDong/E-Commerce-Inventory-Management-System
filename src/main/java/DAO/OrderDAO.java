@@ -16,11 +16,11 @@ import utils.JDBCConnection;
  * @author Huynh Han Dong
  */
 public class OrderDAO {
-    private static final String ADD_ORDER = "INSERT INTO orders (orderID, customerID, orderDate, totalPrice, status) VALUES (?,?,?,?,?);";
-    private static final String GET_ALL_ORDERS = "SELECT * FROM orders;";
-    private static final String GET_ORDER_DETAILS = "SELECT * FROM orders WHERE orderID = ?;";
-    private static final String ADD_ITEM = "INSERT INTO orderItems (orderItemID, orderID, productID, price, quantity) VALUES (?,?,?,?);";
-    private static final String GET_ITEMS_DETAILS = "SELECT orderItemID, productID, price, quantity FROM orderItems orderID = ?;";
+    private static final String ADD_ORDER = "INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalPrice, Status) VALUES (?,?,?,?,?);";
+    private static final String GET_ALL_ORDERS = "SELECT * FROM Orders;";
+    private static final String GET_ORDER_DETAILS = "SELECT * FROM Orders WHERE OrderID = ?;";
+    private static final String ADD_ITEM = "INSERT INTO OrderItems (OrderItemID, OrderID, ProductID, Price, Quantity) VALUES (?,?,?,?);";
+    private static final String GET_ITEMS_DETAILS = "SELECT OrderItemID, ProductID, Price, Quantity FROM OrderItems WHERE OrderID = ?;";
 
     public int addOrder(Order order) {
         int result = 0;

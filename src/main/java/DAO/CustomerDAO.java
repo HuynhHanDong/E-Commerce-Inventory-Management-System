@@ -2,11 +2,20 @@ package DAO;
 
 import models.Customer;
 import utils.PasswordHasher;
+import utils.JDBCConnection;
 import java.sql.*;
 
 public class CustomerDAO implements AuthDAO {
 
     private Connection connection;
+
+    public CustomerDAO() {
+        try {
+            this.connection = JDBCConnection.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public CustomerDAO(Connection connection) {
         this.connection = connection;
@@ -14,12 +23,11 @@ public class CustomerDAO implements AuthDAO {
 
     @Override
     public boolean authenticate(int id, String username, String email, String password) {
-        String sql = "SELECT * FROM Customer";
+        String sql = "SELECT Password FROM Customer WHERE CustomerID = ? AND Email = ? AND Username = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.setString(2, email);
             pstmt.setString(3, username);
-            pstmt.setString(4, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 String storedUsername = rs.getString("username");
