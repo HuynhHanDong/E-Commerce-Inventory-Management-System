@@ -1,81 +1,100 @@
 package controller;
 
-import view.Menu;
 import models.Customer;
 import models.StoreOwner;
-import controller.CustomerMenuController;
-
 import DAO.CustomerDAO;
 import DAO.StoreOwnerDAO;
-import java.sql.Connection;
+import java.util.InputMismatchException;
 
 public class LoginMenuController extends BaseController {
     private CustomerDAO customerDAO;
     private StoreOwnerDAO storeOwnerDAO;
 
-    public LoginMenuController(Connection connection) {
+    public LoginMenuController() {
         super();
-        this.customerDAO = new CustomerDAO(connection);
-        this.storeOwnerDAO = new StoreOwnerDAO(connection);
+        this.customerDAO = new CustomerDAO();
+        this.storeOwnerDAO = new StoreOwnerDAO();
     }
 
     public void displayLoginMenu() {
-        menu.loginMenu();
-        int choice = getValidChoice(0, 2);
+        while (true) {
+            menu.loginMenu();
+            int choice = getValidChoice(0, 2);
 
-        switch (choice) {
-            case 1:
-                loginStoreOwner();
-                break;
-            case 2:
-                loginCustomer();
-                break;
-            case 0:
-                System.out.println("Exiting the application. Goodbye!");
-                System.exit(0);
-                break;
+            switch (choice) {
+                case 1:
+                    loginStoreOwner();
+                    break;
+                case 2:
+                    loginCustomer();
+                    break;
+                case 0:
+                    System.out.println("Exiting the application. Goodbye!");
+                    System.exit(0);
+                    break;
+            }
         }
     }
 
     private void loginStoreOwner() {
-        System.out.println("Enter store owner ID:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter username:");
-        String username = scanner.nextLine();
-        System.out.println("Enter email:");
-        String email = scanner.nextLine();
-        System.out.println("Enter password:");
-        String password = scanner.nextLine();
-
-        if (storeOwnerDAO.authenticate(id, username, email, password)) {
+        StoreOwner storeOwner = getStoreOwnerCredentials();
+        if (storeOwner != null && storeOwnerDAO.authenticate(storeOwner.getStoreownerID(), storeOwner.getUsername(),
+                storeOwner.getEmail(), storeOwner.getPassword())) {
             System.out.println("Store owner login successful!");
-            StoreOwner storeOwner = new StoreOwner(id, email, username, password);
             new StoreOwnerMenuController(storeOwner).displayStoreOwnerMenu();
         } else {
             System.out.println("Invalid credentials. Please try again.");
-            displayLoginMenu();
         }
     }
 
     private void loginCustomer() {
-        System.out.println("Enter customer ID:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter username:");
-        String username = scanner.nextLine();
-        System.out.println("Enter email:");
-        String email = scanner.nextLine();
-        System.out.println("Enter password:");
-        String password = scanner.nextLine();
-
-        if (customerDAO.authenticate(id, username, email, password)) {
+        Customer customer = getCustomerCredentials();
+        if (customer != null && customerDAO.authenticate(customer.getCustomerID(), customer.getUsername(),
+                customer.getEmail(), customer.getPassword())) {
             System.out.println("Customer login successful!");
-            Customer customer = new Customer(id, email, username, password);
             new CustomerMenuController(customer).displayCustomerMenu();
         } else {
             System.out.println("Invalid credentials. Please try again.");
-            displayLoginMenu();
+        }
+    }
+
+    private StoreOwner getStoreOwnerCredentials() {
+        try {
+            System.out.println("Enter store owner ID:");
+            int id = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            System.out.println("Enter username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter email:");
+            String email = scanner.nextLine();
+            System.out.println("Enter password:");
+            String password = scanner.nextLine();
+
+            return new StoreOwner(id, username, email, password);
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid integer for ID.");
+            scanner.nextLine();
+            return null;
+        }
+    }
+
+    private Customer getCustomerCredentials() {
+        try {
+            System.out.println("Enter customer ID:");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter username:");
+            String username = scanner.nextLine();
+            System.out.println("Enter email:");
+            String email = scanner.nextLine();
+            System.out.println("Enter password:");
+            String password = scanner.nextLine();
+
+            return new Customer(id, username, email, password);
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid integer for ID.");
+            scanner.nextLine();
+            return null;
         }
     }
 }
