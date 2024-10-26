@@ -26,6 +26,7 @@ public class ProductDAO {
     private static final String GET_PRODUCT_BY_ID = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE ProductID = ?;";
     private static final String GET_PRODUCT_BY_CATEGORY = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE CategoryName = ?;";
     private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
+    private static final String GET_PRODUCT_BY_NAME = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE ProductName = ?";
 
     public int addProduct(Product product) {
         int result = 0;
@@ -148,6 +149,31 @@ public class ProductDAO {
                 while (result.next()) {
                     int productID = result.getInt("productID");
                     String productName = result.getString("productName");
+                    String category = result.getString("categoryName");
+                    double price = result.getDouble("price");
+                    int stock = result.getInt("stock");
+                    String description = result.getString("description");
+                    System.out.println("ID: " + productID + "; Name: " + productName + "; Category: " + category
+                            + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
+                }
+            }
+            conn.close();
+        } catch (SQLException e) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void viewProductDetails(String productName) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_NAME)) {
+            statement.setString(1, productName);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result != null) {
+                while (result.next()) {
+                    int productID = result.getInt("productID");
+                    productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
                     int stock = result.getInt("stock");
