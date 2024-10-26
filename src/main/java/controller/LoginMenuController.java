@@ -4,7 +4,6 @@ import models.Customer;
 import models.StoreOwner;
 import DAO.CustomerDAO;
 import DAO.StoreOwnerDAO;
-import java.util.InputMismatchException;
 
 public class LoginMenuController extends BaseController {
     private CustomerDAO customerDAO;
@@ -37,7 +36,7 @@ public class LoginMenuController extends BaseController {
     }
 
     private void loginStoreOwner() {
-        StoreOwner storeOwner = getStoreOwnerCredentials();
+        StoreOwner storeOwner = getStoreOwnerInfo();
         if (storeOwner != null && storeOwnerDAO.authenticate(storeOwner.getStoreownerID(), storeOwner.getUsername(),
                 storeOwner.getEmail(), storeOwner.getPassword())) {
             System.out.println("Store owner login successful!");
@@ -48,7 +47,7 @@ public class LoginMenuController extends BaseController {
     }
 
     private void loginCustomer() {
-        Customer customer = getCustomerCredentials();
+        Customer customer = getCustomerInfo();
         if (customer != null && customerDAO.authenticate(customer.getCustomerID(), customer.getUsername(),
                 customer.getEmail(), customer.getPassword())) {
             System.out.println("Customer login successful!");
@@ -58,43 +57,69 @@ public class LoginMenuController extends BaseController {
         }
     }
 
-    private StoreOwner getStoreOwnerCredentials() {
-        try {
-            System.out.println("Enter store owner ID:");
-            int id = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            System.out.println("Enter username:");
-            String username = scanner.nextLine();
-            System.out.println("Enter email:");
-            String email = scanner.nextLine();
-            System.out.println("Enter password:");
-            String password = scanner.nextLine();
+    private StoreOwner getStoreOwnerInfo() {
+        int id = 0;
+        String username = "";
+        String email = "";
+        String password = "";
 
-            return new StoreOwner(id, username, email, password);
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid integer for ID.");
-            scanner.nextLine();
-            return null;
+        while (!StoreOwnerValidation.isValidId(id)) {
+            System.out.println("Enter store owner ID:");
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer for ID.");
+            }
         }
+
+        while (!StoreOwnerValidation.isValidUsername(username)) {
+            System.out.println("Enter username:");
+            username = scanner.nextLine();
+        }
+
+        while (!StoreOwnerValidation.isValidEmail(email)) {
+            System.out.println("Enter email:");
+            email = scanner.nextLine();
+        }
+
+        while (!StoreOwnerValidation.isValidPassword(password)) {
+            System.out.println("Enter password:");
+            password = scanner.nextLine();
+        }
+
+        return new StoreOwner(id, username, email, password);
     }
 
-    private Customer getCustomerCredentials() {
-        try {
-            System.out.println("Enter customer ID:");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("Enter username:");
-            String username = scanner.nextLine();
-            System.out.println("Enter email:");
-            String email = scanner.nextLine();
-            System.out.println("Enter password:");
-            String password = scanner.nextLine();
+    private Customer getCustomerInfo() {
+        int id = 0;
+        String username = "";
+        String email = "";
+        String password = "";
 
-            return new Customer(id, username, email, password);
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid integer for ID.");
-            scanner.nextLine();
-            return null;
+        while (!StoreOwnerValidation.isValidId(id)) {
+            System.out.println("Enter customer ID:");
+            try {
+                id = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer for ID.");
+            }
         }
+
+        while (!StoreOwnerValidation.isValidUsername(username)) {
+            System.out.println("Enter username:");
+            username = scanner.nextLine();
+        }
+
+        while (!StoreOwnerValidation.isValidEmail(email)) {
+            System.out.println("Enter email:");
+            email = scanner.nextLine();
+        }
+
+        while (!StoreOwnerValidation.isValidPassword(password)) {
+            System.out.println("Enter password:");
+            password = scanner.nextLine();
+        }
+
+        return new Customer(id, username, email, password);
     }
 }

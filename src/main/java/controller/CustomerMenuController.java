@@ -52,4 +52,14 @@ public class CustomerMenuController extends BaseController {
         }
     }
 
+    public void viewProductDetails() {
+        System.out.println("Enter the product name to view details: ");
+        String productName = scanner.nextLine();
+        Product product = productDAO.getProductByName(productName);
+        if (product != null) {
+            System.out.println(product);
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
 }
