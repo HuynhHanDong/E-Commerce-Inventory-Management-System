@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Order;
@@ -39,7 +40,8 @@ public class OrderDAO {
         return result;
     }
 
-    public void viewOrderHistory() {
+    public ArrayList<Order> viewOrderHistory() {
+        ArrayList<Order> orderList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
             ResultSet result = statement.executeQuery();
@@ -51,17 +53,20 @@ public class OrderDAO {
                     Date orderDate = result.getDate("orderDate");
                     double totalPrice = result.getDouble("totalPrice");
                     String status = result.getString("status");
-                    System.out.println("Order: " + orderID + " CustomerID: " + customerID + " Order date: " + orderDate
-                            + " Total price: " + totalPrice + " Status: " + status);
+                    
+                    ArrayList<OrderItems> items = this.viewItemsDetails(orderID);
+                    orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return orderList;
     }
 
-    public void viewOrderDetails(int orderID) {
+    public Order viewOrderDetails(int orderID) {
+        Order order = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ORDER_DETAILS)) {
             statement.setInt(1, orderID);
@@ -75,14 +80,16 @@ public class OrderDAO {
                     Date orderDate = result.getDate("orderDate");
                     double totalPrice = result.getDouble("totalPrice");
                     String status = result.getString("status");
-                    System.out.println("Order: " + orderID + " CustomerID: " + customerID + " Order date: " + orderDate
-                            + " Total price: " + totalPrice + " Status: " + status);
+                    
+                    ArrayList<OrderItems> items = this.viewItemsDetails(orderID);
+                    order = new Order(orderID, customerID, orderDate, items, totalPrice, status);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return order;
     }
 
     public int AddToCart(Order order) {
@@ -104,7 +111,8 @@ public class OrderDAO {
         return result;
     }
 
-    public void viewItemsDetails(int orderID) {
+    public ArrayList<OrderItems> viewItemsDetails(int orderID) {
+        ArrayList<OrderItems> itemList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ITEMS_DETAILS)) {
             statement.setInt(1, orderID);
@@ -117,13 +125,13 @@ public class OrderDAO {
                     int productID = result.getInt("productID");
                     double price = result.getDouble("price");
                     int quantity = result.getInt("quantity");
-                    System.out.println("OrderItemID: " + orderItemID + " ProductID: " + productID + " Price: " + price
-                            + " Quantity: " + quantity);
+                    itemList.add(new OrderItems(orderItemID, orderID, productID, price, quantity));
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return itemList;
     }
 }

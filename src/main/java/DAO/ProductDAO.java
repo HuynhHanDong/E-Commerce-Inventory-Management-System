@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.JDBCConnection;
@@ -90,7 +91,8 @@ public class ProductDAO {
         return result;
     }
 
-    public void searchProductsById(int productID) {
+    public Product searchProductsById(int productID) {
+        Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_ID)) {
             statement.setInt(1, productID);
@@ -105,17 +107,18 @@ public class ProductDAO {
                     double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
-                    System.out.println("ID: " + productID + "; Name: " + productName + "; Category: " + category
-                            + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
+                    product = new Product(productID, productName, price, stock, description, category);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return product;
     }
 
-    public void searchProductsByCategory(String categoryName) {
+    public Product searchProductsByCategory(String categoryName) {
+        Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)) {
             statement.setString(1, categoryName);
@@ -130,17 +133,18 @@ public class ProductDAO {
                     double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
-                    System.out.println("ID: " + productID + "; Name: " + productName + "; Category: " + category
-                            + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
+                    product = new Product(productID, productName, price, stock, description, category);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return product;
     }
 
-    public void viewAllProducts() {
+    public ArrayList<Product> viewAllProducts() {
+        ArrayList<Product> productList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_PRODUCTS)) {
             ResultSet result = statement.executeQuery();
@@ -153,17 +157,18 @@ public class ProductDAO {
                     double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
-                    System.out.println("ID: " + productID + "; Name: " + productName + "; Category: " + category
-                            + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
+                    productList.add(new Product(productID, productName, price, stock, description, category));
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return productList;
     }
 
-    public void viewProductDetails(String productName) {
+    public Product viewProductDetails(String productName) {
+        Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_NAME)) {
             statement.setString(1, productName);
@@ -178,13 +183,13 @@ public class ProductDAO {
                     double price = result.getDouble("price");
                     int stock = result.getInt("stock");
                     String description = result.getString("description");
-                    System.out.println("ID: " + productID + "; Name: " + productName + "; Category: " + category
-                            + "; Price: " + price + "; Stock: " + stock + "; Description: " + description);
+                    product = new Product(productID, productName, price, stock, description, category);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return product;
     }
 }
