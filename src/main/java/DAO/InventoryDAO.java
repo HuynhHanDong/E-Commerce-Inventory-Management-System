@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,8 +77,8 @@ public class InventoryDAO {
         return inventory;
     }
 
-    public List<Inventory> getAllInventoryItems() {
-        List<Inventory> inventoryList = new ArrayList<>();
+    public ArrayList<Inventory> getAllInventoryItems() {
+        ArrayList<Inventory> inventoryList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_INVENTORY_ITEMS)) {
             ResultSet result = statement.executeQuery();

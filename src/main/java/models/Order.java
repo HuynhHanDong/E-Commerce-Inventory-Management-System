@@ -14,12 +14,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items) {
+    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items, double totalPrice, String status) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.orderDate = orderDate;
         this.items = items;
-        this.status = "Pending";
+        this.totalPrice = totalPrice;
+        this.status = status;
     }
 
     public int getOrderID() {

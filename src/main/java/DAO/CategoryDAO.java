@@ -4,7 +4,6 @@ import models.Category;
 import utils.JDBCConnection;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +52,8 @@ public class CategoryDAO {
         return result;
     }
 
-    public void getCategoryById(int categoryID) {
+    public Category getCategoryById(int categoryID) {
+        Category category = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_CATEGORY_BY_ID)) {
             statement.setInt(1, categoryID);
@@ -63,17 +63,18 @@ public class CategoryDAO {
                 while (result.next()) {
                     categoryID = result.getInt("categoryID");
                     String categoryName = result.getString("categoryName");
-                    System.out.println("ID: " + categoryID + "; categoryName: " + categoryName);
+                    category = new Category(categoryID, categoryName);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, e);
         }
+        return category;
     }
 
-    public List<Category> getAllCategories() {
-        List<Category> categories = new ArrayList<>();
+    public ArrayList<Category> getAllCategories() {
+        ArrayList<Category> categories = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_CATEGORIES)) {
             ResultSet result = statement.executeQuery();
@@ -81,7 +82,7 @@ public class CategoryDAO {
                 if (result.next()) {
                     int categoryID = result.getInt("categoryID");
                     String categoryName = result.getString("categoryName");
-                    System.out.println("ID: " + categoryID + "; categoryName: " + categoryName);
+                    categories.add(new Category(categoryID, categoryName));
                 }
             }
             conn.close();

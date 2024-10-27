@@ -12,6 +12,9 @@ public class OrderItems implements Serializable {
     private int productID;
     private double price;
     private int quantity;
+    
+    public OrderItems(){
+    }
 
     public OrderItems(int orderItemID, int orderID, int productID, double price, int quantity) {
         this.orderItemID = orderItemID;
@@ -63,5 +66,16 @@ public class OrderItems implements Serializable {
 
     public double getTotalPrice() {
         return this.quantity * this.price;
+    }
+    
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "orderItemID='" + orderItemID +
+                ", orderID='" + orderID + '\'' +
+                ", productID='" + productID + '\'' +
+                ", price=" + price + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }
