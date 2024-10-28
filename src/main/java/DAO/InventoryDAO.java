@@ -12,7 +12,7 @@ import models.Inventory;
 import utils.JDBCConnection;
 
 public class InventoryDAO {
-    private static final String INSERT_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
+    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
     private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET CurrentStock = ?, LowStockThreshold = ? WHERE ProductID = ?;";
     private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE ProductID = ?;";
     private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE ProductID = ?;";
@@ -21,7 +21,7 @@ public class InventoryDAO {
     public boolean addInventoryItem(Inventory inventory) {
         boolean success = false;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(INSERT_INVENTORY_ITEM)) {
+                PreparedStatement statement = conn.prepareStatement(ADD_INVENTORY_ITEM)) {
             statement.setInt(1, inventory.getProductID());
             statement.setInt(2, inventory.getCurrentStock());
             statement.setInt(3, inventory.getLowStockThreshold());
@@ -46,11 +46,11 @@ public class InventoryDAO {
         return success;
     }
 
-    public boolean deleteInventoryItem(String productId) {
+    public boolean deleteInventoryItem(int productId) {
         boolean success = false;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(DELETE_INVENTORY_ITEM)) {
-            statement.setString(1, productId);
+            statement.setInt(1, productId);
             success = statement.executeUpdate() > 0;
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error deleting inventory item", e);
@@ -58,11 +58,11 @@ public class InventoryDAO {
         return success;
     }
 
-    public Inventory getInventoryItemById(String productId) {
+    public Inventory getInventoryItemById(int productId) {
         Inventory inventory = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_INVENTORY_ITEM_BY_ID)) {
-            statement.setString(1, productId);
+            statement.setInt(1, productId);
             ResultSet result = statement.executeQuery();
             if (result != null) {
                 if (result.next()) {

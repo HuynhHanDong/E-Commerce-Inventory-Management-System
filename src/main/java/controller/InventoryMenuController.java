@@ -92,7 +92,7 @@ public class InventoryMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to delete:");
             int productID = scanner.nextInt();
-            boolean success = inventoryDAO.deleteInventoryItem(String.valueOf(productID));
+            boolean success = inventoryDAO.deleteInventoryItem(productID);
             if (success) {
                 System.out.println("Inventory item deleted successfully.");
             } else {
@@ -108,9 +108,9 @@ public class InventoryMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to view:");
             int productID = scanner.nextInt();
-            Inventory inventory = inventoryDAO.getInventoryItemById(String.valueOf(productID));
+            Inventory inventory = inventoryDAO.getInventoryItemById(productID);
             if (inventory != null) {
-                System.out.println(inventory);
+                System.out.println(inventory.toString());
             } else {
                 System.out.println("Inventory item not found.");
             }
@@ -123,7 +123,7 @@ public class InventoryMenuController extends BaseController {
     private void viewAllInventoryItems() {
     List<Inventory> inventoryItems = inventoryDAO.getAllInventoryItems();
     for (Inventory inventory : inventoryItems) {
-        System.out.println(inventory);
+        System.out.println(inventory.toString());
     }
 }
 
