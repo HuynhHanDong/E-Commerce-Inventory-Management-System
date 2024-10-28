@@ -11,6 +11,8 @@ import DAO.InventoryDAO;
 public class StoreOwnerMenuController extends BaseController {
     private StoreOwner storeOwner;
     private ProductMenuController productMenuController;
+    private CategoryMenuController categoryMenuController;
+    private InventoryMenuController inventoryMenuController;
     private CategoryDAO categoryDAO;
     private InventoryDAO inventoryDAO;
 
@@ -32,10 +34,10 @@ public class StoreOwnerMenuController extends BaseController {
                     productMenuController.manageProducts();
                     break;
                 case 2:
-                    manageCategories();
+                    categoryMenuController.manageCategories();
                     break;
                 case 3:
-                    manageInventory();
+                    inventoryMenuController.manageInventory();
                     break;
                 case 4:
                     viewReports();

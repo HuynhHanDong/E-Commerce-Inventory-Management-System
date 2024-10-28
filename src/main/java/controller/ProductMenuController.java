@@ -2,7 +2,6 @@ package controller;
 
 import models.Product;
 import DAO.ProductDAO;
-import java.util.InputMismatchException;
 
 public class ProductMenuController extends BaseController {
     private ProductDAO productDAO;
@@ -46,46 +45,187 @@ public class ProductMenuController extends BaseController {
     private void addProduct() {
         try {
             System.out.println("Enter product ID:");
-            int productID = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int productID = Integer.parseInt(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidProductID(productID)) {
+                return;
+            }
+
             System.out.println("Enter product name:");
             String productName = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidProductName(productName)) {
+                return;
+            }
+
             System.out.println("Enter category:");
-            String category = scanner.nextLine();
+            String categoryName = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidCategoryName(categoryName)) {
+                return;
+            }
+
             System.out.println("Enter price:");
-            double price = scanner.nextDouble();
+            double price = Double.parseDouble(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidPrice(price)) {
+                return;
+            }
+
             System.out.println("Enter stock level:");
-            int stockLevel = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int stockLevel = Integer.parseInt(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidStockLevel(stockLevel)) {
+                return;
+            }
+
             System.out.println("Enter description:");
             String description = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidDescription(description)) {
+                return;
+            }
 
-            Product product = new Product(productID, productName, price, stockLevel, description, category);
+            Product product = new Product(productID, productName, price, stockLevel, description, categoryName);
             int result = productDAO.addProduct(product);
             if (result > 0) {
                 System.out.println("Product added successfully.");
             } else {
                 System.out.println("Failed to add product.");
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter the correct data type.");
-            scanner.nextLine(); // Clear the scanner buffer
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
     private void updateProduct() {
-        // Implement update product method
+        try {
+            System.out.println("Enter product ID to update:");
+            int productID = Integer.parseInt(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidProductID(productID)) {
+                return;
+            }
+
+            Product existingProduct = productDAO.searchProductsById(productID);
+            if (existingProduct == null) {
+                System.out.println("Product not found.");
+                return;
+            }
+
+            System.out.println("Enter new product name (or press enter to skip):");
+            String productName = scanner.nextLine();
+            if (!productName.isEmpty() && !StoreOwnerValidation.isValidProductName(productName)) {
+                return;
+            }
+
+            System.out.println("Enter new category (or press enter to skip):");
+            String categoryName = scanner.nextLine();
+            if (!categoryName.isEmpty() && !StoreOwnerValidation.isValidCategoryName(categoryName)) {
+                return;
+            }
+
+            System.out.println("Enter new price (or -1 to skip):");
+            double price = Double.parseDouble(scanner.nextLine());
+            if (price != -1 && !StoreOwnerValidation.isValidPrice(price)) {
+                return;
+            }
+
+            System.out.println("Enter new stock level (or -1 to skip):");
+            int stockLevel = Integer.parseInt(scanner.nextLine());
+            if (stockLevel != -1 && !StoreOwnerValidation.isValidStockLevel(stockLevel)) {
+                return;
+            }
+
+            System.out.println("Enter new description (or press enter to skip):");
+            String description = scanner.nextLine();
+            if (!description.isEmpty() && !StoreOwnerValidation.isValidDescription(description)) {
+                return;
+            }
+
+            if (!productName.isEmpty())
+                existingProduct.setProductName(productName);
+
+            if (!categoryName.isEmpty())
+                existingProduct.setCategory(categoryName);
+
+            if (price != -1)
+                existingProduct.setPrice(price);
+
+            if (stockLevel != -1)
+                existingProduct.setStockLevel(stockLevel);
+
+            if (!description.isEmpty())
+                existingProduct.setDescription(description);
+
+            int result = productDAO.updateProduct(existingProduct);
+            if (result > 0) {
+                System.out.println("Product updated successfully.");
+            } else {
+                System.out.println("Failed to update product.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 
     private void deleteProduct() {
-        // Implement delete product method
+        try {
+            System.out.println("Enter product ID to delete:");
+            int productID = Integer.parseInt(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidProductID(productID)) {
+                return;
+            }
+
+            Product existingProduct = productDAO.searchProductsById(productID);
+            if (existingProduct == null) {
+                System.out.println("Product not found.");
+                return;
+            }
+
+            System.out.println("Are you sure you want to delete this product? (y/n)");
+            String confirm = scanner.nextLine();
+            if (confirm.equalsIgnoreCase("y")) {
+                int result = productDAO.deleteProduct(productID);
+                if (result > 0) {
+                    System.out.println("Product deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete product.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 
     private void searchProductById() {
-        // Implement search product by ID method
+        try {
+            System.out.println("Enter product ID to search:");
+            int productID = Integer.parseInt(scanner.nextLine());
+            if (!StoreOwnerValidation.isValidProductID(productID)) {
+                return;
+            }
+
+            Product product = productDAO.searchProductsById(productID);
+            if (product != null) {
+                System.out.println(product.toString());
+            } else {
+                System.out.println("Product not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 
     private void searchProductByCategory() {
-        // Implement search product by category method
+        try {
+            System.out.println("Enter category name to search:");
+            String categoryName = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidCategoryName(categoryName)) {
+                return;
+            }
+
+            Product product = productDAO.searchProductsByCategory(categoryName);
+            if (product != null) {
+                System.out.println(product.toString());
+            } else {
+                System.out.println("No products found in this category.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 }
