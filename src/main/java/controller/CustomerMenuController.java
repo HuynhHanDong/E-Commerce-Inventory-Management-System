@@ -14,14 +14,13 @@ public class CustomerMenuController extends BaseController {
     private Customer customer;
     private ProductDAO productDAO;
     private OrderDAO orderDAO;
-    private ArrayList<OrderItems> cart;
+    private OrderMenuController orderMenuController;
 
     public CustomerMenuController(Customer customer) {
         super();
         this.customer = customer;
         this.productDAO = new ProductDAO();
         this.orderDAO = new OrderDAO();
-        this.cart = new ArrayList<>();
     }
 
     public void displayCustomerMenu() {
@@ -37,7 +36,7 @@ public class CustomerMenuController extends BaseController {
                     searchProduct();
                     break;
                 case 3:
-                    placeOrder();
+                    orderMenuController.displayOrderMenu();
                     break;
                 case 4:
                     viewOrderHistory();
@@ -55,11 +54,50 @@ public class CustomerMenuController extends BaseController {
     public void viewProductDetails() {
         System.out.println("Enter the product name to view details: ");
         String productName = scanner.nextLine();
-        Product product = productDAO.getProductByName(productName);
+        Product product = productDAO.viewProductDetails(productName);
         if (product != null) {
-            System.out.println(product);
+            System.out.println(product.toString());
         } else {
             System.out.println("Product not found.");
+        }
+    }
+    
+    public void searchProduct(){
+        System.out.println("Enter the product ID: ");
+        int productID = scanner.nextInt();
+        Product product = productDAO.searchProductsById(productID);
+        if (product != null) {
+            System.out.println(product.toString());
+        } else {
+            System.out.println("Product not found.");
+        }
+    }
+    
+    public void viewOrderHistory(){
+        ArrayList<Order> history = orderDAO.viewOrderHistory();
+        if (history != null) {
+            for (Order order : history){
+                System.out.println(order.toString());
+            }
+        } else {
+            System.out.println("No order history.");
+        }
+    }
+    
+    public void viewOrderDetails(){
+        System.out.println("Enter order ID to view details: ");
+        int orderID = scanner.nextInt();
+        Order order = orderDAO.viewOrderDetails(orderID);
+        if (order != null) {
+            System.out.println(order.toString());
+            
+            ArrayList<OrderItems> items = orderDAO.viewItemsDetails(orderID);
+            for (OrderItems item : items){
+                System.out.println(item.toString());
+            }
+            
+        } else {
+            System.out.println("Order not found.");
         }
     }
 }

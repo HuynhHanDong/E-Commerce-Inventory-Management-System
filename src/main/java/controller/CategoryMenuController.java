@@ -48,7 +48,7 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category ID: ");
             int categoryID = scanner.nextInt();
-            scanner.nextLine(); // Clear the buffer
+            scanner.nextLine();
             System.out.print("Enter Category Name: ");
             String categoryName = scanner.nextLine();
 
@@ -106,7 +106,12 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category ID to view: ");
             int categoryID = scanner.nextInt();
-            categoryDAO.getCategoryById(categoryID); // Adjust if you want to return a Category object
+            Category category = categoryDAO.getCategoryById(categoryID);
+            if (category != null) {
+                System.out.println(category.toString());
+            } else {
+                System.out.println("Inventory item not found.");
+            }
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please enter a valid Category ID.");
             scanner.nextLine(); 
@@ -116,7 +121,7 @@ public class CategoryMenuController extends BaseController {
     private void viewAllCategories() {
     List<Category> categories = categoryDAO.getAllCategories();
     for (Category category : categories) {
-        System.out.println(category);
+        System.out.println(category.toString());
     }
 }
 
