@@ -46,11 +46,11 @@ public class InventoryDAO {
         return success;
     }
 
-    public boolean deleteInventoryItem(String productId) {
+    public boolean deleteInventoryItem(int productID) {
         boolean success = false;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(DELETE_INVENTORY_ITEM)) {
-            statement.setString(1, productId);
+            statement.setInt(1, productID);
             success = statement.executeUpdate() > 0;
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error deleting inventory item", e);
@@ -58,11 +58,11 @@ public class InventoryDAO {
         return success;
     }
 
-    public Inventory getInventoryItemById(String productId) {
+    public Inventory getInventoryItemById(int productID) {
         Inventory inventory = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_INVENTORY_ITEM_BY_ID)) {
-            statement.setString(1, productId);
+            statement.setInt(1, productID);
             ResultSet result = statement.executeQuery();
             if (result != null) {
                 if (result.next()) {
