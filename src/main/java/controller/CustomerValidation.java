@@ -64,4 +64,10 @@ public class CustomerValidation {
         }
         return true;
     }
+
+    public static boolean isValidDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        return true;
+    }
 }
