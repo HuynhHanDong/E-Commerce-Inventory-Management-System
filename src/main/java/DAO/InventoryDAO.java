@@ -12,7 +12,7 @@ import models.Inventory;
 import utils.JDBCConnection;
 
 public class InventoryDAO {
-    private static final String INSERT_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
+    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
     private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET CurrentStock = ?, LowStockThreshold = ? WHERE ProductID = ?;";
     private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE ProductID = ?;";
     private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE ProductID = ?;";
@@ -21,7 +21,7 @@ public class InventoryDAO {
     public boolean addInventoryItem(Inventory inventory) {
         boolean success = false;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(INSERT_INVENTORY_ITEM)) {
+                PreparedStatement statement = conn.prepareStatement(ADD_INVENTORY_ITEM)) {
             statement.setInt(1, inventory.getProductID());
             statement.setInt(2, inventory.getCurrentStock());
             statement.setInt(3, inventory.getLowStockThreshold());
