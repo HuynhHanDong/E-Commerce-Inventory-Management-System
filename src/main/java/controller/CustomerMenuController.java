@@ -7,7 +7,6 @@ import models.OrderItems;
 import DAO.ProductDAO;
 import DAO.OrderDAO;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.sql.Date;
 
 public class CustomerMenuController extends BaseController {
@@ -15,12 +14,14 @@ public class CustomerMenuController extends BaseController {
     private ProductDAO productDAO;
     private OrderDAO orderDAO;
     private OrderMenuController orderMenuController;
+    private ProductMenuController productMenuController;
 
     public CustomerMenuController(Customer customer) {
         super();
         this.customer = customer;
         this.productDAO = new ProductDAO();
         this.orderDAO = new OrderDAO();
+        this.productMenuController = new ProductMenuController();
     }
 
     public void displayCustomerMenu() {
@@ -30,10 +31,10 @@ public class CustomerMenuController extends BaseController {
 
             switch (choice) {
                 case 1:
-                    viewProductDetails();
+                    productMenuController.viewProductDetails();
                     break;
                 case 2:
-                    searchProduct();
+                    productMenuController.searchProduct();
                     break;
                 case 3:
                     orderMenuController.displayOrderMenu();
@@ -51,51 +52,29 @@ public class CustomerMenuController extends BaseController {
         }
     }
 
-    public void viewProductDetails() {
-        System.out.println("Enter the product name to view details: ");
-        String productName = scanner.nextLine();
-        Product product = productDAO.viewProductDetails(productName);
-        if (product != null) {
-            System.out.println(product.toString());
-        } else {
-            System.out.println("Product not found.");
-        }
-    }
-    
-    public void searchProduct(){
-        System.out.println("Enter the product ID: ");
-        int productID = scanner.nextInt();
-        Product product = productDAO.searchProductsById(productID);
-        if (product != null) {
-            System.out.println(product.toString());
-        } else {
-            System.out.println("Product not found.");
-        }
-    }
-    
-    public void viewOrderHistory(){
+    public void viewOrderHistory() {
         ArrayList<Order> history = orderDAO.viewOrderHistory();
         if (history != null) {
-            for (Order order : history){
+            for (Order order : history) {
                 System.out.println(order.toString());
             }
         } else {
             System.out.println("No order history.");
         }
     }
-    
-    public void viewOrderDetails(){
+
+    public void viewOrderDetails() {
         System.out.println("Enter order ID to view details: ");
         int orderID = scanner.nextInt();
         Order order = orderDAO.viewOrderDetails(orderID);
         if (order != null) {
             System.out.println(order.toString());
-            
+
             ArrayList<OrderItems> items = orderDAO.viewItemsDetails(orderID);
-            for (OrderItems item : items){
+            for (OrderItems item : items) {
                 System.out.println(item.toString());
             }
-            
+
         } else {
             System.out.println("Order not found.");
         }
