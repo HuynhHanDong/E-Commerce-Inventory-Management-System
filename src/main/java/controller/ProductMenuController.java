@@ -228,4 +228,43 @@ public class ProductMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
+
+    public void viewProductDetails() {
+        try {
+            System.out.println("Enter product name to view details:");
+            String productName = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidProductName(productName)) {
+                return;
+            }
+
+            Product product = productDAO.viewProductDetails(productName);
+            if (product != null) {
+                System.out.println(product.toString());
+            } else {
+                System.out.println("Product not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+    public void searchProduct() {
+        try {
+            System.out.println("Enter id/category name to search: \n" +
+                    "[1]. ID \n" +
+                    "[2]. Category Name");
+            int choice = getValidChoice(1, 2);
+
+            switch (choice) {
+                case 1:
+                    searchProductById();
+                    break;
+                case 2:
+                    searchProductByCategory();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
 }
