@@ -50,11 +50,6 @@ public class StoreOwner {
 
     @Override
     public String toString() {
-        return "StoreOwner{" +
-                "storeownerID=" + storeownerID +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password= " + password + '\'' +
-                '}';
+        return "storeownerID: " + storeownerID + ", email: " + email + ", username: " + username + ", password: " + password;
     }
 }

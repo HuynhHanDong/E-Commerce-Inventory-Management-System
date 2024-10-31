@@ -17,44 +17,121 @@ import utils.JDBCConnection;
  * @author Huynh Han Dong
  */
 public class OrderDAO {
-    private static final String ADD_ORDER = "INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalPrice, Status) VALUES (?,?,?,?,?);";
-    private static final String GET_ALL_ORDERS = "SELECT * FROM Orders;";
-    private static final String GET_ORDER_DETAILS = "SELECT * FROM Orders WHERE OrderID = ?;";
-    private static final String ADD_ITEM = "INSERT INTO OrderItems (OrderItemID, OrderID, ProductID, Price, Quantity) VALUES (?,?,?,?);";
-    private static final String GET_ITEMS_DETAILS = "SELECT OrderItemID, ProductID, Price, Quantity FROM OrderItems WHERE OrderID = ?;";
+    private static final String ADD_ORDER = "INSERT INTO Orders (CustomerID, OrderDate, TotalPrice, Status) VALUES (?,?,?,?);";
+    private static final String UPDATE_ORDER_STATUS = "UPDATE  Orders SET Status = ? WHERE OrderID = ?;";
+    private static final String GET_ALL_ORDERS = "SELECT * FROM Orders WHERE CustomerID = ?;";
+    private static final String GET_ORDER_BY_ID = "SELECT * FROM Orders WHERE OrderID = ? AND CustomerID = ?;";
+    private static final String GET_ORDER_BY_STATUS = "SELECT * FROM Orders WHERE CustomerID = ? AND Status = ?;";
+    private static final String ADD_ITEMS = "INSERT INTO OrderItems (OrderID, ProductID, Price, Quantity) VALUES (?,?,?,?);";
+    private static final String GET_ITEMS = "SELECT * FROM OrderItems WHERE OrderID = ?;";
 
-    public int addOrder(Order order) {
-        int result = 0;
+    public int addOrder(int customerID, Date orderDate, Double totalPrice, String status) {
+        int orderID = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
-            statement.setInt(1, order.getOrderID());
-            statement.setInt(2, order.getCustomerID());
-            statement.setDate(3, order.getOrderDate());
-            statement.setDouble(4, order.getTotalPrice());
-            statement.setString(5, order.getStatus());
+            statement.setInt(1, customerID);
+            statement.setDate(2, orderDate);
+            statement.setDouble(3, totalPrice);
+            statement.setString(4, status);
+
+            ResultSet result = statement.executeQuery();
+            if (result != null) {
+                System.out.println("Esult: "+result);
+                orderID = result.getInt("orderID");
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return orderID;
+    }
+    
+    public int updateOrder(String status, int orderID) {
+        int result = 0;
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(UPDATE_ORDER_STATUS)) {
+            statement.setString(1, status);
+            statement.setInt(2, orderID);
 
             result = statement.executeUpdate();
         } catch (SQLException e) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return result;
     }
 
-    public ArrayList<Order> viewOrderHistory() {
+    public ArrayList<Order> getAllOrders(int customerID) {
         ArrayList<Order> orderList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
+            statement.setInt(1, customerID);
+            
             ResultSet result = statement.executeQuery();
 
             if (result != null) {
                 while (result.next()) {
                     int orderID = result.getInt("orderID");
-                    int customerID = result.getInt("customerID");
+                    customerID = result.getInt("customerID");
                     Date orderDate = result.getDate("orderDate");
                     double totalPrice = result.getDouble("totalPrice");
                     String status = result.getString("status");
                     
-                    ArrayList<OrderItems> items = this.viewItemsDetails(orderID);
+                    ArrayList<OrderItems> items = getOrderItems(orderID);
+                    orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
+                }
+            } 
+            conn.close();
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return orderList;
+    }
+
+    public Order getOrderByID(int orderID, int customerID) {
+        Order order = null;
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_ID)) {
+            statement.setInt(1, orderID);
+            statement.setInt(2, customerID);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result != null) {
+                while (result.next()) {
+                    orderID = result.getInt("orderID");
+                    customerID = result.getInt("customerID");
+                    Date orderDate = result.getDate("orderDate");
+                    double totalPrice = result.getDouble("totalPrice");
+                    String status = result.getString("status");
+                    
+                    ArrayList<OrderItems> items = getOrderItems(orderID);
+                    order = new Order(orderID, customerID, orderDate, items, totalPrice, status);
+                }
+            }
+            conn.close();
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return order;
+    }
+    
+    public ArrayList<Order> getOrderByStatus(int customerID, String status) {
+        ArrayList<Order>  orderList = new ArrayList<>();
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_STATUS)) {
+            statement.setInt(1, customerID);
+            statement.setString(2, status);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result != null) {
+                while (result.next()) {
+                    int orderID = result.getInt("orderID");
+                    customerID = result.getInt("customerID");
+                    Date orderDate = result.getDate("orderDate");
+                    double totalPrice = result.getDouble("totalPrice");
+                    status = result.getString("status");
+                    
+                    ArrayList<OrderItems> items = getOrderItems(orderID);
                     orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
                 }
             }
@@ -65,43 +142,15 @@ public class OrderDAO {
         return orderList;
     }
 
-    public Order viewOrderDetails(int orderID) {
-        Order order = null;
-        try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_ORDER_DETAILS)) {
-            statement.setInt(1, orderID);
-
-            ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    orderID = result.getInt("orderID");
-                    int customerID = result.getInt("customerID");
-                    Date orderDate = result.getDate("orderDate");
-                    double totalPrice = result.getDouble("totalPrice");
-                    String status = result.getString("status");
-                    
-                    ArrayList<OrderItems> items = this.viewItemsDetails(orderID);
-                    order = new Order(orderID, customerID, orderDate, items, totalPrice, status);
-                }
-            }
-            conn.close();
-        } catch (SQLException e) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return order;
-    }
-
-    public int AddToCart(Order order) {
+    public int addItems(ArrayList<OrderItems> items) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(ADD_ITEM)) {
-            for (OrderItems item : order.getItems()) {
-                statement.setInt(1, item.getOrderItemID());
-                statement.setInt(2, item.getOrderID());
-                statement.setInt(3, item.getProductID());
-                statement.setDouble(4, item.getPrice());
-                statement.setInt(5, item.getQuantity());
+                PreparedStatement statement = conn.prepareStatement(ADD_ITEMS)) {
+            for (OrderItems item : items) {
+                statement.setInt(1, item.getOrderID());
+                statement.setInt(2, item.getProductID());
+                statement.setDouble(3, item.getPrice());
+                statement.setInt(4, item.getQuantity());
 
                 result = statement.executeUpdate();
             }
@@ -111,10 +160,10 @@ public class OrderDAO {
         return result;
     }
 
-    public ArrayList<OrderItems> viewItemsDetails(int orderID) {
+    private ArrayList<OrderItems> getOrderItems(int orderID) {
         ArrayList<OrderItems> itemList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_ITEMS_DETAILS)) {
+                PreparedStatement statement = conn.prepareStatement(GET_ITEMS)) {
             statement.setInt(1, orderID);
 
             ResultSet result = statement.executeQuery();
@@ -122,6 +171,7 @@ public class OrderDAO {
             if (result != null) {
                 while (result.next()) {
                     int orderItemID = result.getInt("orderItemID");
+                    orderID = result.getInt("orderID");
                     int productID = result.getInt("productID");
                     double price = result.getDouble("price");
                     int quantity = result.getInt("quantity");

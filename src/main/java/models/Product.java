@@ -11,8 +11,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int productID, String productName, double price, int stockLevel, String description,
-            String categoryName) {
+    public Product(int productID, String productName, double price, int stockLevel, String description, String categoryName) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
@@ -71,13 +70,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "productID='" + productID +
-                ", productName='" + productName + '\'' +
-                ", price=" + price + '\'' +
-                ", stockLevel=" + stockLevel +
-                ", description='" + description + '\'' +
-                ", categoryName='" + categoryName + '\'' +
-                '}';
+        return "productID: " + productID + ", productName: " + productName + ", price: " + price + 
+               ", stockLevel: " + stockLevel + ", description: " + description + ", categoryName: " + categoryName;
     }
 }

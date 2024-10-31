@@ -22,6 +22,15 @@ public class Order {
         this.totalPrice = totalPrice;
         this.status = status;
     }
+    
+    public Order(int orderID, int customerID) {
+        this.orderID = orderID;
+        this.customerID = customerID;
+        this.orderDate = null;
+        this.items = null;
+        this.totalPrice = 0;
+        this.status = "Not confirmed";
+    }
 
     public int getOrderID() {
         return orderID;
@@ -59,8 +68,8 @@ public class Order {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotalPrice() {
+        calculateTotalPrice();
     }
 
     public String getStatus() {
@@ -71,7 +80,7 @@ public class Order {
         this.status = status;
     }
 
-    public void calculateTotalPrice() {
+    private void calculateTotalPrice() {
         double total = 0;
         for (OrderItems item : items) {
             total += item.getTotalPrice();
@@ -81,13 +90,10 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderID=" + orderID +
-                ", customerID=" + customerID + '\'' +
-                ", orderDate='" + orderDate + '\'' +
-                ", items=" + items + '\'' +
-                ", totalPrice=" + totalPrice + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+        return "orderID: " + orderID + ", customerID: " + customerID + ", orderDate: " + orderDate + ", totalPrice: " + totalPrice + ", status: " + status;
+    }
+    
+    public String getDetails(){
+        return "orderID: " + orderID + ", customerID: " + customerID + ", orderDate: " + orderDate + ", status: " + status + items + "totalPrice: " + totalPrice;
     }
 }

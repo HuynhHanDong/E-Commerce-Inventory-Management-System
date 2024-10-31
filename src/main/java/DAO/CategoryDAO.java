@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CategoryDAO {
-    private static final String ADD_CATEGORY = "INSERT INTO Category (CategoryID, CategoryName) VALUES (?, ?);";
+    private static final String ADD_CATEGORY = "INSERT INTO Category (CategoryName) VALUES (?);";
     private static final String UPDATE_CATEGORY = "UPDATE Category SET CategoryName = ? WHERE CategoryID = ?;";
     private static final String DELETE_CATEGORY = "DELETE FROM Category WHERE CategoryID = ?;";
     private static final String GET_CATEGORY_BY_ID = "SELECT * FROM Category WHERE CategoryID = ?;";
@@ -18,8 +18,7 @@ public class CategoryDAO {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_CATEGORY)) {
-            statement.setInt(1, category.getCategoryID());
-            statement.setString(2, category.getCategoryName());
+            statement.setString(1, category.getCategoryName());
             result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, e);
