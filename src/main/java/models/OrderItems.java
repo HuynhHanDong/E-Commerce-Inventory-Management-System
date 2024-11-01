@@ -70,12 +70,6 @@ public class OrderItems implements Serializable {
     
     @Override
     public String toString() {
-        return "OrderItem{" +
-                "orderItemID='" + orderItemID +
-                ", orderID='" + orderID + '\'' +
-                ", productID='" + productID + '\'' +
-                ", price=" + price + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return "orderItemID: " + orderItemID + ", productID: " + productID + ", price: " + price + ", quantity: " + quantity;
     }
 }

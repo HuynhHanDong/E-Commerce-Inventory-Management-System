@@ -20,7 +20,7 @@ import models.Product;
  * @author Huynh Han Dong
  */
 public class ProductDAO {
-    private static final String ADD_PRODUCT = "INSERT INTO Products (ProductID, ProductName, CategoryID, Price, StockLevel, Description) VALUES (?,?,?,?,?,?);";
+    private static final String ADD_PRODUCT = "INSERT INTO Products (ProductName, CategoryID, Price, StockLevel, Description) VALUES (?,?,?,?,?);";
     private static final String UPDATE_PRODUCT = "UPDATE Products SET ProductName = ?, CategoryID = ?, Price = ?, StockLevel = ?, Description = ? WHERE ProductID = ?;";
     private static final String UPDATE_STOCK_LEVEL = "UPDATE Products SET StockLevel = ? WHERE ProductID = ?;";
     private static final String DELETE_PRODUCT = "DELETE FROM Products WHERE ProductID = ?;";
@@ -33,12 +33,12 @@ public class ProductDAO {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_PRODUCT)) {
-            statement.setInt(1, product.getProductID());
-            statement.setString(2, product.getProductName());
-            statement.setString(3, product.getCategory());
-            statement.setDouble(4, product.getPrice());
-            statement.setInt(5, product.getStockLevel());
-            statement.setString(6, product.getDescription());
+            statement.setString(1, product.getProductName());
+            
+            statement.setString(2, product.getCategory());
+            statement.setDouble(3, product.getPrice());
+            statement.setInt(4, product.getStockLevel());
+            statement.setString(5, product.getDescription());
 
             result = statement.executeUpdate();
         } catch (SQLException e) {
@@ -105,7 +105,7 @@ public class ProductDAO {
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stock");
+                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
                     product = new Product(productID, productName, price, stock, description, category);
                 }
@@ -131,7 +131,7 @@ public class ProductDAO {
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stock");
+                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
                     product = new Product(productID, productName, price, stock, description, category);
                 }
@@ -155,7 +155,7 @@ public class ProductDAO {
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stock");
+                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
                     productList.add(new Product(productID, productName, price, stock, description, category));
                 }
@@ -181,7 +181,7 @@ public class ProductDAO {
                     productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stock");
+                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
                     product = new Product(productID, productName, price, stock, description, category);
                 }

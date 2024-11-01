@@ -40,10 +40,6 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return "Inventory{" +
-                "productID='" + productID + '\'' +
-                ", currentStock=" + currentStock + '\'' +
-                ", lowStockThreshold=" + lowStockThreshold + '\'' +
-                '}';
+        return "productID: " + productID + ", currentStock: " + currentStock + ", lowStockThreshold: " + lowStockThreshold;
     }
 }

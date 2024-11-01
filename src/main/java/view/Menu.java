@@ -69,7 +69,7 @@ public class Menu {
         System.out.println("| 2. Update inventory item             |");
         System.out.println("| 1. View stock levels by product      |");
         System.out.println("| 2. View stock levels of all products |");
-        System.out.println("| 0. Go back"); 
+        System.out.println("| 0. Go back                           |"); 
         System.out.println("+--------------------------------------+");
     }
     
@@ -90,6 +90,32 @@ public class Menu {
         System.out.println("| 3. Remove item from cart             |");
         System.out.println("| 4. View order details                |");
         System.out.println("| 5. Confirm order                     |");
+        System.out.println("| 0. Go back                           |");
+        System.out.println("+--------------------------------------+");
+    }
+    
+    public void confirmOrderMenu(){
+        System.out.println("+----------- Confirm Order ------------+");
+        System.out.println("| 1. YES                               |");
+        System.out.println("| 0. NO                                |");
+        System.out.println("+--------------------------------------+");
+    }
+    
+    public void orderHistoryMenu(){
+        System.out.println("+----------- Order History ------------+");
+        System.out.println("| 1. View all                          |");
+        System.out.println("| 2. View status                       |");
+        System.out.println("| 0. Go back                           |");
+        System.out.println("+--------------------------------------+");
+    }
+
+    public void orderHistorySubMenu(){
+        System.out.println("+----------- Order History ------------+");
+        System.out.println("| 1. Pending                           |");
+        System.out.println("| 2. In progress                       |");
+        System.out.println("| 3. In transit                        |");
+        System.out.println("| 4. Finished                          |");
+        System.out.println("| 5. Canceled                          |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
     }

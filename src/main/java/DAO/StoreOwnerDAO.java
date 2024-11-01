@@ -1,6 +1,5 @@
 package DAO;
 
-import models.StoreOwner;
 import utils.PasswordHasher;
 import utils.JDBCConnection;
 import java.sql.*;
@@ -22,12 +21,10 @@ public class StoreOwnerDAO implements AuthDAO {
     }
 
     @Override
-    public boolean authenticate(int id, String username, String email, String password) {
-        String sql = "SELECT Password FROM StoreOwner WHERE StoreOwnerID = ? AND Email = ? AND Username = ?";
+    public boolean authenticate(String username, String password) {
+        String sql = "SELECT Password FROM StoreOwner Username = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.setString(2, email);
-            pstmt.setString(3, username);
+            pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 String storedUsername = rs.getString("username");

@@ -37,8 +37,7 @@ public class LoginMenuController extends BaseController {
 
     private void loginStoreOwner() {
         StoreOwner storeOwner = getStoreOwnerInfo();
-        if (storeOwner != null && storeOwnerDAO.authenticate(storeOwner.getStoreownerID(), storeOwner.getUsername(),
-                storeOwner.getEmail(), storeOwner.getPassword())) {
+        if (storeOwner != null && storeOwnerDAO.authenticate(storeOwner.getUsername(), storeOwner.getPassword())) {
             System.out.println("Store owner login successful!");
             new StoreOwnerMenuController(storeOwner).displayStoreOwnerMenu();
         } else {
@@ -48,8 +47,7 @@ public class LoginMenuController extends BaseController {
 
     private void loginCustomer() {
         Customer customer = getCustomerInfo();
-        if (customer != null && customerDAO.authenticate(customer.getCustomerID(), customer.getUsername(),
-                customer.getEmail(), customer.getPassword())) {
+        if (customer != null && customerDAO.authenticate(customer.getUsername(), customer.getPassword())) {
             System.out.println("Customer login successful!");
             new CustomerMenuController(customer).displayCustomerMenu();
         } else {
@@ -96,23 +94,9 @@ public class LoginMenuController extends BaseController {
         String email = "";
         String password = "";
 
-        while (!StoreOwnerValidation.isValidId(id)) {
-            System.out.println("Enter customer ID:");
-            try {
-                id = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid integer for ID.");
-            }
-        }
-
         while (!StoreOwnerValidation.isValidUsername(username)) {
             System.out.println("Enter username:");
             username = scanner.nextLine();
-        }
-
-        while (!StoreOwnerValidation.isValidEmail(email)) {
-            System.out.println("Enter email:");
-            email = scanner.nextLine();
         }
 
         while (!StoreOwnerValidation.isValidPassword(password)) {
