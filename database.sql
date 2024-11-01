@@ -65,6 +65,17 @@ CREATE TABLE Inventory
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
 
+CREATE TABLE Reports
+(
+    ReportID INT PRIMARY KEY IDENTITY(1,1),
+    ReportType VARCHAR(20) NOT NULL,
+    GeneratedDate DATETIME NOT NULL,
+    StartDate DATETIME,
+    EndDate DATETIME,
+    TotalAmount DECIMAL(18,2) NOT NULL,
+    Status VARCHAR(20) NOT NULL
+)
+
 -- Insert sample customer with BCrypt hashed password
 INSERT INTO Customer
     (Username, Email, Password)
