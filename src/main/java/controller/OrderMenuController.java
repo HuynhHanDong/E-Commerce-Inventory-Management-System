@@ -121,27 +121,35 @@ public class OrderMenuController extends BaseController {
     }  
     
     private void viewCart() {
-        for (OrderItems item : cart) {
-            System.out.println(item.toString());
+        if (cart.isEmpty()) {
+            System.out.println("Nothing in cart.");
+        } else {
+            for (OrderItems item : cart) {
+                System.out.println(item.toString());
+            }  
         }
     }
     
     private void confirmOrder() {
-        System.out.println("+------------ Place Order -------------+");
-        viewCart();
-        System.out.println("Total price: " + order.getTotalPrice());
-        System.out.println("+--------------------------------------+");
-        System.out.println("| Confirm Order?                       |");
-        System.out.println("| 1. YES                               |");
-        System.out.println("| 0. NO                                |");
-        System.out.println("+--------------------------------------+");
-        int choice = getValidChoice(0,1);
-        if (choice == 1) {
-            addOrder();
-            order = null;
-            cart.clear();
+        if (cart.isEmpty()) {
+            System.out.println("Nothing in cart.");
         } else {
-            System.out.println("Continue shopping... ");
+            System.out.println("+------------ Place Order -------------+");
+            viewCart();
+            System.out.println("Total price: " + order.getTotalPrice());
+            System.out.println("+--------------------------------------+");
+            System.out.println("| Confirm Order?                       |");
+            System.out.println("| 1. YES                               |");
+            System.out.println("| 0. NO                                |");
+            System.out.println("+--------------------------------------+");
+            int choice = getValidChoice(0,1);
+            if (choice == 1) {
+                addOrder();
+                order = null;
+                cart.clear();
+            } else {
+                System.out.println("Continue shopping... ");
+            }
         }
     }
     
@@ -149,12 +157,14 @@ public class OrderMenuController extends BaseController {
         Date orderDate = new Date(System.currentTimeMillis());
         int result = orderDAO.addOrder(customerID, orderDate, order.getTotalPrice(),"Pending");
         if (result > 0) {
+            int orderID = orderDAO.getOrderID();
+            System.out.println("OrderID = "+orderID);
             for (OrderItems item : cart){
-                item.setOrderID(result);
+                item.setOrderID(orderID);
             }
             result = orderDAO.addItems(cart);
             if (result > 0) {
-                System.out.println("Added orderItems successfully.");
+                System.out.println("Placed order successfully.");
             } else {
                 System.out.println("Failed to add orderItems.");
             }

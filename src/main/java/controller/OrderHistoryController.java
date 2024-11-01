@@ -27,7 +27,7 @@ public class OrderHistoryController extends BaseController{
         int choice;
         do {
             menu.orderHistoryMenu();
-            choice = getValidChoice(0, 5);
+            choice = getValidChoice(0, 3);
             
             switch (choice) {
                 case 1:
@@ -35,8 +35,8 @@ public class OrderHistoryController extends BaseController{
                     break;
                 case 2:
                     menu.orderHistorySubMenu();
-                    choice = getValidChoice(0, 5);
-                    switch (choice) {
+                    int status = getValidChoice(0, 5);
+                    switch (status) {
                         case 1:
                             viewOrdersByStatus("Pending");
                             break;
@@ -55,6 +55,10 @@ public class OrderHistoryController extends BaseController{
                         case 0:
                             break;
                     }
+                    break;
+                case 3:
+                    cancelOrder();
+                    break;
                 case 0:
                     System.out.println("Going back to Customer Menu...");
                     break;
@@ -95,14 +99,24 @@ public class OrderHistoryController extends BaseController{
         }
     }
     
-    public void cancelOrder() {
+    private void cancelOrder() {
         System.out.println("Enter orderID to cancel:");
-        int id = scanner.nextInt();
-        int result = orderDAO.updateOrder("Cancelled", id);
-        if (result > 0) {
-            System.out.println("Cancelled order.");
+        int orderID = scanner.nextInt();
+        Order order = orderDAO.getOrderByID(orderID, customerID);
+        if (order != null) {
+            if (order.getStatus() != "In transit" || order.getStatus() != "Finished") {
+                int result = orderDAO.updateOrder("Cancelled", orderID);
+                if (result > 0) {
+                    System.out.println("Cancelled order.");
+                } else {
+                    System.out.println("Failed to cancel order.");
+                }
+            } else {
+                    System.out.println("Cannot cancel. This order is in transit or already finished.");
+            }
         } else {
             System.out.println("Order not found.");
         }
+        
     }
 }

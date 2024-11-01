@@ -22,27 +22,24 @@ public class OrderDAO {
     private static final String GET_ALL_ORDERS = "SELECT * FROM Orders WHERE CustomerID = ?;";
     private static final String GET_ORDER_BY_ID = "SELECT * FROM Orders WHERE OrderID = ? AND CustomerID = ?;";
     private static final String GET_ORDER_BY_STATUS = "SELECT * FROM Orders WHERE CustomerID = ? AND Status = ?;";
+    private static final String GET_ORDERID = "SELECT MAX(OrderID) AS OrderID FROM Orders;";
     private static final String ADD_ITEMS = "INSERT INTO OrderItems (OrderID, ProductID, Price, Quantity) VALUES (?,?,?,?);";
     private static final String GET_ITEMS = "SELECT * FROM OrderItems WHERE OrderID = ?;";
 
     public int addOrder(int customerID, Date orderDate, Double totalPrice, String status) {
-        int orderID = 0;
+        int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
             statement.setInt(1, customerID);
             statement.setDate(2, orderDate);
             statement.setDouble(3, totalPrice);
             statement.setString(4, status);
-
-            ResultSet result = statement.executeQuery();
-            if (result != null) {
-                System.out.println("Esult: "+result);
-                orderID = result.getInt("orderID");
-            }
+            
+            result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
-        return orderID;
+        return result;
     }
     
     public int updateOrder(String status, int orderID) {
@@ -140,6 +137,21 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return orderList;
+    }
+    
+    public int getOrderID() {
+        int orderID = 0;
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDERID)) {
+                ResultSet result = statement.executeQuery();
+                if (result != null && result.next()) {
+                    orderID = result.getInt("OrderID");
+                }
+            
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return orderID;
     }
 
     public int addItems(ArrayList<OrderItems> items) {

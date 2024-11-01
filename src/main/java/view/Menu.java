@@ -105,6 +105,7 @@ public class Menu {
         System.out.println("+----------- Order History ------------+");
         System.out.println("| 1. View all                          |");
         System.out.println("| 2. View status                       |");
+        System.out.println("| 3. Cancel order                      |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
     }
