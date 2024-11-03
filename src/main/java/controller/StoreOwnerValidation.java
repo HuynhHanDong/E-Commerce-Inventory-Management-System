@@ -89,8 +89,8 @@ public class StoreOwnerValidation {
             return false;
         }
 
-        if (productName.length() < 3 || productName.length() > 50) {
-            System.out.println("Product name must be between 3 and 50 characters.");
+        if (productName.length() < 3 || productName.length() > 100) {
+            System.out.println("Product name must be between 3 and 100 characters.");
             return false;
         }
 
@@ -102,13 +102,13 @@ public class StoreOwnerValidation {
     }
 
     public static boolean isValidPrice(double price) {
-        if (price <= 0) {
-            System.out.println("Price must be greater than 0.");
-            return false;
-        }
-
-        if (!String.valueOf(price).matches("^\\d+(\\.\\d{1,2})?$")) {
-            System.out.println("Price must be a number with up to 2 decimal places.");
+        try {
+            if (price <= 0) {
+                System.out.println("Price must be greater than 0.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Product ID must be a positive integer.");
             return false;
         }
         return true;

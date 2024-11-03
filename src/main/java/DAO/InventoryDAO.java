@@ -12,10 +12,10 @@ import models.Inventory;
 import utils.JDBCConnection;
 
 public class InventoryDAO {
-    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, CurrentStock, LowStockThreshold) VALUES (?, ?, ?);";
-    private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET CurrentStock = ?, LowStockThreshold = ? WHERE ProductID = ?;";
-    private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE ProductID = ?;";
-    private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE ProductID = ?;";
+    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, StockLevel, LowStockThreshold) VALUES (?, ?, ?);";
+    private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET StockLevel = ?, LowStockThreshold = ? WHERE ProductID = ?;";
+    private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE InventoryID = ?;";
+    private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE InventoryID = ?;";
     private static final String GET_ALL_INVENTORY_ITEMS = "SELECT * FROM Inventory;";
 
     public boolean addInventoryItem(Inventory inventory) {
@@ -23,7 +23,7 @@ public class InventoryDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_INVENTORY_ITEM)) {
             statement.setInt(1, inventory.getProductID());
-            statement.setInt(2, inventory.getCurrentStock());
+            statement.setInt(2, inventory.getStockLevel());
             statement.setInt(3, inventory.getLowStockThreshold());
             success = statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -36,7 +36,8 @@ public class InventoryDAO {
         boolean success = false;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(UPDATE_INVENTORY_ITEM)) {
-            statement.setInt(1, inventory.getCurrentStock());
+            
+            statement.setInt(1, inventory.getStockLevel());
             statement.setInt(2, inventory.getLowStockThreshold());
             statement.setInt(3, inventory.getProductID());
             success = statement.executeUpdate() > 0;
@@ -66,8 +67,11 @@ public class InventoryDAO {
             ResultSet result = statement.executeQuery();
             if (result != null) {
                 if (result.next()) {
-                    inventory = new Inventory(result.getInt("productID"), result.getInt("currentStock"),
-                            result.getInt("lowStockThreshold"));
+                    int inventoryID = result.getInt("inventoryID");
+                    productID = result.getInt("productID");
+                    int stockLevel = result.getInt("stockLevel");
+                    int lowStockThreshold = result.getInt("lowStockThreshold");
+                    inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold);
                 }
             }
             conn.close();

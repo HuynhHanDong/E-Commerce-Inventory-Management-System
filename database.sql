@@ -1,4 +1,5 @@
 CREATE DATABASE ECommerceDB;
+GO;
 
 USE ECommerceDB;
 
@@ -30,8 +31,7 @@ CREATE TABLE Products
     ProductName NVARCHAR(100) NOT NULL,
     CategoryID INT NOT NULL,
     Price DECIMAL(10, 2) NOT NULL,
-    StockLevel INT NOT NULL,
-    Description NVARCHAR(MAX),
+    Description NVARCHAR(200),
     FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
 );
 
@@ -60,7 +60,7 @@ CREATE TABLE Inventory
 (
     InventoryID INT PRIMARY KEY IDENTITY(1,1),
     ProductID INT NOT NULL,
-    CurrentStock INT NOT NULL,
+    StockLevel INT NOT NULL,
     LowStockThreshold INT NOT NULL,
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
@@ -77,15 +77,13 @@ CREATE TABLE Reports
 )
 
 -- Insert sample customer with BCrypt hashed password
-INSERT INTO Customer
-    (Username, Email, Password)
-VALUES
-    ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
+INSERT INTO Customer (Username, Email, Password) VALUES ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
 
 -- Insert sample store owner with BCrypt hashed password
-INSERT INTO StoreOwner
-    (Username, Email, Password)
-VALUES
-    ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
+INSERT INTO StoreOwner (Username, Email, Password) VALUES ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
 
 -- The password for both users is 'password123'
+
+INSERT INTO Category (CategoryName) VALUES ('electronics'),('vehicle'),('clothes');
+INSERT INTO Products (ProductName, CategoryID, Price, Description) VALUES ('tivi','1',6590000,'tivi LG'), ('iphone13','1',13670000,'iphone 13') ,('tivi','1',7890000,'tivi SAMSUNG');
+

@@ -24,16 +24,16 @@ public class ProductDAO {
     private static final String UPDATE_PRODUCT = "UPDATE Products SET ProductName = ?, CategoryID = ?, Price = ?, Description = ? WHERE ProductID = ?;";
     private static final String DELETE_PRODUCT = "DELETE FROM Products WHERE ProductID = ?;";
     private static final String GET_PRODUCT_ID = "SELECT MAX(ProductID) AS ProductID FROM Products;";
+    private static final String GET_PRODUCT_BY_ID = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE ProductID = ?";
     private static final String GET_PRODUCT_WITH_CONDITION = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE ";
     private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
 
-    public int addProduct(Product product) {
+    public int addProduct(Product product, int categoryID) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_PRODUCT)) {
             statement.setString(1, product.getProductName());
-            
-            statement.setString(2, product.getCategory());
+            statement.setInt(2, categoryID);
             statement.setDouble(3, product.getPrice());
             statement.setString(4, product.getDescription());
 
@@ -44,12 +44,12 @@ public class ProductDAO {
         return result;
     }
 
-    public int updateProduct(Product product) {
+    public int updateProduct(Product product, int categoryID) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT)) {
             statement.setString(1, product.getProductName());
-            statement.setString(2, product.getCategory());
+            statement.setInt(2, categoryID);
             statement.setDouble(3, product.getPrice());
             statement.setString(4, product.getDescription());
             statement.setInt(5, product.getProductID());
@@ -73,7 +73,7 @@ public class ProductDAO {
         return result;
     }
     
-    public int getproductID() {
+    public int getProductID() {
         int productID = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_ID)) {
@@ -87,17 +87,18 @@ public class ProductDAO {
         }
         return productID;
     }
-
-    public Product searchProduct(String condition) {
+    
+    public Product getProductByID(int productID) {
         Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_WITH_CONDITION + condition)) {
+                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_ID)) {
+            statement.setInt(1, productID);
 
             ResultSet result = statement.executeQuery();
 
             if (result != null) {
                 while (result.next()) {
-                    int productID = result.getInt("productID");
+                    productID = result.getInt("productID");
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
@@ -110,6 +111,30 @@ public class ProductDAO {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return product;
+    }
+
+    public ArrayList<Product> searchProduct(String condition) {
+        ArrayList<Product> productList = new ArrayList<>();
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_WITH_CONDITION + condition)) {
+
+            ResultSet result = statement.executeQuery();
+
+            if (result != null) {
+                while (result.next()) {
+                    int productID = result.getInt("productID");
+                    String productName = result.getString("productName");
+                    String category = result.getString("categoryName");
+                    double price = result.getDouble("price");
+                    String description = result.getString("description");
+                    productList.add(new Product(productID, productName, price, description, category));
+                }
+            }
+            conn.close();
+        } catch (SQLException e) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return productList;
     }
     
     public ArrayList<Product> viewAllProducts() {

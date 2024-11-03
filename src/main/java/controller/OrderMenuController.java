@@ -57,9 +57,9 @@ public class OrderMenuController extends BaseController {
         if (order == null) {
             order = new Order();
         }
-        System.out.println("Enter product id: ");
-        int id = scanner.nextInt();
-        Product product = productDAO.searchProductsById(id);
+        System.out.println("Enter product ID: ");
+        int productID = scanner.nextInt();
+        Product product = productDAO.getProductByID(productID);
         if (product != null) {
             System.out.println("Enter quantity: ");
             int quantity = scanner.nextInt();

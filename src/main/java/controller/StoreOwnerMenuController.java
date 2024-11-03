@@ -3,9 +3,9 @@ package controller;
 import models.StoreOwner;
 
 public class StoreOwnerMenuController extends BaseController {
-    private ProductMenuController productMenuController;
-    private CategoryMenuController categoryMenuController;
-    private InventoryMenuController inventoryMenuController;
+    private final ProductMenuController productMenuController;
+    private final CategoryMenuController categoryMenuController;
+    private final InventoryMenuController inventoryMenuController;
 
     public StoreOwnerMenuController(StoreOwner storeOwner) {
         super();

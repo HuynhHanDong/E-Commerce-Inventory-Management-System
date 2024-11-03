@@ -3,9 +3,11 @@ package controller;
 import models.Product;
 import DAO.ProductDAO;
 import java.util.List;
+import DAO.CategoryDAO;
+import models.Category;
 
 public class ProductMenuController extends BaseController {
-    private ProductDAO productDAO;
+    private final ProductDAO productDAO;
 
     public ProductMenuController() {
         super();
@@ -53,6 +55,7 @@ public class ProductMenuController extends BaseController {
             if (!StoreOwnerValidation.isValidCategoryName(categoryName)) {
                 return;
             }
+            int categoryID = getCategoryID(categoryName);
 
             System.out.println("Enter price:");
             double price = Double.parseDouble(scanner.nextLine());
@@ -67,9 +70,9 @@ public class ProductMenuController extends BaseController {
             }
 
             Product product = new Product(0, productName, price, description, categoryName);
-            int result = productDAO.addProduct(product);
+            int result = productDAO.addProduct(product, categoryID);
             if (result > 0) {
-                int productID = productDAO.getproductID();
+                int productID = productDAO.getProductID();
                 System.out.println("Product added successfully. ProductID: " + productID);
             } else {
                 System.out.println("Failed to add product.");
@@ -87,7 +90,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product existingProduct = productDAO.searchProduct("ProductID = " + productID);
+            Product existingProduct = productDAO.getProductByID(productID);
             if (existingProduct == null) {
                 System.out.println("Product not found.");
                 return;
@@ -128,8 +131,10 @@ public class ProductMenuController extends BaseController {
 
             if (!description.isEmpty())
                 existingProduct.setDescription(description);
+            
+            int categoryID = getCategoryID(existingProduct.getCategory());
 
-            int result = productDAO.updateProduct(existingProduct);
+            int result = productDAO.updateProduct(existingProduct, categoryID);
             if (result > 0) {
                 System.out.println("Product updated successfully.");
             } else {
@@ -148,7 +153,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product existingProduct = productDAO.searchProduct("ProductID = " + productID);
+            Product existingProduct = productDAO.getProductByID(productID);
             if (existingProduct == null) {
                 System.out.println("Product not found.");
                 return;
@@ -177,7 +182,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product product = productDAO.searchProduct("ProductID = " + productID);
+            Product product = productDAO.getProductByID(productID);
             if (product != null) {
                 System.out.println(product.toString());
             } else {
@@ -196,9 +201,11 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product product = productDAO.searchProduct("productName = '" + productName + "'");
-            if (product != null) {
-                System.out.println(product.toString());
+            List<Product>  productList = productDAO.searchProduct("productName = '" + productName + "'");
+            if (productList != null) {
+                for (Product product : productList) {
+                    System.out.println(product.toString());
+                }
             } else {
                 System.out.println("Product not found.");
             }
@@ -215,9 +222,11 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product product = productDAO.searchProduct("CategoryName = '" + categoryName + "'");
-            if (product != null) {
-                System.out.println(product.toString());
+            List<Product> productList = productDAO.searchProduct("CategoryName = '" + categoryName + "'");
+            if (productList != null) {
+                for (Product product : productList) {
+                    System.out.println(product.toString());
+                }
             } else {
                 System.out.println("No products found in this category.");
             }
@@ -229,7 +238,7 @@ public class ProductMenuController extends BaseController {
     public void searchProduct() {
         try {
             System.out.println("How would you like to search: \n" +
-                    "[1]. ProductID \n" +
+                    "[1]. Product ID \n" +
                     "[2]. Product Name \n" +
                     "[3]. Category Name \n" +
                     "[0]. Go back");
@@ -267,5 +276,17 @@ public class ProductMenuController extends BaseController {
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
+    }
+    
+    private int getCategoryID(String categoryName) {
+        int categoryID = 0;
+        CategoryDAO categoryDAO = new CategoryDAO();
+        Category category = categoryDAO.getCategory("CategoryName = '" + categoryName + "'");
+        if (category != null) {
+            categoryID = category.getCategoryID();
+        } else{
+            System.out.println("Category not found.");
+        }
+        return categoryID;
     }
 }

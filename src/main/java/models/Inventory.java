@@ -1,17 +1,27 @@
 package models;
 
 public class Inventory {
+    private int inventoryID;
     private int productID;
-    private int currentStock; // Mức tồn kho hiện tại
+    private int stockLevel; // Mức tồn kho hiện tại
     private int lowStockThreshold; // Cảnh báo mức độ tồn kho thấp
 
     public Inventory() {
     }
 
-    public Inventory(int productID, int currentStock, int lowStockThreshold) {
+    public Inventory(int inventoryID, int productID, int stockLevel, int lowStockThreshold) {
+        this.inventoryID = inventoryID;
         this.productID = productID;
-        this.currentStock = currentStock;
+        this.stockLevel = stockLevel;
         this.lowStockThreshold = lowStockThreshold;
+    }
+    
+    public int getInventoryID() {
+        return this.inventoryID;
+    }
+    
+    public void setInventoryID(int inventoryID) {
+        this.inventoryID = inventoryID;
     }
 
     public int getProductID() {
@@ -22,12 +32,12 @@ public class Inventory {
         this.productID = productID;
     }
 
-    public int getCurrentStock() {
-        return currentStock;
+    public int getStockLevel() {
+        return stockLevel;
     }
 
-    public void setCurrentStock(int currentStock) {
-        this.currentStock = currentStock;
+    public void setCurrentStock(int stockLevel) {
+        this.stockLevel = stockLevel;
     }
 
     public int getLowStockThreshold() {
@@ -40,6 +50,6 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return "productID: " + productID + ", currentStock: " + currentStock + ", lowStockThreshold: " + lowStockThreshold;
+        return "invetoryID: " + inventoryID + ", productID: " + productID + ", stockLevel: " + stockLevel + ", lowStockThreshold: " + lowStockThreshold;
     }
 }
