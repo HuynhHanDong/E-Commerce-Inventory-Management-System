@@ -1,6 +1,5 @@
 package controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class StoreOwnerValidation {
@@ -26,14 +25,14 @@ public class StoreOwnerValidation {
                 System.out.println("ID cannot be empty.");
                 return false;
             }
-            if (String.valueOf(id).length() != 4) {
-                System.out.println("ID must be 4 digits.");
+            if (id <= 0) {
+                System.out.println("ID must be greater than 0.");
                 return false;
             }
 
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("ID must be a valid number.");
+            System.out.println("ID must be a positive integer.");
             return false;
         }
     }
@@ -73,13 +72,13 @@ public class StoreOwnerValidation {
                 System.out.println("Product ID cannot be empty.");
                 return false;
             }
-            if (String.valueOf(productID).length() != 4) {
-                System.out.println("Product ID must be 4 digits.");
+            if (productID <= 0) {
+                System.out.println("Product ID must be greater than 0.");
                 return false;
             }
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Product ID must be a valid number.");
+            System.out.println("Product ID must be a positive integer.");
             return false;
         }
     }
@@ -108,11 +107,6 @@ public class StoreOwnerValidation {
             return false;
         }
 
-        if (price > 1000) {
-            System.out.println("Price must be less than 1000."); // mn muốn cho price khoảng bao nhiêu vậy:D?
-            return false;
-        }
-
         if (!String.valueOf(price).matches("^\\d+(\\.\\d{1,2})?$")) {
             System.out.println("Price must be a number with up to 2 decimal places.");
             return false;
@@ -127,13 +121,13 @@ public class StoreOwnerValidation {
                 return false;
             }
 
-            if (quantity < 0 || quantity > 1000) {
-                System.out.println("Quantity must be between 0 and 1000.");
+            if (quantity < 0) {
+                System.out.println("Quantity must be greater than 0");
                 return false;
             }
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Quantity must be a valid number.");
+            System.out.println("Quantity must be a positive integer.");
             return false;
         }
     }
@@ -175,7 +169,7 @@ public class StoreOwnerValidation {
             }
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Stock level must be a valid number.");
+            System.out.println("Stock level must be a positive integer.");
             return false;
         }
     }
@@ -186,8 +180,8 @@ public class StoreOwnerValidation {
             return false;
         }
 
-        if (description.length() < 10 || description.length() > 200) {
-            System.out.println("Description must be between 10 and 200 characters.");
+        if (description.length() < 0 || description.length() > 200) {
+            System.out.println("Description must be between 0 and 200 characters.");
             return false;
         }
 

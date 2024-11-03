@@ -92,8 +92,4 @@ public class Order {
     public String toString() {
         return "orderID: " + orderID + ", customerID: " + customerID + ", orderDate: " + orderDate + ", totalPrice: " + totalPrice + ", status: " + status;
     }
-    
-    public String getDetails(){
-        return "orderID: " + orderID + ", customerID: " + customerID + ", orderDate: " + orderDate + ", status: " + status + items + "totalPrice: " + totalPrice;
-    }
 }

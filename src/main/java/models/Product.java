@@ -3,19 +3,17 @@ package models;
 public class Product {
     private int productID;
     private String productName;
-    private double price;
-    private int stockLevel;
+    private double price;;
     private String description;
     private String categoryName;
 
     public Product() {
     }
 
-    public Product(int productID, String productName, double price, int stockLevel, String description, String categoryName) {
+    public Product(int productID, String productName, double price, String description, String categoryName) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
-        this.stockLevel = stockLevel;
         this.description = description;
         this.categoryName = categoryName;
     }
@@ -44,14 +42,6 @@ public class Product {
         this.price = price;
     }
 
-    public int getStockLevel() {
-        return stockLevel;
-    }
-
-    public void setStockLevel(int stockLevel) {
-        this.stockLevel = stockLevel;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -71,6 +61,6 @@ public class Product {
     @Override
     public String toString() {
         return "productID: " + productID + ", productName: " + productName + ", price: " + price + 
-               ", stockLevel: " + stockLevel + ", description: " + description + ", categoryName: " + categoryName;
+               ", description: " + description + ", categoryName: " + categoryName;
     }
 }

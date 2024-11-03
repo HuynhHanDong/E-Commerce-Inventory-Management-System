@@ -21,7 +21,7 @@ public class Menu {
     
     public void customerMenu(){
         System.out.println("+----------- Customer Menu ------------+");
-        System.out.println("| 1. View product details              |");
+        System.out.println("| 1. View all Products                 |");
         System.out.println("| 2. Search product                    |");
         System.out.println("| 3. Place order                       |");
         System.out.println("| 4. View order history                |");
@@ -45,9 +45,8 @@ public class Menu {
         System.out.println("| 1. Add product                       |");
         System.out.println("| 2. Update product details            |");
         System.out.println("| 3. Delete product                    |");
-        System.out.println("| 4. Search product by id              |");
-        System.out.println("| 5. Search product by category        |");
-        System.out.println("| 6. View all products                 |");
+        System.out.println("| 4. Search product                    |");
+        System.out.println("| 5. View all products                 |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
     }

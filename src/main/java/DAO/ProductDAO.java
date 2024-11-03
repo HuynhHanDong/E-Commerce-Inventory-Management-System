@@ -20,14 +20,12 @@ import models.Product;
  * @author Huynh Han Dong
  */
 public class ProductDAO {
-    private static final String ADD_PRODUCT = "INSERT INTO Products (ProductName, CategoryID, Price, StockLevel, Description) VALUES (?,?,?,?,?);";
-    private static final String UPDATE_PRODUCT = "UPDATE Products SET ProductName = ?, CategoryID = ?, Price = ?, StockLevel = ?, Description = ? WHERE ProductID = ?;";
-    private static final String UPDATE_STOCK_LEVEL = "UPDATE Products SET StockLevel = ? WHERE ProductID = ?;";
+    private static final String ADD_PRODUCT = "INSERT INTO Products (ProductName, CategoryID, Price, Description) VALUES (?,?,?,?);";
+    private static final String UPDATE_PRODUCT = "UPDATE Products SET ProductName = ?, CategoryID = ?, Price = ?, Description = ? WHERE ProductID = ?;";
     private static final String DELETE_PRODUCT = "DELETE FROM Products WHERE ProductID = ?;";
-    private static final String GET_PRODUCT_BY_ID = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE ProductID = ?;";
-    private static final String GET_PRODUCT_BY_CATEGORY = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE CategoryName = ?;";
-    private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
-    private static final String GET_PRODUCT_BY_NAME = "SELECT ProductID, ProductName, CategoryName, Price, StockLevel, Description FROM Products, Category WHERE ProductName = ?";
+    private static final String GET_PRODUCT_ID = "SELECT MAX(ProductID) AS ProductID FROM Products;";
+    private static final String GET_PRODUCT_WITH_CONDITION = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE ";
+    private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
 
     public int addProduct(Product product) {
         int result = 0;
@@ -37,8 +35,7 @@ public class ProductDAO {
             
             statement.setString(2, product.getCategory());
             statement.setDouble(3, product.getPrice());
-            statement.setInt(4, product.getStockLevel());
-            statement.setString(5, product.getDescription());
+            statement.setString(4, product.getDescription());
 
             result = statement.executeUpdate();
         } catch (SQLException e) {
@@ -54,23 +51,8 @@ public class ProductDAO {
             statement.setString(1, product.getProductName());
             statement.setString(2, product.getCategory());
             statement.setDouble(3, product.getPrice());
-            statement.setInt(4, product.getStockLevel());
-            statement.setString(5, product.getDescription());
-            statement.setInt(6, product.getProductID());
-
-            result = statement.executeUpdate();
-        } catch (SQLException e) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return result;
-    }
-
-    public int updateStockLevel(int productID, int newStockLevel) {
-        int result = 0;
-        try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(UPDATE_STOCK_LEVEL)) {
-            statement.setInt(1, newStockLevel);
-            statement.setInt(2, productID);
+            statement.setString(4, product.getDescription());
+            statement.setInt(5, product.getProductID());
 
             result = statement.executeUpdate();
         } catch (SQLException e) {
@@ -90,38 +72,26 @@ public class ProductDAO {
         }
         return result;
     }
-
-    public Product searchProductsById(int productID) {
-        Product product = null;
+    
+    public int getproductID() {
+        int productID = 0;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_ID)) {
-            statement.setInt(1, productID);
-
-            ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    productID = result.getInt("productID");
-                    String productName = result.getString("productName");
-                    String category = result.getString("categoryName");
-                    double price = result.getDouble("price");
-                    int stock = result.getInt("stocklevel");
-                    String description = result.getString("description");
-                    product = new Product(productID, productName, price, stock, description, category);
+                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_ID)) {
+                ResultSet result = statement.executeQuery();
+                if (result != null && result.next()) {
+                    productID = result.getInt("ProductID");
                 }
-            }
-            conn.close();
+            
         } catch (SQLException e) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
-        return product;
+        return productID;
     }
 
-    public Product searchProductsByCategory(String categoryName) {
+    public Product searchProduct(String condition) {
         Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_CATEGORY)) {
-            statement.setString(1, categoryName);
+                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_WITH_CONDITION + condition)) {
 
             ResultSet result = statement.executeQuery();
 
@@ -131,9 +101,8 @@ public class ProductDAO {
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
-                    product = new Product(productID, productName, price, stock, description, category);
+                    product = new Product(productID, productName, price, description, category);
                 }
             }
             conn.close();
@@ -142,7 +111,7 @@ public class ProductDAO {
         }
         return product;
     }
-
+    
     public ArrayList<Product> viewAllProducts() {
         ArrayList<Product> productList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
@@ -155,9 +124,8 @@ public class ProductDAO {
                     String productName = result.getString("productName");
                     String category = result.getString("categoryName");
                     double price = result.getDouble("price");
-                    int stock = result.getInt("stocklevel");
                     String description = result.getString("description");
-                    productList.add(new Product(productID, productName, price, stock, description, category));
+                    productList.add(new Product(productID, productName, price, description, category));
                 }
             }
             conn.close();
@@ -165,31 +133,5 @@ public class ProductDAO {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return productList;
-    }
-
-    public Product viewProductDetails(String productName) {
-        Product product = null;
-        try (Connection conn = JDBCConnection.getConnection();
-                PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_BY_NAME)) {
-            statement.setString(1, productName);
-
-            ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    int productID = result.getInt("productID");
-                    productName = result.getString("productName");
-                    String category = result.getString("categoryName");
-                    double price = result.getDouble("price");
-                    int stock = result.getInt("stocklevel");
-                    String description = result.getString("description");
-                    product = new Product(productID, productName, price, stock, description, category);
-                }
-            }
-            conn.close();
-        } catch (SQLException e) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return product;
     }
 }

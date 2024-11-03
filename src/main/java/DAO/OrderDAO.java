@@ -18,7 +18,7 @@ import utils.JDBCConnection;
  */
 public class OrderDAO {
     private static final String ADD_ORDER = "INSERT INTO Orders (CustomerID, OrderDate, TotalPrice, Status) VALUES (?,?,?,?);";
-    private static final String UPDATE_ORDER_STATUS = "UPDATE  Orders SET Status = ? WHERE OrderID = ?;";
+    private static final String UPDATE_ORDER_STATUS = "UPDATE Orders SET Status = ? WHERE OrderID = ?;";
     private static final String GET_ALL_ORDERS = "SELECT * FROM Orders WHERE CustomerID = ?;";
     private static final String GET_ORDER_BY_ID = "SELECT * FROM Orders WHERE OrderID = ? AND CustomerID = ?;";
     private static final String GET_ORDER_BY_STATUS = "SELECT * FROM Orders WHERE CustomerID = ? AND Status = ?;";

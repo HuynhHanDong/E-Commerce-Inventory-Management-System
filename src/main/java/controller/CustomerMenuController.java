@@ -24,7 +24,7 @@ public class CustomerMenuController extends BaseController {
 
             switch (choice) {
                 case 1:
-                    productMenuController.viewProductDetails();
+                    productMenuController.viewAllProducts();
                     break;
                 case 2:
                     productMenuController.searchProduct();
@@ -33,7 +33,7 @@ public class CustomerMenuController extends BaseController {
                     orderMenuController.displayOrderMenu();
                     break;
                 case 4:
-                    orderHistoryController.DisplayOrderHistoryMenu();
+                    orderHistoryController.viewOrderHistory();
                     break;
                 case 5:
                     orderHistoryController.viewOrderDetails();

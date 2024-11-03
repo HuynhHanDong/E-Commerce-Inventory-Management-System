@@ -47,13 +47,7 @@ public class OrderMenuController extends BaseController {
                     confirmOrder();
                     break;
                 case 0:
-                    if (checkConfirm()) {
-                        System.out.println("Going back to Customer Menu...");
-                        
-                    } else {
-                        System.out.println("Your order hasn't confirmed yet. Saved as draft.");
-                        System.out.println("Draft order will be erased when log out.");
-                    }
+                    checkConfirm();
                     break;
             }
         } while (choice != 0);
@@ -69,7 +63,7 @@ public class OrderMenuController extends BaseController {
         if (product != null) {
             System.out.println("Enter quantity: ");
             int quantity = scanner.nextInt();
-            cart.add(new OrderItems(0, 0, product.getProductID(), product.getPrice(), quantity )); // initialize orderID and orderItemID as zero
+            cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity )); // initialize orderID and orderItemID as zero
             order.setItems(cart);
             order.setTotalPrice();
             System.out.println("Added to cart.");
@@ -158,13 +152,12 @@ public class OrderMenuController extends BaseController {
         int result = orderDAO.addOrder(customerID, orderDate, order.getTotalPrice(),"Pending");
         if (result > 0) {
             int orderID = orderDAO.getOrderID();
-            System.out.println("OrderID = "+orderID);
             for (OrderItems item : cart){
                 item.setOrderID(orderID);
             }
             result = orderDAO.addItems(cart);
             if (result > 0) {
-                System.out.println("Placed order successfully.");
+                System.out.println("Placed order successfully. OrderID: " + orderID);
             } else {
                 System.out.println("Failed to add orderItems.");
             }
@@ -174,11 +167,12 @@ public class OrderMenuController extends BaseController {
         }
     }
     
-    private boolean checkConfirm() {
-        boolean check = false;
-        if (order == null) {
-            check = true;
+    private void checkConfirm() {
+        if (cart.isEmpty()) {
+            System.out.println("Going back to Customer Menu...");
+        } else {
+            System.out.println("Your order hasn't confirmed yet. Saved as draft.");
+            System.out.println("Draft order will be erased when log out.");
         }
-        return check;
     }
 }

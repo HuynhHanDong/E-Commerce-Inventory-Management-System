@@ -2,6 +2,7 @@ package controller;
 
 import models.Product;
 import DAO.ProductDAO;
+import java.util.List;
 
 public class ProductMenuController extends BaseController {
     private ProductDAO productDAO;
@@ -15,7 +16,7 @@ public class ProductMenuController extends BaseController {
         int choice;
         do {
             menu.productMenu();
-            choice = getValidChoice(0, 6);
+            choice = getValidChoice(0, 5);
             switch (choice) {
                 case 1:
                     addProduct();
@@ -27,13 +28,10 @@ public class ProductMenuController extends BaseController {
                     deleteProduct();
                     break;
                 case 4:
-                    searchProductById();
+                    searchProduct();
                     break;
                 case 5:
-                    searchProductByCategory();
-                    break;
-                case 6:
-                    productDAO.viewAllProducts();
+                    viewAllProducts();
                     break;
                 case 0:
                     System.out.println("Returning to main menu...");
@@ -44,12 +42,6 @@ public class ProductMenuController extends BaseController {
 
     private void addProduct() {
         try {
-            System.out.println("Enter product ID:");
-            int productID = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidProductID(productID)) {
-                return;
-            }
-
             System.out.println("Enter product name:");
             String productName = scanner.nextLine();
             if (!StoreOwnerValidation.isValidProductName(productName)) {
@@ -68,22 +60,17 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            System.out.println("Enter stock level:");
-            int stockLevel = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidStockLevel(stockLevel)) {
-                return;
-            }
-
             System.out.println("Enter description:");
             String description = scanner.nextLine();
             if (!StoreOwnerValidation.isValidDescription(description)) {
                 return;
             }
 
-            Product product = new Product(productID, productName, price, stockLevel, description, categoryName);
+            Product product = new Product(0, productName, price, description, categoryName);
             int result = productDAO.addProduct(product);
             if (result > 0) {
-                System.out.println("Product added successfully.");
+                int productID = productDAO.getproductID();
+                System.out.println("Product added successfully. ProductID: " + productID);
             } else {
                 System.out.println("Failed to add product.");
             }
@@ -100,7 +87,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product existingProduct = productDAO.searchProductsById(productID);
+            Product existingProduct = productDAO.searchProduct("ProductID = " + productID);
             if (existingProduct == null) {
                 System.out.println("Product not found.");
                 return;
@@ -124,12 +111,6 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            System.out.println("Enter new stock level (or -1 to skip):");
-            int stockLevel = Integer.parseInt(scanner.nextLine());
-            if (stockLevel != -1 && !StoreOwnerValidation.isValidStockLevel(stockLevel)) {
-                return;
-            }
-
             System.out.println("Enter new description (or press enter to skip):");
             String description = scanner.nextLine();
             if (!description.isEmpty() && !StoreOwnerValidation.isValidDescription(description)) {
@@ -144,9 +125,6 @@ public class ProductMenuController extends BaseController {
 
             if (price != -1)
                 existingProduct.setPrice(price);
-
-            if (stockLevel != -1)
-                existingProduct.setStockLevel(stockLevel);
 
             if (!description.isEmpty())
                 existingProduct.setDescription(description);
@@ -170,7 +148,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product existingProduct = productDAO.searchProductsById(productID);
+            Product existingProduct = productDAO.searchProduct("ProductID = " + productID);
             if (existingProduct == null) {
                 System.out.println("Product not found.");
                 return;
@@ -199,7 +177,26 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product product = productDAO.searchProductsById(productID);
+            Product product = productDAO.searchProduct("ProductID = " + productID);
+            if (product != null) {
+                System.out.println(product.toString());
+            } else {
+                System.out.println("Product not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+    
+    private void searchProductByName() {
+        try {
+            System.out.println("Enter product name to view details:");
+            String productName = scanner.nextLine();
+            if (!StoreOwnerValidation.isValidProductName(productName)) {
+                return;
+            }
+
+            Product product = productDAO.searchProduct("productName = '" + productName + "'");
             if (product != null) {
                 System.out.println(product.toString());
             } else {
@@ -218,7 +215,7 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            Product product = productDAO.searchProductsByCategory(categoryName);
+            Product product = productDAO.searchProduct("CategoryName = '" + categoryName + "'");
             if (product != null) {
                 System.out.println(product.toString());
             } else {
@@ -229,39 +226,43 @@ public class ProductMenuController extends BaseController {
         }
     }
 
-    public void viewProductDetails() {
-        try {
-            System.out.println("Enter product name to view details:");
-            String productName = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidProductName(productName)) {
-                return;
-            }
-
-            Product product = productDAO.viewProductDetails(productName);
-            if (product != null) {
-                System.out.println(product.toString());
-            } else {
-                System.out.println("Product not found.");
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        }
-    }
-
     public void searchProduct() {
         try {
-            System.out.println("Enter id/category name to search: \n" +
-                    "[1]. ID \n" +
-                    "[2]. Category Name");
-            int choice = getValidChoice(1, 2);
+            System.out.println("How would you like to search: \n" +
+                    "[1]. ProductID \n" +
+                    "[2]. Product Name \n" +
+                    "[3]. Category Name \n" +
+                    "[0]. Go back");
+            
+            int choice = getValidChoice(1, 3);
 
             switch (choice) {
                 case 1:
                     searchProductById();
                     break;
                 case 2:
+                    searchProductByName();
+                    break;
+                case 3:
                     searchProductByCategory();
                     break;
+                case 0:
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+    
+    public void viewAllProducts() {
+        try {
+            List<Product> productList = productDAO.viewAllProducts();
+            if (!productList.isEmpty()) {
+                for (Product product : productList) {
+                    System.out.println(product.toString());
+                }
+            } else {
+                System.out.println("There is no product at the moment. Please come back later");
             }
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());

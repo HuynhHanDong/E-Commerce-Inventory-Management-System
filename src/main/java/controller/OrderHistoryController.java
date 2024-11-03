@@ -6,8 +6,9 @@
 package controller;
 
 import DAO.OrderDAO;
-import java.util.ArrayList;
+import java.util.List;
 import models.Order;
+import models.OrderItems;
 
 /**
  *
@@ -23,7 +24,7 @@ public class OrderHistoryController extends BaseController{
         this.orderDAO = new OrderDAO();
     }
     
-    public void DisplayOrderHistoryMenu() {
+    public void viewOrderHistory() {
         int choice;
         do {
             menu.orderHistoryMenu();
@@ -50,7 +51,7 @@ public class OrderHistoryController extends BaseController{
                             viewOrdersByStatus("Finished");
                             break;
                         case 5:
-                            viewOrdersByStatus("Canceled");
+                            viewOrdersByStatus("Cancelled");
                             break;
                         case 0:
                             break;
@@ -67,8 +68,8 @@ public class OrderHistoryController extends BaseController{
     }        
     
     private void viewAllOrders() {
-        ArrayList<Order> orderList = orderDAO.getAllOrders(customerID);
-        if (orderList != null) {
+        List<Order> orderList = orderDAO.getAllOrders(customerID);
+        if (!orderList.isEmpty()) {
             for (Order order : orderList) {
                 System.out.println(order.toString());
             }
@@ -78,13 +79,13 @@ public class OrderHistoryController extends BaseController{
     }
     
     private void viewOrdersByStatus(String status) {
-        ArrayList<Order> orderList = orderDAO.getOrderByStatus(customerID, status);
-        if (orderList != null) {
+        List<Order> orderList = orderDAO.getOrderByStatus(customerID, status);
+        if (!orderList.isEmpty()) {
             for (Order order : orderList) {
                 System.out.println(order.toString());
             }
         } else {
-            System.out.println("No order history.");
+            System.out.println("There is no order with this status.");
         }
     }
     
@@ -93,7 +94,10 @@ public class OrderHistoryController extends BaseController{
         int orderID = scanner.nextInt();
         Order order = orderDAO.getOrderByID(orderID, customerID);
         if (order != null) {
-            System.out.println(order.getDetails()); // Print out order details and list of orderItems
+            System.out.println(order.toString());  // Print out order details
+            for (OrderItems item : order.getItems()) {
+                System.out.println(item.toString());  // Print out list of orderItems
+            }
         } else {
             System.out.println("Order not found.");
         }
@@ -104,19 +108,27 @@ public class OrderHistoryController extends BaseController{
         int orderID = scanner.nextInt();
         Order order = orderDAO.getOrderByID(orderID, customerID);
         if (order != null) {
-            if (order.getStatus() != "In transit" || order.getStatus() != "Finished") {
-                int result = orderDAO.updateOrder("Cancelled", orderID);
-                if (result > 0) {
-                    System.out.println("Cancelled order.");
-                } else {
-                    System.out.println("Failed to cancel order.");
-                }
+            System.out.println(order.toString());
+            if (!"In transit".equals(order.getStatus()) || !"Finished".equals(order.getStatus())) {
+                    System.out.println("+--------------------------------------+");
+                    System.out.println("| Cancel this order?                   |");
+                    System.out.println("| 1. YES                               |");
+                    System.out.println("| 0. NO                                |");
+                    System.out.println("+--------------------------------------+");
+                    int choice = getValidChoice(0,1);
+                    if (choice == 1) {
+                        int result = orderDAO.updateOrder("Cancelled", orderID);
+                        if (result > 0) {
+                            System.out.println("Cancelled order.");
+                        } else {
+                            System.out.println("Failed to cancel order.");
+                        }
+                    }
             } else {
                     System.out.println("Cannot cancel. This order is in transit or already finished.");
-            }
+            } 
         } else {
             System.out.println("Order not found.");
         }
-        
     }
 }
