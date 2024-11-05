@@ -191,4 +191,39 @@ public class StoreOwnerValidation {
         }
         return true;
     }
+
+    public static boolean isValidLowStockThreshold(int lowStockThreshold) {
+        try {
+            if (String.valueOf(lowStockThreshold).isEmpty()) {
+                System.out.println("Low stock threshold cannot be empty.");
+                return false;
+            }
+
+            if (lowStockThreshold < 10 || lowStockThreshold > 100) {
+                System.out.println("Low stock threshold must be between 10 and 100");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Low stock threshold must be a positive integer.");
+        }
+        return true;
+    }
+
+    public static boolean isValidInventoryID(int inventoryID) {
+        try {
+            if (String.valueOf(inventoryID).isEmpty()) {
+                System.out.println("Inventory ID cannot be empty.");
+                return false;
+            }
+
+            if (inventoryID <= 0) {
+                System.out.println("Inventory ID must be greater than 0.");
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println("Inventory ID must be the positive integer.");
+            return false;
+        }
+    }
 }

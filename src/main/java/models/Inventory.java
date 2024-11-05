@@ -15,11 +15,11 @@ public class Inventory {
         this.stockLevel = stockLevel;
         this.lowStockThreshold = lowStockThreshold;
     }
-    
+
     public int getInventoryID() {
         return this.inventoryID;
     }
-    
+
     public void setInventoryID(int inventoryID) {
         this.inventoryID = inventoryID;
     }
@@ -36,7 +36,7 @@ public class Inventory {
         return stockLevel;
     }
 
-    public void setCurrentStock(int stockLevel) {
+    public void setStockLevel(int stockLevel) {
         this.stockLevel = stockLevel;
     }
 
@@ -50,6 +50,7 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return "invetoryID: " + inventoryID + ", productID: " + productID + ", stockLevel: " + stockLevel + ", lowStockThreshold: " + lowStockThreshold;
+        return "invetoryID: " + inventoryID + ", productID: " + productID + ", stockLevel: " + stockLevel
+                + ", lowStockThreshold: " + lowStockThreshold;
     }
 }

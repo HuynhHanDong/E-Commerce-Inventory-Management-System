@@ -18,45 +18,45 @@ public class InventoryDAO {
     private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE InventoryID = ?;";
     private static final String GET_ALL_INVENTORY_ITEMS = "SELECT * FROM Inventory;";
 
-    public boolean addInventoryItem(Inventory inventory) {
-        boolean success = false;
+    public int addInventoryItem(Inventory inventory) {
+        int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_INVENTORY_ITEM)) {
             statement.setInt(1, inventory.getProductID());
             statement.setInt(2, inventory.getStockLevel());
             statement.setInt(3, inventory.getLowStockThreshold());
-            success = statement.executeUpdate() > 0;
+            result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error adding inventory item", e);
         }
-        return success;
+        return result;
     }
 
-    public boolean updateInventoryItem(Inventory inventory) {
-        boolean success = false;
+    public int updateInventoryItem(Inventory inventory) {
+        int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(UPDATE_INVENTORY_ITEM)) {
-            
+
             statement.setInt(1, inventory.getStockLevel());
             statement.setInt(2, inventory.getLowStockThreshold());
             statement.setInt(3, inventory.getProductID());
-            success = statement.executeUpdate() > 0;
+            result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error updating inventory item", e);
         }
-        return success;
+        return result;
     }
 
-    public boolean deleteInventoryItem(int productID) {
-        boolean success = false;
+    public int deleteInventoryItem(int productID) {
+        int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(DELETE_INVENTORY_ITEM)) {
             statement.setInt(1, productID);
-            success = statement.executeUpdate() > 0;
+            result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error deleting inventory item", e);
         }
-        return success;
+        return result;
     }
 
     public Inventory getInventoryItemById(int productID) {
@@ -86,16 +86,15 @@ public class InventoryDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_INVENTORY_ITEMS)) {
             ResultSet result = statement.executeQuery();
-            while (result != null) {
-                if (result.next()) {
-                    int productID = result.getInt("productID");
-                    int currentStock = result.getInt("currentStock");
-                    int lowStockThreshold = result.getInt("lowStockThreshold");
-                    System.out.println("ID: " + productID + "; currentStock: " + currentStock + "; lowStockThreshold: "
-                            + lowStockThreshold);
-                }
+            while (result.next()) {
+                int inventoryID = result.getInt("InventoryID");
+                int productID = result.getInt("ProductID");
+                int stockLevel = result.getInt("StockLevel");
+                int lowStockThreshold = result.getInt("LowStockThreshold");
+
+                Inventory inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold);
+                inventoryList.add(inventory);
             }
-            conn.close();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error retrieving all inventory items", e);
         }

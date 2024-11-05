@@ -15,7 +15,7 @@ public class CategoryMenuController extends BaseController {
     public void manageCategories() {
         int choice;
         do {
-            menu.categorytMenu(); 
+            menu.categoryMenu();
             choice = getValidChoice(0, 5);
             switch (choice) {
                 case 1:
@@ -62,7 +62,7 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category ID to update: ");
             int categoryID = scanner.nextInt();
-            scanner.nextLine(); 
+            scanner.nextLine();
             System.out.print("Enter new Category Name: ");
             String categoryName = scanner.nextLine();
 
@@ -92,14 +92,14 @@ public class CategoryMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
+
     public void searchCategory() {
         try {
             System.out.println("How would you like to search: \n" +
                     "[1]. Category ID \n" +
                     "[2]. Category Name \n" +
                     "[0]. Go back");
-            
+
             int choice = getValidChoice(0, 2);
 
             switch (choice) {
@@ -131,7 +131,7 @@ public class CategoryMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
+
     private void searchCategoryByName() {
         try {
             System.out.print("Enter Category name to view: ");
