@@ -3,7 +3,6 @@ package controller;
 import java.util.List;
 import DAO.InventoryDAO;
 import models.Inventory;
-import DAO.ProductDAO;
 
 public class InventoryMenuController extends BaseController {
     private InventoryDAO inventoryDAO;
@@ -51,11 +50,15 @@ public class InventoryMenuController extends BaseController {
 
             System.out.println("Enter low stock threshold:");
             int lowStockThreshold = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidStockLevel(stockLevel)) {
+            if (!StoreOwnerValidation.isValidLowStockThreshold(lowStockThreshold)) {
                 return;
             }
 
-            Inventory inventory = new Inventory(0, 0, stockLevel, lowStockThreshold);
+            // Assume Product ID is required here
+            System.out.println("Enter Product ID:");
+            int productID = Integer.parseInt(scanner.nextLine());
+
+            Inventory inventory = new Inventory(0, productID, stockLevel, lowStockThreshold);
             int result = inventoryDAO.addInventoryItem(inventory);
             if (result > 0) {
                 System.out.println("Inventory item added successfully.");
@@ -83,25 +86,19 @@ public class InventoryMenuController extends BaseController {
 
             System.out.println("Enter new stock level (or press -1 to skip):");
             int stockLevel = Integer.parseInt(scanner.nextLine());
-
             if (stockLevel != -1 && !StoreOwnerValidation.isValidStockLevel(stockLevel)) {
                 return;
             }
 
             System.out.println("Enter new low stock threshold (or press -1 to skip):");
             int lowStockThreshold = Integer.parseInt(scanner.nextLine());
-
             if (lowStockThreshold != -1 && !StoreOwnerValidation.isValidLowStockThreshold(lowStockThreshold)) {
                 return;
             }
 
-            if (stockLevel != -1)
-                existingInventory.setStockLevel(stockLevel);
-
-            if (lowStockThreshold != -1)
-                existingInventory.setLowStockThreshold(lowStockThreshold);
-
-            int productID = getProductID(existingInventory.getProduct());
+            // Update values only if valid
+            if (stockLevel != -1) existingInventory.setStockLevel(stockLevel);
+            if (lowStockThreshold != -1) existingInventory.setLowStockThreshold(lowStockThreshold);
 
             int result = inventoryDAO.updateInventoryItem(existingInventory);
             if (result > 0) {
