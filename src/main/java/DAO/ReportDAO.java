@@ -8,27 +8,23 @@ import java.util.List;
 import java.util.Date;
 
 public class ReportDAO {
-    private Connection connection;
-
-    public ReportDAO() {
-        this.connection = JDBCConnection.getConnection();
-    }
+    private static final String GENERATE_SALES_REPORT = "SELECT COUNT(o.OrderID) as TotalOrders, SUM(od.Quantity * p.Price) as TotalRevenue " +
+                                                        "FROM Orders o JOIN OrderDetails od ON o.OrderID = od.OrderID JOIN Products p " + 
+                                                        "ON od.ProductID = p.ProductID WHERE o.OrderDate BETWEEN ? AND ?";
+    private static final String VIEW_SALES_REPORT = "SELECT * WHERE ReportType = 'SALES' ORDER BY GeneratedDate DESC";
+    private static final String GENERATE_INVENTORY_REPORT = "SELECT COUNT(ProductID) as TotalProducts, SUM(StockLevel * Price) as TotalValue, " +
+                                                        "SUM(CASE WHEN StockLevel <= ReorderLevel THEN 1 ELSE 0 END) as LowStockItems FROM Products";
+    private static final String VIEW_INVENTORY_REPORT = "SELECT * WHERE ReportType = 'INVENTORY' ORDER BY GeneratedDate DESC";
+    private static final String SAVE_REPORT = "INSERT INTO Reports (ReportType, GeneratedDate, StartDate, EndDate, TotalAmount, Status) VALUES (?, ?, ?, ?, ?, ?)";
 
     // Generate Sales Report
     public Report generateSalesReport(Date startDate, Date endDate) {
-        String sql = "SELECT " +
-                "COUNT(o.OrderID) as TotalOrders, " +
-                "SUM(od.Quantity * p.Price) as TotalRevenue " +
-                "FROM Orders o " +
-                "JOIN OrderDetails od ON o.OrderID = od.OrderID " +
-                "JOIN Products p ON od.ProductID = p.ProductID " +
-                "WHERE o.OrderDate BETWEEN ? AND ?";
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GENERATE_SALES_REPORT)) {
+            statement.setDate(1, new java.sql.Date(startDate.getTime()));
+            statement.setDate(2, new java.sql.Date(endDate.getTime()));
 
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setDate(1, new java.sql.Date(startDate.getTime()));
-            pstmt.setDate(2, new java.sql.Date(endDate.getTime()));
-
-            ResultSet rs = pstmt.executeQuery();
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Report report = new Report();
                 report.setReportType("SALES");
@@ -50,14 +46,9 @@ public class ReportDAO {
     // View Sales Reports
     public List<Report> viewSalesReports() {
         List<Report> reports = new ArrayList<>();
-        String sql = "SELECT ReportID, ReportType, GeneratedDate, StartDate, " +
-                "EndDate, TotalAmount, Status " +
-                "FROM Reports " +
-                "WHERE ReportType = 'SALES' " +
-                "ORDER BY GeneratedDate DESC";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(VIEW_SALES_REPORT)) {
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Report report = new Report(
                         rs.getInt("ReportID"),
@@ -77,14 +68,9 @@ public class ReportDAO {
 
     // Generate Inventory Report
     public Report generateInventoryReport() {
-        String sql = "SELECT " +
-                "COUNT(ProductID) as TotalProducts, " +
-                "SUM(StockLevel * Price) as TotalValue, " +
-                "SUM(CASE WHEN StockLevel <= ReorderLevel THEN 1 ELSE 0 END) as LowStockItems " +
-                "FROM Products";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GENERATE_INVENTORY_REPORT)) {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Report report = new Report();
                 report.setReportType("INVENTORY");
@@ -104,14 +90,9 @@ public class ReportDAO {
     // View Inventory Reports
     public List<Report> viewInventoryReports() {
         List<Report> reports = new ArrayList<>();
-        String sql = "SELECT ReportID, ReportType, GeneratedDate, StartDate, " +
-                "EndDate, TotalAmount, Status " +
-                "FROM Reports " +
-                "WHERE ReportType = 'INVENTORY' " +
-                "ORDER BY GeneratedDate DESC";
-
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(VIEW_INVENTORY_REPORT)) {
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Report report = new Report(
                         rs.getInt("ReportID"),
@@ -131,21 +112,16 @@ public class ReportDAO {
 
     // Save Report
     private void saveReport(Report report) {
-        String sql = "INSERT INTO Reports (ReportType, GeneratedDate, StartDate, " +
-                "EndDate, TotalAmount, Status) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(SAVE_REPORT)) {
+            statement.setString(1, report.getReportType());
+            statement.setTimestamp(2, new java.sql.Timestamp(report.getGeneratedDate().getTime()));
+            statement.setTimestamp(3, report.getStartDate() != null ? new java.sql.Timestamp(report.getStartDate().getTime()) : null);
+            statement.setTimestamp(4, report.getEndDate() != null ? new java.sql.Timestamp(report.getEndDate().getTime()) : null);
+            statement.setDouble(5, report.getTotalAmount());
+            statement.setString(6, report.getStatus());
 
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, report.getReportType());
-            pstmt.setTimestamp(2, new java.sql.Timestamp(report.getGeneratedDate().getTime()));
-            pstmt.setTimestamp(3,
-                    report.getStartDate() != null ? new java.sql.Timestamp(report.getStartDate().getTime()) : null);
-            pstmt.setTimestamp(4,
-                    report.getEndDate() != null ? new java.sql.Timestamp(report.getEndDate().getTime()) : null);
-            pstmt.setDouble(5, report.getTotalAmount());
-            pstmt.setString(6, report.getStatus());
-
-            pstmt.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

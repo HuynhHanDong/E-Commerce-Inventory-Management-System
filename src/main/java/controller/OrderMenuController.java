@@ -27,7 +27,7 @@ public class OrderMenuController extends BaseController {
     public void displayOrderMenu() {
         int choice;
         do {
-            menu.ordertMenu();
+            menu.orderMenu();
             choice = getValidChoice(0, 5);
             
             switch (choice) {

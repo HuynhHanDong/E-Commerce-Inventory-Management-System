@@ -53,10 +53,10 @@ public class InventoryDAO {
         return result;
     }
 
-    public int deleteInventoryItem(int productID) {
+    public int deleteInventoryItem(int inventoryID) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(DELETE_INVENTORY_ITEM)) {
-            statement.setInt(1, productID);
+            statement.setInt(1, inventoryID);
             result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error deleting inventory item", e);

@@ -6,12 +6,14 @@ public class StoreOwnerMenuController extends BaseController {
     private final ProductMenuController productMenuController;
     private final CategoryMenuController categoryMenuController;
     private final InventoryMenuController inventoryMenuController;
+    private final ReportMenuController reportMenuController;
 
     public StoreOwnerMenuController(StoreOwner storeOwner) {
         super();
         this.productMenuController = new ProductMenuController();
         this.categoryMenuController = new CategoryMenuController();
         this.inventoryMenuController = new InventoryMenuController();
+        this.reportMenuController = new ReportMenuController();
     }
 
     public void displayStoreOwnerMenu() {
@@ -30,7 +32,7 @@ public class StoreOwnerMenuController extends BaseController {
                     inventoryMenuController.manageInventory();
                     break;
                 case 4:
-                    viewReports();
+                    reportMenuController.manageReports();
                     break;
                 case 0:
                     System.out.println("Logging out...");

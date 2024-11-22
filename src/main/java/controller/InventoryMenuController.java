@@ -113,17 +113,16 @@ public class InventoryMenuController extends BaseController {
 
     private void deleteInventoryItem() {
         System.out.println("Enter product ID to delete:");
-        String productIdInput = scanner.nextLine();
-        if (!StoreOwnerValidation.isValidProductId(productIdInput)) {
+        int inventoryID = Integer.parseInt(scanner.nextLine());
+        if (!StoreOwnerValidation.isValidProductID(inventoryID)) {
             return;
         }
-        int productId = Integer.parseInt(productIdInput);
 
         System.out.println("Are you sure you want to delete this inventory item? (y/n)");
         String confirmation = scanner.nextLine();
         if (confirmation.equalsIgnoreCase("y")) {
-            boolean success = inventoryDAO.deleteInventoryItem(productId);
-            if (success) {
+            int success = inventoryDAO.deleteInventoryItem(inventoryID);
+            if (success > 0) {
                 System.out.println("Inventory item deleted successfully.");
             } else {
                 System.out.println("Failed to delete inventory item.");
@@ -135,13 +134,12 @@ public class InventoryMenuController extends BaseController {
 
     private void viewInventoryItemById() {
         System.out.println("Enter product ID to view:");
-        String productIdInput = scanner.nextLine();
-        if (!StoreOwnerValidation.isValidProductId(productIdInput)) {
+        int productID = Integer.parseInt(scanner.nextLine());
+        if (!StoreOwnerValidation.isValidProductID(productID)) {
             return;
         }
-        int productId = Integer.parseInt(productIdInput);
 
-        Inventory inventory = inventoryDAO.getInventoryItemById(productId);
+        Inventory inventory = inventoryDAO.getInventoryItemById(productID);
         if (inventory != null) {
             System.out.println(inventory.toString());
         } else {
