@@ -1,7 +1,9 @@
 package DAO;
 
+import models.User;
+
 public interface AuthDAO {
-    boolean authenticate(String username, String password);
+    User authenticate(String username, String password);
 
     void logout(int id);
 }
