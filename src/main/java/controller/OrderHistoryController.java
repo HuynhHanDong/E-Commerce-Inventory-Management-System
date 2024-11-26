@@ -94,10 +94,13 @@ public class OrderHistoryController extends BaseController {
         int orderID = scanner.nextInt();
         Order order = orderDAO.getOrderByID(orderID, userID);
         if (order != null) {
+            System.out.println("--------------------------------------");
             System.out.println(order.toString()); // Print out order details
+            System.out.println("--------------------------------------");
             for (OrderItems item : order.getItems()) {
                 System.out.println(item.toString()); // Print out list of orderItems
             }
+            System.out.println("--------------------------------------");
         } else {
             System.out.println("Order not found.");
         }
