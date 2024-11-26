@@ -14,22 +14,22 @@ import models.OrderItems;
  *
  * @author Huynh Han Dong
  */
-public class OrderHistoryController extends BaseController{
-    private final int customerID;
+public class OrderHistoryController extends BaseController {
+    private final int userID;
     private final OrderDAO orderDAO;
-   
-    public OrderHistoryController(int customerID){
+
+    public OrderHistoryController(int userID) {
         super();
-        this.customerID = customerID;
+        this.userID = userID;
         this.orderDAO = new OrderDAO();
     }
-    
+
     public void viewOrderHistory() {
         int choice;
         do {
             menu.orderHistoryMenu();
             choice = getValidChoice(0, 3);
-            
+
             switch (choice) {
                 case 1:
                     viewAllOrders();
@@ -63,12 +63,12 @@ public class OrderHistoryController extends BaseController{
                 case 0:
                     System.out.println("Going back to Customer Menu...");
                     break;
-                }
+            }
         } while (choice != 0);
-    }        
-    
+    }
+
     private void viewAllOrders() {
-        List<Order> orderList = orderDAO.getAllOrders(customerID);
+        List<Order> orderList = orderDAO.getAllOrders(userID);
         if (!orderList.isEmpty()) {
             for (Order order : orderList) {
                 System.out.println(order.toString());
@@ -77,9 +77,9 @@ public class OrderHistoryController extends BaseController{
             System.out.println("No order history.");
         }
     }
-    
+
     private void viewOrdersByStatus(String status) {
-        List<Order> orderList = orderDAO.getOrderByStatus(customerID, status);
+        List<Order> orderList = orderDAO.getOrderByStatus(userID, status);
         if (!orderList.isEmpty()) {
             for (Order order : orderList) {
                 System.out.println(order.toString());
@@ -88,45 +88,45 @@ public class OrderHistoryController extends BaseController{
             System.out.println("There is no order with this status.");
         }
     }
-    
+
     public void viewOrderDetails() {
         System.out.println("Enter orderID to view details: ");
         int orderID = scanner.nextInt();
-        Order order = orderDAO.getOrderByID(orderID, customerID);
+        Order order = orderDAO.getOrderByID(orderID, userID);
         if (order != null) {
-            System.out.println(order.toString());  // Print out order details
+            System.out.println(order.toString()); // Print out order details
             for (OrderItems item : order.getItems()) {
-                System.out.println(item.toString());  // Print out list of orderItems
+                System.out.println(item.toString()); // Print out list of orderItems
             }
         } else {
             System.out.println("Order not found.");
         }
     }
-    
+
     private void cancelOrder() {
         System.out.println("Enter orderID to cancel:");
         int orderID = scanner.nextInt();
-        Order order = orderDAO.getOrderByID(orderID, customerID);
+        Order order = orderDAO.getOrderByID(orderID, userID);
         if (order != null) {
             System.out.println(order.toString());
             if (!"In transit".equals(order.getStatus()) || !"Finished".equals(order.getStatus())) {
-                    System.out.println("+--------------------------------------+");
-                    System.out.println("| Cancel this order?                   |");
-                    System.out.println("| 1. YES                               |");
-                    System.out.println("| 0. NO                                |");
-                    System.out.println("+--------------------------------------+");
-                    int choice = getValidChoice(0,1);
-                    if (choice == 1) {
-                        int result = orderDAO.updateOrder("Cancelled", orderID);
-                        if (result > 0) {
-                            System.out.println("Cancelled order.");
-                        } else {
-                            System.out.println("Failed to cancel order.");
-                        }
+                System.out.println("+--------------------------------------+");
+                System.out.println("| Cancel this order?                   |");
+                System.out.println("| 1. YES                               |");
+                System.out.println("| 0. NO                                |");
+                System.out.println("+--------------------------------------+");
+                int choice = getValidChoice(0, 1);
+                if (choice == 1) {
+                    int result = orderDAO.updateOrder("Cancelled", orderID);
+                    if (result > 0) {
+                        System.out.println("Cancelled order.");
+                    } else {
+                        System.out.println("Failed to cancel order.");
                     }
+                }
             } else {
-                    System.out.println("Cannot cancel. This order is in transit or already finished.");
-            } 
+                System.out.println("Cannot cancel. This order is in transit or already finished.");
+            }
         } else {
             System.out.println("Order not found.");
         }

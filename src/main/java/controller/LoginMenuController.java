@@ -1,18 +1,14 @@
 package controller;
 
-import models.Customer;
-import models.StoreOwner;
-import DAO.CustomerDAO;
-import DAO.StoreOwnerDAO;
+import models.User;
+import DAO.UserDAO;
 
 public class LoginMenuController extends BaseController {
-    private CustomerDAO customerDAO;
-    private StoreOwnerDAO storeOwnerDAO;
+    private UserDAO userDAO;
 
     public LoginMenuController() {
         super();
-        this.customerDAO = new CustomerDAO();
-        this.storeOwnerDAO = new StoreOwnerDAO();
+        this.userDAO = new UserDAO();
     }
 
     public void displayLoginMenu() {
@@ -22,10 +18,10 @@ public class LoginMenuController extends BaseController {
 
             switch (choice) {
                 case 1:
-                    loginStoreOwner();
+                    loginUser("STORE_OWNER");
                     break;
                 case 2:
-                    loginCustomer();
+                    loginUser("CUSTOMER");
                     break;
                 case 0:
                     System.out.println("Exiting the application. Goodbye!");
@@ -35,75 +31,40 @@ public class LoginMenuController extends BaseController {
         }
     }
 
-    private void loginStoreOwner() {
-        StoreOwner storeOwner = getStoreOwnerInfo();
-        if (storeOwner != null && storeOwnerDAO.authenticate(storeOwner.getUsername(), storeOwner.getPassword())) {
-            System.out.println("Store owner login successful!");
-            new StoreOwnerMenuController(storeOwner).displayStoreOwnerMenu();
+    private void loginUser(String role) {
+        String username;
+        String password;
+
+        // Validate username
+        do {
+            System.out.println("Enter username:");
+            username = scanner.nextLine().trim();
+        } while (!UserValidation.isValidUsername(username));
+
+        // Validate password
+        do {
+            System.out.println("Enter password:");
+            password = scanner.nextLine().trim();
+        } while (!UserValidation.isValidPassword(password));
+
+        User user = userDAO.authenticate(username, password);
+
+        if (user != null && user.getRole().equals(role)) {
+            System.out.println("Login successful!");
+            switch (role) {
+                case "STORE_OWNER":
+                    new StoreOwnerMenuController(user).displayStoreOwnerMenu();
+                    break;
+                case "CUSTOMER":
+                    new CustomerMenuController(user).displayCustomerMenu();
+                    break;
+            }
         } else {
-            System.out.println("Invalid credentials. Please try again.");
-        }
-    }
-
-    private void loginCustomer() {
-        Customer customer = getCustomerInfo();
-        if (customer != null && customerDAO.authenticate(customer.getUsername(), customer.getPassword())) {
-            System.out.println("Customer login successful!");
-            new CustomerMenuController(customer).displayCustomerMenu();
-        } else {
-            System.out.println("Invalid credentials. Please try again.");
-        }
-    }
-
-    private StoreOwner getStoreOwnerInfo() {
-        int id = 0;
-        String username = "";
-        String email = "";
-        String password = "";
-
-        while (!StoreOwnerValidation.isValidId(id)) {
-            System.out.println("Enter store owner ID:");
-            try {
-                id = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid integer for ID.");
+            if (user == null) {
+                System.out.println("Invalid username or password.");
+            } else {
+                System.out.println("You don't have permission to access this role.");
             }
         }
-
-        while (!StoreOwnerValidation.isValidUsername(username)) {
-            System.out.println("Enter username:");
-            username = scanner.nextLine();
-        }
-
-        while (!StoreOwnerValidation.isValidEmail(email)) {
-            System.out.println("Enter email:");
-            email = scanner.nextLine();
-        }
-
-        while (!StoreOwnerValidation.isValidPassword(password)) {
-            System.out.println("Enter password:");
-            password = scanner.nextLine();
-        }
-
-        return new StoreOwner(id, username, email, password);
-    }
-
-    private Customer getCustomerInfo() {
-        int id = 0;
-        String username = "";
-        String email = "";
-        String password = "";
-
-        while (!StoreOwnerValidation.isValidUsername(username)) {
-            System.out.println("Enter username:");
-            username = scanner.nextLine();
-        }
-
-        while (!StoreOwnerValidation.isValidPassword(password)) {
-            System.out.println("Enter password:");
-            password = scanner.nextLine();
-        }
-
-        return new Customer(id, username, email, password);
     }
 }

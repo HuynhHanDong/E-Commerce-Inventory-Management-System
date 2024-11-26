@@ -46,26 +46,26 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product name:");
             String productName = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidProductName(productName)) {
+            if (!UserValidation.isValidProductName(productName)) {
                 return;
             }
 
             System.out.println("Enter category:");
             String categoryName = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidCategoryName(categoryName)) {
+            if (!UserValidation.isValidCategoryName(categoryName)) {
                 return;
             }
             int categoryID = getCategoryID(categoryName);
 
             System.out.println("Enter price:");
             double price = Double.parseDouble(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidPrice(price)) {
+            if (!UserValidation.isValidPrice(price)) {
                 return;
             }
 
             System.out.println("Enter description:");
             String description = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidDescription(description)) {
+            if (!UserValidation.isValidDescription(description)) {
                 return;
             }
 
@@ -86,7 +86,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to update:");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidProductID(productID)) {
+            if (!UserValidation.isValidProductID(productID)) {
                 return;
             }
 
@@ -98,25 +98,25 @@ public class ProductMenuController extends BaseController {
 
             System.out.println("Enter new product name (or press enter to skip):");
             String productName = scanner.nextLine();
-            if (!productName.isEmpty() && !StoreOwnerValidation.isValidProductName(productName)) {
+            if (!productName.isEmpty() && !UserValidation.isValidProductName(productName)) {
                 return;
             }
 
             System.out.println("Enter new category (or press enter to skip):");
             String categoryName = scanner.nextLine();
-            if (!categoryName.isEmpty() && !StoreOwnerValidation.isValidCategoryName(categoryName)) {
+            if (!categoryName.isEmpty() && !UserValidation.isValidCategoryName(categoryName)) {
                 return;
             }
 
             System.out.println("Enter new price (or -1 to skip):");
             double price = Double.parseDouble(scanner.nextLine());
-            if (price != -1 && !StoreOwnerValidation.isValidPrice(price)) {
+            if (price != -1 && !UserValidation.isValidPrice(price)) {
                 return;
             }
 
             System.out.println("Enter new description (or press enter to skip):");
             String description = scanner.nextLine();
-            if (!description.isEmpty() && !StoreOwnerValidation.isValidDescription(description)) {
+            if (!description.isEmpty() && !UserValidation.isValidDescription(description)) {
                 return;
             }
 
@@ -131,7 +131,7 @@ public class ProductMenuController extends BaseController {
 
             if (!description.isEmpty())
                 existingProduct.setDescription(description);
-            
+
             int categoryID = getCategoryID(existingProduct.getCategory());
 
             int result = productDAO.updateProduct(existingProduct, categoryID);
@@ -149,7 +149,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to delete:");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidProductID(productID)) {
+            if (!UserValidation.isValidProductID(productID)) {
                 return;
             }
 
@@ -178,7 +178,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to search:");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!StoreOwnerValidation.isValidProductID(productID)) {
+            if (!UserValidation.isValidProductID(productID)) {
                 return;
             }
 
@@ -192,16 +192,16 @@ public class ProductMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
+
     private void searchProductByName() {
         try {
             System.out.println("Enter product name to view details:");
             String productName = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidProductName(productName)) {
+            if (!UserValidation.isValidProductName(productName)) {
                 return;
             }
 
-            List<Product>  productList = productDAO.searchProduct("productName = '" + productName + "'");
+            List<Product> productList = productDAO.searchProduct("productName = '" + productName + "'");
             if (productList != null) {
                 for (Product product : productList) {
                     System.out.println(product.toString());
@@ -218,7 +218,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter category name to search:");
             String categoryName = scanner.nextLine();
-            if (!StoreOwnerValidation.isValidCategoryName(categoryName)) {
+            if (!UserValidation.isValidCategoryName(categoryName)) {
                 return;
             }
 
@@ -242,7 +242,7 @@ public class ProductMenuController extends BaseController {
                     "[2]. Product Name \n" +
                     "[3]. Category Name \n" +
                     "[0]. Go back");
-            
+
             int choice = getValidChoice(1, 3);
 
             switch (choice) {
@@ -262,7 +262,7 @@ public class ProductMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
+
     public void viewAllProducts() {
         try {
             List<Product> productList = productDAO.viewAllProducts();
@@ -277,14 +277,14 @@ public class ProductMenuController extends BaseController {
             System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
+
     private int getCategoryID(String categoryName) {
         int categoryID = 0;
         CategoryDAO categoryDAO = new CategoryDAO();
         Category category = categoryDAO.getCategory("CategoryName = '" + categoryName + "'");
         if (category != null) {
             categoryID = category.getCategoryID();
-        } else{
+        } else {
             System.out.println("Category not found.");
         }
         return categoryID;

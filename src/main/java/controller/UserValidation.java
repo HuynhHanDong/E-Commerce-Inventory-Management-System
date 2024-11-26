@@ -2,7 +2,8 @@ package controller;
 
 import java.text.SimpleDateFormat;
 
-public class StoreOwnerValidation {
+public class UserValidation {
+    // Common validations
     public static boolean isValidUsername(String username) {
         if (username.isEmpty()) {
             System.out.println("Username cannot be empty.");
@@ -20,21 +21,19 @@ public class StoreOwnerValidation {
     }
 
     public static boolean isValidId(int id) {
-        try {
-            if (String.valueOf(id).isEmpty()) {
-                System.out.println("ID cannot be empty.");
-                return false;
-            }
-            if (id <= 0) {
-                System.out.println("ID must be greater than 0.");
-                return false;
-            }
-
-            return true;
-        } catch (NumberFormatException e) {
-            System.out.println("ID must be a positive integer.");
+        if (String.valueOf(id).isEmpty()) {
+            System.out.println("ID cannot be empty.");
             return false;
         }
+        if (String.valueOf(id).length() != 4) {
+            System.out.println("ID must be 4 digits.");
+            return false;
+        }
+        if (!String.valueOf(id).matches("^\\d+$")) {
+            System.out.println("ID must be a number.");
+            return false;
+        }
+        return true;
     }
 
     public static boolean isValidEmail(String email) {
@@ -132,12 +131,6 @@ public class StoreOwnerValidation {
         }
     }
 
-    public static boolean isValidDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-        return true;
-    }
-
     public static boolean isValidCategoryName(String categoryName) {
         if (categoryName.isEmpty()) {
             System.out.println("Category name cannot be empty.");
@@ -223,6 +216,27 @@ public class StoreOwnerValidation {
             return true;
         } catch (NumberFormatException e) {
             System.out.println("Inventory ID must be the positive integer.");
+            return false;
+        }
+    }
+
+    public static boolean isValidOrderID(int orderID) {
+        if (orderID <= 0) {
+            System.out.println("Order ID must be greater than 0.");
+            return false;
+        }
+        return true;
+    }
+
+    // Utility methods
+    public static boolean isValidDate(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            sdf.parse(date);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Use dd/MM/yyyy");
             return false;
         }
     }

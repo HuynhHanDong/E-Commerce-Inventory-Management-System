@@ -1,19 +1,20 @@
 package controller;
 
-import models.Customer;
+import models.User;
 
 public class CustomerMenuController extends BaseController {
-    private final Customer customer;
+
+    private final User user;
     private final OrderMenuController orderMenuController;
     private final ProductMenuController productMenuController;
     private final OrderHistoryController orderHistoryController;
 
-    public CustomerMenuController(Customer customer) {
+    public CustomerMenuController(User user) {
         super();
-        this.customer = customer;
+        this.user = user;
         this.productMenuController = new ProductMenuController();
-        this.orderMenuController = new OrderMenuController(customer.getCustomerID());
-        this.orderHistoryController = new OrderHistoryController(customer.getCustomerID());
+        this.orderMenuController = new OrderMenuController(user.getUserID());
+        this.orderHistoryController = new OrderHistoryController(user.getUserID());
     }
 
     public void displayCustomerMenu() {

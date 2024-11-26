@@ -1,15 +1,17 @@
 package controller;
 
-import models.StoreOwner;
+import models.User;
 
 public class StoreOwnerMenuController extends BaseController {
+    private final User user;
     private final ProductMenuController productMenuController;
     private final CategoryMenuController categoryMenuController;
     private final InventoryMenuController inventoryMenuController;
     private final ReportMenuController reportMenuController;
 
-    public StoreOwnerMenuController(StoreOwner storeOwner) {
+    public StoreOwnerMenuController(User user) {
         super();
+        this.user = user;
         this.productMenuController = new ProductMenuController();
         this.categoryMenuController = new CategoryMenuController();
         this.inventoryMenuController = new InventoryMenuController();
