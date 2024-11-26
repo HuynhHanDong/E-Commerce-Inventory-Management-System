@@ -74,8 +74,8 @@ CREATE TABLE Reports
 INSERT INTO Users
     (Username, Email, Password, Role)
 VALUES
-    ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
-    ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
+    ('Storeowner', 'storeowner@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
+    ('Customer', 'customer@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
 
 INSERT INTO Category
     (CategoryName)
