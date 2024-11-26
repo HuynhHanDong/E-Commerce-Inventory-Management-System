@@ -3,20 +3,14 @@ GO;
 
 USE ECommerceDB;
 
-CREATE TABLE Customer
+CREATE TABLE Users
 (
-    CustomerID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT PRIMARY KEY IDENTITY(1,1),
     Username NVARCHAR(50) NOT NULL UNIQUE,
     Email NVARCHAR(100) NOT NULL UNIQUE,
-    Password NVARCHAR(60) NOT NULL
-);
-
-CREATE TABLE StoreOwner
-(
-    StoreOwnerID INT PRIMARY KEY IDENTITY(1,1),
-    Username NVARCHAR(50) NOT NULL UNIQUE,
-    Email NVARCHAR(100) NOT NULL UNIQUE,
-    Password NVARCHAR(60) NOT NULL
+    Password NVARCHAR(60) NOT NULL,
+    Role NVARCHAR(20) NOT NULL
+    -- 'CUSTOMER' or 'STORE_OWNER'
 );
 
 CREATE TABLE Category
@@ -42,7 +36,7 @@ CREATE TABLE Orders
     OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
     TotalPrice DECIMAL(10, 2) NOT NULL,
     Status NVARCHAR(20) NOT NULL,
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+    FOREIGN KEY (CustomerID) REFERENCES Users(UserID)
 );
 
 CREATE TABLE OrderItems
@@ -76,14 +70,23 @@ CREATE TABLE Reports
     Status VARCHAR(20) NOT NULL
 )
 
--- Insert sample customer with BCrypt hashed password
-INSERT INTO Customer (Username, Email, Password) VALUES ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
+-- Insert sample accounts
+INSERT INTO Users
+    (Username, Email, Password, Role)
+VALUES
+    ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
+    ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
 
--- Insert sample store owner with BCrypt hashed password
-INSERT INTO StoreOwner (Username, Email, Password) VALUES ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy');
-
--- The password for both users is 'password123'
-
-INSERT INTO Category (CategoryName) VALUES ('electronics'),('vehicle'),('clothes');
-INSERT INTO Products (ProductName, CategoryID, Price, Description) VALUES ('tivi','1',6590000,'tivi LG'), ('iphone13','1',13670000,'iphone 13') ,('tivi','1',7890000,'tivi SAMSUNG');
+INSERT INTO Category
+    (CategoryName)
+VALUES
+    ('electronics'),
+    ('vehicle'),
+    ('clothes');
+INSERT INTO Products
+    (ProductName, CategoryID, Price, Description)
+VALUES
+    ('tivi', '1', 6590000, 'tivi LG'),
+    ('iphone13', '1', 13670000, 'iphone 13') ,
+    ('tivi', '1', 7890000, 'tivi SAMSUNG');
 
