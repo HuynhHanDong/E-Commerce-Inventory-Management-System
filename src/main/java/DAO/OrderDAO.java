@@ -1,11 +1,5 @@
 package DAO;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -195,59 +189,5 @@ public class OrderDAO {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return itemList;
-    }
-
-    public boolean generateSalesReport(Date startDate, Date endDate) {
-        String query
-                = "SELECT DATE(OrderDate) AS SaleDate, COUNT(*) AS TotalOrders, "
-                + "SUM(TotalPrice) AS TotalRevenue "
-                + "FROM Orders "
-                + "WHERE OrderDate BETWEEN ? AND ? "
-                + "GROUP BY DATE(OrderDate)";
-
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setDate(1, startDate);
-            pstmt.setDate(2, endDate);
-
-            try (ResultSet rs = pstmt.executeQuery(); PrintWriter writer = new PrintWriter(new FileWriter("sales_report.txt"))) {
-
-                writer.println("Sales Report from " + startDate + " to " + endDate);
-                writer.println("Date\t\tTotal Orders\tTotal Revenue");
-
-                while (rs.next()) {
-                    String date = rs.getString("SaleDate");
-                    int totalOrders = rs.getInt("TotalOrders");
-                    double totalRevenue = rs.getDouble("TotalRevenue");
-
-                    writer.printf("%s\t\t%d\t\t%.2f%n", date, totalOrders, totalRevenue);
-                }
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public void viewSalesReports() {
-        File reportFile = new File("sales_report.txt");
-
-        if (!reportFile.exists()) {
-            System.out.println("No sales reports available.");
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(reportFile))) {
-            System.out.println("Sales Report Contents:");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading sales report: " + e.getMessage());
-        }
     }
 }

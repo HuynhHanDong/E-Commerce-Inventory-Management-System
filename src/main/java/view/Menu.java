@@ -75,9 +75,7 @@ public class Menu {
     public void reportMenu() {
         System.out.println("+------------ Report Menu -------------+");
         System.out.println("| 1. Generate sales report             |");
-        System.out.println("| 2. View sales reports                |");
-        System.out.println("| 3. Generate invetory report          |");
-        System.out.println("| 4. View invetory reports             |");
+        System.out.println("| 2. Generate invetory report          |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
     }

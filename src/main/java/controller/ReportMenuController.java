@@ -3,36 +3,29 @@ package controller;
 import java.sql.Date;
 import java.util.InputMismatchException;
 
-import DAO.InventoryDAO;
-import DAO.OrderDAO;
+import DAO.ReportDAO;
+import java.util.ArrayList;
+import models.Report;
 
 public class ReportMenuController extends BaseController {
-    private OrderDAO orderDAO;
-    private InventoryDAO inventoryDAO;
+    private final ReportDAO reportDAO;
 
     public ReportMenuController() {
         super();
-        this.orderDAO = new OrderDAO();
-        this.inventoryDAO = new InventoryDAO();
+        this.reportDAO = new ReportDAO();
     }
 
     public void manageReports() {
         int choice;
         do {
             menu.reportMenu();
-            choice = getValidChoice(0, 4);
+            choice = getValidChoice(0, 2);
             switch (choice) {
                 case 1:
                     generateSalesReport();
                     break;
                 case 2:
-                    viewSalesReports();
-                    break;
-                case 3:
                     generateInventoryReport();
-                    break;
-                case 4:
-                    viewInventoryReports();
                     break;
                 case 0:
                     System.out.println("Returning to main menu...");
@@ -52,11 +45,13 @@ public class ReportMenuController extends BaseController {
             Date startDate = Date.valueOf(startDateStr);
             Date endDate = Date.valueOf(endDateStr);
 
-            boolean success = orderDAO.generateSalesReport(startDate, endDate);
-            if (success) {
-                System.out.println("Sales report generated successfully.");
+            ArrayList<Report> salesReport = reportDAO.generateSalesReport(startDate, endDate);
+            if (salesReport != null) {
+                for (Report report : salesReport) {
+                    System.out.println(report.printSalesReport());
+                }
             } else {
-                System.out.println("Failed to generate sales report.");
+                System.out.println("Nothing to report.");
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid date format. Please use YYYY-MM-DD.");
@@ -65,51 +60,32 @@ public class ReportMenuController extends BaseController {
         }
     }
 
-    private void viewSalesReports() {
-        try {
-            System.out.println("View Sales Reports");
-            orderDAO.viewSalesReports();
-        } catch (Exception e) {
-            System.out.println("Error viewing sales reports: " + e.getMessage());
-        }
-    }
-
     private void generateInventoryReport() {
         try {
             System.out.println("Generate Inventory Report");
-            System.out.println("Select report type:");
-            System.out.println("1. Low Stock Report");
-            System.out.println("2. Total Inventory Value Report");
-            int reportType = getValidChoice(1, 2);
+            System.out.println("Enter start date (YYYY-MM-DD):");
+            String startDateStr = scanner.nextLine();
+            System.out.println("Enter end date (YYYY-MM-DD):");
+            String endDateStr = scanner.nextLine();
+            Date startDate = Date.valueOf(startDateStr);
+            Date endDate = Date.valueOf(endDateStr);
 
-            boolean success;
-            switch (reportType) {
-                case 1:
-                    success = inventoryDAO.generateLowStockReport();
-                    break;
-                case 2:
-                    success = inventoryDAO.generateInventoryValueReport();
-                    break;
-                default:
-                    success = false;
-            }
-
-            if (success) {
-                System.out.println("Inventory report generated successfully.");
+            ArrayList<Report> inventoryReport = reportDAO.generateSalesReport(startDate, endDate);
+            if (inventoryReport != null) {
+                for (Report report : inventoryReport) {
+                    System.out.println(report.printInventoryReport());
+                }
             } else {
-                System.out.println("Failed to generate inventory report.");
+                System.out.println("Nothing to report.");
             }
-        } catch (Exception e) {
-            System.out.println("Error generating inventory report: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please try again.");
         }
     }
-
-    private void viewInventoryReports() {
-        try {
-            System.out.println("View Inventory Reports");
-            inventoryDAO.viewInventoryReports();
-        } catch (Exception e) {
-            System.out.println("Error viewing inventory reports: " + e.getMessage());
-        }
+    
+    private void saveToFile() {
+        
     }
 }
