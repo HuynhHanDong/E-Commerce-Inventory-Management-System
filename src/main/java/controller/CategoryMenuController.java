@@ -80,16 +80,34 @@ public class CategoryMenuController extends BaseController {
 
     private void deleteCategory() {
         try {
-            System.out.print("Enter Category ID to delete: ");
-            int categoryID = scanner.nextInt();
-            int result = categoryDAO.deleteCategory(categoryID);
-            if (result > 0) {
-                System.out.println("Category deleted successfully.");
+            System.out.println("Enter category ID to delete:");
+            int categoryID = Integer.parseInt(scanner.nextLine());
+
+            Category category = categoryDAO.getCategory("CategoryID = " + categoryID);
+            if (category != null) {
+                System.out.println("Current category details:");
+                System.out.println(category.toString());
+
+                System.out.println("\nAre you sure you want to delete this category?");
+                System.out.println("[1]. Yes");
+                System.out.println("[0]. No");
+
+                int choice = getValidChoice(0, 1);
+                if (choice == 1) {
+                    int result = categoryDAO.deleteCategory(categoryID);
+                    if (result > 0) {
+                        System.out.println("Category deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete category.");
+                    }
+                } else {
+                    System.out.println("Deletion cancelled.");
+                }
             } else {
-                System.out.println("Failed to delete category.");
+                System.out.println("Category not found.");
             }
-        } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid category ID format.");
         }
     }
 
