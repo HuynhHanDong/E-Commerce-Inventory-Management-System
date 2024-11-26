@@ -68,7 +68,6 @@ public class ReportMenuController extends BaseController {
     private void viewSalesReports() {
         try {
             System.out.println("View Sales Reports");
-            // Giả sử có phương thức viewSalesReports trong OrderDAO
             orderDAO.viewSalesReports();
         } catch (Exception e) {
             System.out.println("Error viewing sales reports: " + e.getMessage());
