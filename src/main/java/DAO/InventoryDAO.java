@@ -105,27 +105,31 @@ public class InventoryDAO {
     }
 
     public boolean generateInventoryValueReport() {
-        String query = "SELECT product_id, product_name, current_stock, unit_price, "
-                + "(current_stock * unit_price) AS total_value FROM products;";
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query); ResultSet rs = pstmt.executeQuery(); PrintWriter writer = new PrintWriter(new FileWriter("inventory_value_report.txt"))) {
+        String query = "SELECT p.productId, p.productName, i.stockLevel, p.price" + "(i.stockLevel * p.price) AS totalValue"
+             + "FROM Products p"
+             + "JOIN Inventory i ON p.productId = i.productID;";
+        try (Connection conn = JDBCConnection.getConnection(); 
+            PreparedStatement pstmt = conn.prepareStatement(query); 
+            ResultSet rs = pstmt.executeQuery(); 
+            PrintWriter writer = new PrintWriter(new FileWriter("inventory_value_report.txt"))) {
 
             writer.println("Inventory Value Report");
             writer.println("Product ID\tProduct Name\tCurrent Stock\tUnit Price\tTotal Value");
 
             double totalInventoryValue = 0;
             while (rs.next()) {
-                int productId = rs.getInt("product_id");
-                String productName = rs.getString("product_name");
-                int currentStock = rs.getInt("current_stock");
-                double unitPrice = rs.getDouble("unit_price");
-                double totalValue = rs.getDouble("total_value");
-                writer.printf("%d\t\t%s\t\t%d\t\t%.2f\t\t%.2f%n", productId, productName, currentStock, unitPrice, totalValue);
+                int productId = rs.getInt("productId");
+                String productName = rs.getString("productName");
+                int stockLevel = rs.getInt("stockLevel");
+                double price = rs.getDouble("price");
+                double totalValue = rs.getDouble("totalValue");
+                writer.printf("%d\t\t%s\t\t%d\t\t%.2f\t\t%.2f%n", productId, productName, stockLevel, price, totalValue);
                 totalInventoryValue += totalValue;
             }
             writer.printf("%nTotal Inventory Value: %.2f%n", totalInventoryValue);
             return true;
         } catch (SQLException | IOException e) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, "Error generating inventory value report", e);
             return false;
         }
     }
