@@ -1,37 +1,43 @@
 package models;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Report {
-    private int reportID;
     private String reportType; // "SALES" or "INVENTORY"
     private Date generatedDate;
     private Date startDate;
     private Date endDate;
-    private double totalAmount;
-    private String status; // "Generated", "Viewed", etc.
+    private int productID;
+    private String productName;
+    private int quantity;
+    private int lowStockThreshold;
+    private double revenue;
+    private Date lastUpdate;
 
     public Report() {
     }
 
-    public Report(int reportID, String reportType, Date generatedDate,
-            Date startDate, Date endDate, double totalAmount, String status) {
-        this.reportID = reportID;
+    public Report(String reportType, Date generatedDate, Date startDate, Date endDate, int productID, String productName, int quantity, double revenue) {
         this.reportType = reportType;
         this.generatedDate = generatedDate; // tự động tạo ngày báo cáo
         this.startDate = startDate; // ngày báo cáo đầu tiên
         this.endDate = endDate; // ngày báo cáo cuối cùng
-        this.totalAmount = totalAmount; // tổng số tiền
-        this.status = status; // trạng thái báo cáo
+        this.productID = productID;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.revenue = revenue; // tổng số tiền
     }
-
-    // Getters and Setters
-    public int getReportID() {
-        return reportID;
-    }
-
-    public void setReportID(int reportID) {
-        this.reportID = reportID;
+    
+    public Report(String reportType, Date generatedDate, Date startDate, Date endDate, int productID, String productName, int quantity, int lowStockThreshold, Date lastUpdate) {
+        this.reportType = reportType;
+        this.generatedDate = generatedDate; // tự động tạo ngày báo cáo
+        this.startDate = startDate; // ngày báo cáo đầu tiên
+        this.endDate = endDate; // ngày báo cáo cuối cùng
+        this.productID = productID;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.lowStockThreshold = lowStockThreshold;
+        this.lastUpdate = lastUpdate; 
     }
 
     public String getReportType() {
@@ -65,26 +71,67 @@ public class Report {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-
-    public double getTotalAmount() {
-        return totalAmount;
+    
+    public int getProductID() {
+        return productID;
     }
 
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public String getStatus() {
-        return status;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public int getQuanity(){
+        return quantity;
+    }
+    
+    public void setQuantity(int quantity){
+        this.quantity = quantity;
+    }
+    
+    public int setLowStockThreshold() {
+        return lowStockThreshold;
+    }
+    
+    public void getLowStockThreshold(int lowStockThreshold) {
+        this.lowStockThreshold = lowStockThreshold;
+    }
+
+    public double getRevenue() {
+        return revenue;
+    }
+
+    public void setRevenue(double revenue) {
+        this.revenue = revenue;
+    }
+    
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+    
+    public void setLastUpdate(Date lastUpdate){
+        this.lastUpdate = lastUpdate;
     }
 
     @Override
     public String toString() {
-        return "reportID = " + reportID + ", reportType = " + reportType + ", generatedDate = " + generatedDate + ", startDate = " + startDate + 
-               ", endDate = " + endDate + ", totalAmount = " + totalAmount + ", status = " + status;
+        return "reportType: " + reportType + ", generatedDate:" + generatedDate + ", startDate: " + startDate + 
+               ", endDate: " + endDate;
+    }
+    
+    public String printSalesReport() {
+        return "product ID: " +  productID + ", product name:" + productName + ", quantity: " + quantity + ", revenue: " + revenue;
+    }
+    
+    public String printInventoryReport() {
+        return "product ID: " +  productID + ", product name:" + productName + ", stock level: " + quantity + 
+                ", low stock threshold: " + lowStockThreshold + "last update:" + lastUpdate;
     }
 }

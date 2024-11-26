@@ -1,17 +1,11 @@
 package DAO;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,8 +14,7 @@ import utils.JDBCConnection;
 
 public class InventoryDAO {
 
-    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, StockLevel, LowStockThreshold) VALUES (?, ?, ?);";
-    private static final String UPDATE_INVENTORY_ITEM = "UPDATE Inventory SET StockLevel = ?, LowStockThreshold = ? WHERE ProductID = ?;";
+    private static final String ADD_INVENTORY_ITEM = "INSERT INTO Inventory (ProductID, StockLevel, LowStockThreshold, LastUpdate) VALUES (?, ?, ?);";
     private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE InventoryID = ?;";
     private static final String GET_INVENTORY_ITEM_BY_ID = "SELECT * FROM Inventory WHERE InventoryID = ?;";
     private static final String GET_ALL_INVENTORY_ITEMS = "SELECT * FROM Inventory;";
@@ -32,23 +25,10 @@ public class InventoryDAO {
             statement.setInt(1, inventory.getProductID());
             statement.setInt(2, inventory.getStockLevel());
             statement.setInt(3, inventory.getLowStockThreshold());
+            statement.setDate(4, inventory.getLastUpdate());
             result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error adding inventory item", e);
-        }
-        return result;
-    }
-
-    public int updateInventoryItem(Inventory inventory) {
-        int result = 0;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(UPDATE_INVENTORY_ITEM)) {
-
-            statement.setInt(1, inventory.getStockLevel());
-            statement.setInt(2, inventory.getLowStockThreshold());
-            statement.setInt(3, inventory.getProductID());
-            result = statement.executeUpdate();
-        } catch (SQLException e) {
-            Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error updating inventory item", e);
         }
         return result;
     }
@@ -75,7 +55,8 @@ public class InventoryDAO {
                     productID = result.getInt("productID");
                     int stockLevel = result.getInt("stockLevel");
                     int lowStockThreshold = result.getInt("lowStockThreshold");
-                    inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold);
+                    Date lastUpdate = result.getDate("lastUpdate");
+                    inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold, lastUpdate);
                 }
             }
             conn.close();
@@ -94,8 +75,8 @@ public class InventoryDAO {
                 int productID = result.getInt("ProductID");
                 int stockLevel = result.getInt("StockLevel");
                 int lowStockThreshold = result.getInt("LowStockThreshold");
-
-                Inventory inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold);
+                Date lastUpdate = result.getDate("lastUpdate");
+                Inventory inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold, lastUpdate);
                 inventoryList.add(inventory);
             }
         } catch (SQLException e) {
@@ -103,85 +84,4 @@ public class InventoryDAO {
         }
         return inventoryList;
     }
-
-    public boolean generateInventoryValueReport() {
-        String query = "SELECT p.productId, p.productName, i.stockLevel, p.price" + "(i.stockLevel * p.price) AS totalValue"
-             + "FROM Products p"
-             + "JOIN Inventory i ON p.productId = i.productID;";
-        try (Connection conn = JDBCConnection.getConnection(); 
-            PreparedStatement pstmt = conn.prepareStatement(query); 
-            ResultSet rs = pstmt.executeQuery(); 
-            PrintWriter writer = new PrintWriter(new FileWriter("inventory_value_report.txt"))) {
-
-            writer.println("Inventory Value Report");
-            writer.println("Product ID\tProduct Name\tCurrent Stock\tUnit Price\tTotal Value");
-
-            double totalInventoryValue = 0;
-            while (rs.next()) {
-                int productId = rs.getInt("productId");
-                String productName = rs.getString("productName");
-                int stockLevel = rs.getInt("stockLevel");
-                double price = rs.getDouble("price");
-                double totalValue = rs.getDouble("totalValue");
-                writer.printf("%d\t\t%s\t\t%d\t\t%.2f\t\t%.2f%n", productId, productName, stockLevel, price, totalValue);
-                totalInventoryValue += totalValue;
-            }
-            writer.printf("%nTotal Inventory Value: %.2f%n", totalInventoryValue);
-            return true;
-        } catch (SQLException | IOException e) {
-            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, "Error generating inventory value report", e);
-            return false;
-        }
-    }
-
-    public void viewInventoryReports() {
-        String[] reportFiles = {"low_stock_report.txt", "inventory_value_report.txt"};
-        for (String fileName : reportFiles) {
-            File reportFile = new File(fileName);
-            if (!reportFile.exists()) {
-                System.out.println("No " + fileName + " available.");
-                continue;
-            }
-            try (BufferedReader reader = new BufferedReader(new FileReader(reportFile))) {
-                System.out.println("\n" + fileName + " Contents:");
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } catch (IOException e) {
-                Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
-    }
-
-    public boolean generateLowStockReport() {
-        List<String> lowStockItems = new ArrayList<>();
-        String query = "SELECT productID, stockLevel FROM Inventory WHERE stockLevel < ?";
-
-        try (Connection connection = JDBCConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, 10);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                int productID = resultSet.getInt("productID");
-                int stockLevel = resultSet.getInt("stockLevel");
-                lowStockItems.add("Product ID: " + productID + " (Stock: " + stockLevel + ")");
-            }
-
-            if (!lowStockItems.isEmpty()) {
-                System.out.println("Low Stock Report:");
-                for (String item : lowStockItems) {
-                    System.out.println(item);
-                }
-                return true;
-            } else {
-                System.out.println("No products with low stock.");
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("Error generating low stock report: " + e.getMessage());
-            return false;
-        }
-    }
-
 }

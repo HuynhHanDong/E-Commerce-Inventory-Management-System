@@ -56,37 +56,46 @@ CREATE TABLE Inventory
     ProductID INT NOT NULL,
     StockLevel INT NOT NULL,
     LowStockThreshold INT NOT NULL,
+	LastUpdate date NOT NULL DEFAULT GETDATE()
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
 
-CREATE TABLE Reports
-(
-    ReportID INT PRIMARY KEY IDENTITY(1,1),
-    ReportType VARCHAR(20) NOT NULL,
-    GeneratedDate DATETIME NOT NULL,
-    StartDate DATETIME,
-    EndDate DATETIME,
-    TotalAmount DECIMAL(18,2) NOT NULL,
-    Status VARCHAR(20) NOT NULL
-)
-
--- Insert sample accounts
-INSERT INTO Users
-    (Username, Email, Password, Role)
+-- Insert sample data
+INSERT INTO Users(Username, Email, Password, Role)
 VALUES
-    ('storeowner1', 'storeowner1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
-    ('customer1', 'customer1@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
+    ('Storeowner', 'storeowner@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
+    ('Customer', 'customer@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
 
-INSERT INTO Category
-    (CategoryName)
+INSERT INTO Category(CategoryName)
 VALUES
     ('electronics'),
     ('vehicle'),
     ('clothes');
-INSERT INTO Products
-    (ProductName, CategoryID, Price, Description)
-VALUES
-    ('tivi', '1', 6590000, 'tivi LG'),
-    ('iphone13', '1', 13670000, 'iphone 13') ,
-    ('tivi', '1', 7890000, 'tivi SAMSUNG');
 
+INSERT INTO Products(ProductName, CategoryID, Price, Description)
+VALUES
+    ('tivi', 1, 6590000, 'tivi LG'),
+    ('iphone13', 1, 13670000, 'iphone 13') ,
+    ('tivi', 1, 7890000, 'tivi SAMSUNG'),
+	('bike', 2, 1999000, 'xe dap');
+
+INSERT INTO Inventory(ProductID, StockLevel, LowStockThreshold, LastUpdate)
+VALUES
+	(1, 100, 30, '2024-10-15'),
+	(2, 150, 50, '2024-10-15'),
+	(3, 90, 30, '2024-10-15'),
+	(4, 50, 10, '2024-10-30');
+
+INSERT INTO Orders(CustomerID, OrderDate, TotalPrice, Status)
+VALUES 
+	(2, '2024-11-01', 6590000, 'Finished'),
+	(2, '2024-11-02', 15669000, 'Finished'),
+	(2, '2024-11-20', 9889000, 'In progress');
+
+INSERT INTO OrderItems(OrderID, ProductID, Quantity, Price)
+VALUES
+	(1, 1, 1, 6590000),
+	(2, 2, 1, 13670000),
+	(2, 4, 1, 1999000),
+	(3, 3, 1, 7890000),
+	(3, 4, 1, 1999000);

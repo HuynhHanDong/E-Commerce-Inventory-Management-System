@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 import DAO.InventoryDAO;
+import java.sql.Date;
 import models.Inventory;
 
 public class InventoryMenuController extends BaseController {
@@ -22,15 +23,12 @@ public class InventoryMenuController extends BaseController {
                     addInventoryItem();
                     break;
                 case 2:
-                    updateInventoryItem();
-                    break;
-                case 3:
                     deleteInventoryItem();
                     break;
-                case 4:
+                case 3:
                     viewInventoryItemById();
                     break;
-                case 5:
+                case 4:
                     viewAllInventoryItems();
                     break;
                 case 0:
@@ -42,6 +40,9 @@ public class InventoryMenuController extends BaseController {
 
     private void addInventoryItem() {
         try {
+            System.out.println("Enter Product ID:");
+            int productID = Integer.parseInt(scanner.nextLine());
+            
             System.out.println("Enter current stock level:");
             int stockLevel = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidStockLevel(stockLevel)) {
@@ -54,59 +55,14 @@ public class InventoryMenuController extends BaseController {
                 return;
             }
 
-            // Assume Product ID is required here
-            System.out.println("Enter Product ID:");
-            int productID = Integer.parseInt(scanner.nextLine());
+            Date lastUpdate = new Date(System.currentTimeMillis());
 
-            Inventory inventory = new Inventory(0, productID, stockLevel, lowStockThreshold);
+            Inventory inventory = new Inventory(0, productID, stockLevel, lowStockThreshold, lastUpdate);
             int result = inventoryDAO.addInventoryItem(inventory);
             if (result > 0) {
                 System.out.println("Inventory item added successfully.");
             } else {
                 System.out.println("Failed to add inventory item.");
-            }
-        } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        }
-    }
-
-    private void updateInventoryItem() {
-        try {
-            System.out.println("Enter inventory ID to update:");
-            int inventoryID = Integer.parseInt(scanner.nextLine());
-            if (!UserValidation.isValidInventoryID(inventoryID)) {
-                return;
-            }
-
-            Inventory existingInventory = inventoryDAO.getInventoryItemById(inventoryID);
-            if (existingInventory == null) {
-                System.out.println("Inventory item not found.");
-                return;
-            }
-
-            System.out.println("Enter new stock level (or press -1 to skip):");
-            int stockLevel = Integer.parseInt(scanner.nextLine());
-            if (stockLevel != -1 && !UserValidation.isValidStockLevel(stockLevel)) {
-                return;
-            }
-
-            System.out.println("Enter new low stock threshold (or press -1 to skip):");
-            int lowStockThreshold = Integer.parseInt(scanner.nextLine());
-            if (lowStockThreshold != -1 && !UserValidation.isValidLowStockThreshold(lowStockThreshold)) {
-                return;
-            }
-
-            // Update values only if valid
-            if (stockLevel != -1)
-                existingInventory.setStockLevel(stockLevel);
-            if (lowStockThreshold != -1)
-                existingInventory.setLowStockThreshold(lowStockThreshold);
-
-            int result = inventoryDAO.updateInventoryItem(existingInventory);
-            if (result > 0) {
-                System.out.println("Inventory item updated successfully.");
-            } else {
-                System.out.println("Failed to update inventory item.");
             }
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());

@@ -63,11 +63,7 @@ public class OrderMenuController extends BaseController {
         if (product != null) {
             System.out.println("Enter quantity: ");
             int quantity = scanner.nextInt();
-            cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity)); // initialize
-                                                                                                            // orderID
-                                                                                                            // and
-                                                                                                            // orderItemID
-                                                                                                            // as zero
+            cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity)); // initialize orderID and orderItemID as zero
             order.setItems(cart);
             order.setTotalPrice();
             System.out.println("Added to cart.");
