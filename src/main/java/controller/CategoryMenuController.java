@@ -50,7 +50,9 @@ public class CategoryMenuController extends BaseController {
             if (result > 0) {
                 int categoryID = categoryDAO.getCategoryID();
                 System.out.println("Category added successfully. CategoryID: " + categoryID);
-            } else {
+            } else if (result == -1) {
+                System.out.println("This category cannot be deleted.");
+            }else {
                 System.out.println("Failed to add category.");
             }
         } catch (Exception e) {
@@ -170,7 +172,7 @@ public class CategoryMenuController extends BaseController {
                     System.out.println(category.toString());
                 }
             } else {
-                System.out.println("There is no product at the moment. Please come back later");
+                System.out.println("There is no category");
             }
         } catch (Exception e) {
             System.out.println("An error occurred: " + e.getMessage());

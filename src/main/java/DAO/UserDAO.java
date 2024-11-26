@@ -8,6 +8,7 @@ import models.User;
 
 public class UserDAO implements AuthDAO {
     private Connection connection;
+    private String GET_USER = "SELECT * FROM Users WHERE Username = ?";
 
     public UserDAO() {
         try {
@@ -23,23 +24,21 @@ public class UserDAO implements AuthDAO {
 
     @Override
     public User authenticate(String username, String password) {
-        String sql = "SELECT * FROM Users WHERE Username = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
+        User user = null;
+        try (PreparedStatement statement = connection.prepareStatement(GET_USER)) {
+            statement.setString(1, username);
+            ResultSet result = statement.executeQuery();
 
-            if (rs.next() && PasswordHasher.verifyPassword(password, rs.getString("Password"))) {
-                return new User(
-                        rs.getInt("UserID"),
-                        rs.getString("Username"),
-                        rs.getString("Email"),
-                        rs.getString("Password"),
-                        rs.getString("Role"));
+            if (result.next() && PasswordHasher.verifyPassword(password, result.getString("Password"))) {
+                int userID = result.getInt("UserID");
+                String email = result.getString("Email");
+                String role = result.getString("Role");
+                user = new User(userID, username, email, password, role);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     @Override

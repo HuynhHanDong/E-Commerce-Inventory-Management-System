@@ -76,14 +76,15 @@ public class ProductMenuController extends BaseController {
             
             int categoryID = getCategoryID(categoryName);
             if (categoryID == 0) {
-                System.out.println("Category not found. Please create the category first.");
+                System.out.println("Category not found. Please add the category first.");
                 return;
             }
 
             Product product = new Product(0, productName, price, description, categoryName);
             int result = productDAO.addProduct(product, categoryID);
             if (result > 0) {
-                System.out.println("Product added successfully.");
+                int productID = productDAO.getProductID();
+                System.out.println("Product added successfully. ProductID: " + productID);
             } else {
                 System.out.println("Failed to add product.");
             }
@@ -175,6 +176,8 @@ public class ProductMenuController extends BaseController {
                 int result = productDAO.deleteProduct(productID);
                 if (result > 0) {
                     System.out.println("Product deleted successfully.");
+                } else if (result == -1){
+                    System.out.println("This product cannot be deleted.");
                 } else {
                     System.out.println("Failed to delete product.");
                 }
@@ -214,7 +217,7 @@ public class ProductMenuController extends BaseController {
             }
 
             List<Product> productList = productDAO.searchProduct("productName = '" + productName + "'");
-            if (productList != null) {
+            if (!productList.isEmpty()) {
                 for (Product product : productList) {
                     System.out.println(product.toString());
                 }
@@ -235,7 +238,7 @@ public class ProductMenuController extends BaseController {
             }
 
             List<Product> productList = productDAO.searchProduct("CategoryName = '" + categoryName + "'");
-            if (productList != null) {
+            if (!productList.isEmpty()) {
                 for (Product product : productList) {
                     System.out.println(product.toString());
                 }

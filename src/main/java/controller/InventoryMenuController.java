@@ -2,8 +2,10 @@ package controller;
 
 import java.util.List;
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import java.sql.Date;
 import models.Inventory;
+import models.Product;
 
 public class InventoryMenuController extends BaseController {
     private final InventoryDAO inventoryDAO;
@@ -43,6 +45,12 @@ public class InventoryMenuController extends BaseController {
             System.out.println("Enter Product ID:");
             int productID = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidProductID(productID)) {
+                return;
+            }
+            ProductDAO productDAO = new ProductDAO();
+            Product product = productDAO.getProductByID(productID);
+            if (product == null){
+                System.out.println("Product not found. Please add the product first.");
                 return;
             }
 
@@ -120,7 +128,7 @@ public class InventoryMenuController extends BaseController {
                 System.out.println("LOW STOCK ALERT!");
             }
         } else {
-            System.out.println("Inventory item not found.");
+            System.out.println("Inventory record not found.");
         }
     }
 
@@ -129,7 +137,7 @@ public class InventoryMenuController extends BaseController {
         List<Inventory> inventoryList = inventoryDAO.getCurrentStockLevel();
 
         if (inventoryList.isEmpty()) {
-            System.out.println("No inventory items found.");
+            System.out.println("No inventory record found.");
         } else {
             for (Inventory inventory : inventoryList) {
                 System.out.println(inventory.toString());

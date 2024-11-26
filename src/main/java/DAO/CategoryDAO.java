@@ -47,7 +47,8 @@ public class CategoryDAO {
             statement.setInt(1, categoryID);
             result = statement.executeUpdate();
         } catch (SQLException e) {
-            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("The DELETE statement conflicted with the REFERENCE constraint.");
+            result = -1;
         }
         return result;
     }
@@ -56,11 +57,10 @@ public class CategoryDAO {
         int categoryID = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_CATEGORY_ID)) {
-                ResultSet result = statement.executeQuery();
-                if (result != null && result.next()) {
-                    categoryID = result.getInt("CategoryID");
-                }
-            
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                categoryID = result.getInt("CategoryID");
+            }
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -72,13 +72,11 @@ public class CategoryDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_CATEGORY_WITH_CONDITION + condition)) {
             ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    int categoryID = result.getInt("categoryID");
-                    String categoryName = result.getString("categoryName");
-                    category = new Category(categoryID, categoryName);
-                }
+            
+            while (result.next()) {
+                int categoryID = result.getInt("categoryID");
+                String categoryName = result.getString("categoryName");
+                category = new Category(categoryID, categoryName);
             }
             conn.close();
         } catch (SQLException e) {
@@ -92,12 +90,10 @@ public class CategoryDAO {
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_ALL_CATEGORIES)) {
             ResultSet result = statement.executeQuery();
-            if (result != null) {
-                while (result.next()) {
-                    int categoryID = result.getInt("categoryID");
-                    String categoryName = result.getString("categoryName");
-                    categories.add(new Category(categoryID, categoryName));
-                }
+            while (result.next()) {
+                int categoryID = result.getInt("categoryID");
+                String categoryName = result.getString("categoryName");
+                categories.add(new Category(categoryID, categoryName));
             }
             conn.close();
         } catch (SQLException e) {
