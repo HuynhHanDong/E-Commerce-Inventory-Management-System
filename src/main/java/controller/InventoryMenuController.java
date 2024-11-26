@@ -45,7 +45,7 @@ public class InventoryMenuController extends BaseController {
             if (!UserValidation.isValidProductID(productID)) {
                 return;
             }
-                        
+
             System.out.println("Enter current stock level:");
             int stockLevel = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidStockLevel(stockLevel)) {

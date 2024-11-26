@@ -101,7 +101,7 @@ public class CategoryMenuController extends BaseController {
                     System.out.println("Deletion cancelled.");
                 }
             } else {
-                System.out.println("Failed to delete category.");
+                System.out.println("Category not found.");
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid category ID format.");

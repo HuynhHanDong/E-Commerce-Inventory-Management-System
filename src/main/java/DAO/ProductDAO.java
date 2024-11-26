@@ -71,13 +71,13 @@ public class ProductDAO {
         }
         return result;
     }
-    
+
     public int getProductID() {
         int productID = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_ID)) {
             ResultSet result = statement.executeQuery();
-            
+
             if (result != null && result.next()) {
                 productID = result.getInt("ProductID");
             }
@@ -86,7 +86,7 @@ public class ProductDAO {
         }
         return productID;
     }
-    
+
     public Product getProductByID(int productID) {
         Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
@@ -133,7 +133,7 @@ public class ProductDAO {
         }
         return productList;
     }
-    
+
     public ArrayList<Product> viewAllProducts() {
         ArrayList<Product> productList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();

@@ -83,8 +83,7 @@ public class ProductMenuController extends BaseController {
             Product product = new Product(0, productName, price, description, categoryName);
             int result = productDAO.addProduct(product, categoryID);
             if (result > 0) {
-                int productID = productDAO.getProductID();
-                System.out.println("Product added successfully. ProductID: " + productID);
+                System.out.println("Product added successfully.");
             } else {
                 System.out.println("Failed to add product.");
             }
