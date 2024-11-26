@@ -44,28 +44,39 @@ public class ProductMenuController extends BaseController {
 
     private void addProduct() {
         try {
-            System.out.println("Enter product name:");
+            System.out.println("Enter product name: ");
             String productName = scanner.nextLine();
             if (!UserValidation.isValidProductName(productName)) {
                 return;
             }
 
-            System.out.println("Enter category:");
+            System.out.println("Enter category name: ");
             String categoryName = scanner.nextLine();
             if (!UserValidation.isValidCategoryName(categoryName)) {
                 return;
             }
-            int categoryID = getCategoryID(categoryName);
 
-            System.out.println("Enter price:");
-            double price = Double.parseDouble(scanner.nextLine());
-            if (!UserValidation.isValidPrice(price)) {
+            System.out.println("Enter price: ");
+            double price;
+            try {
+                price = Double.parseDouble(scanner.nextLine());
+                if (!UserValidation.isValidPrice(price)) {
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price format. Please enter a number.");
                 return;
             }
 
-            System.out.println("Enter description:");
+            System.out.println("Enter description: ");
             String description = scanner.nextLine();
             if (!UserValidation.isValidDescription(description)) {
+                return;
+            }
+            
+            int categoryID = getCategoryID(categoryName);
+            if (categoryID == 0) {
+                System.out.println("Category not found. Please create the category first.");
                 return;
             }
 
@@ -84,7 +95,7 @@ public class ProductMenuController extends BaseController {
 
     private void updateProduct() {
         try {
-            System.out.println("Enter product ID to update:");
+            System.out.println("Enter product ID to update: ");
             int productID = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidProductID(productID)) {
                 return;
@@ -96,25 +107,25 @@ public class ProductMenuController extends BaseController {
                 return;
             }
 
-            System.out.println("Enter new product name (or press enter to skip):");
+            System.out.println("Enter new product name (or press enter to skip): ");
             String productName = scanner.nextLine();
             if (!productName.isEmpty() && !UserValidation.isValidProductName(productName)) {
                 return;
             }
 
-            System.out.println("Enter new category (or press enter to skip):");
+            System.out.println("Enter new category (or press enter to skip): ");
             String categoryName = scanner.nextLine();
             if (!categoryName.isEmpty() && !UserValidation.isValidCategoryName(categoryName)) {
                 return;
             }
 
-            System.out.println("Enter new price (or -1 to skip):");
+            System.out.println("Enter new price (or -1 to skip): ");
             double price = Double.parseDouble(scanner.nextLine());
             if (price != -1 && !UserValidation.isValidPrice(price)) {
                 return;
             }
 
-            System.out.println("Enter new description (or press enter to skip):");
+            System.out.println("Enter new description (or press enter to skip): ");
             String description = scanner.nextLine();
             if (!description.isEmpty() && !UserValidation.isValidDescription(description)) {
                 return;
@@ -149,28 +160,30 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to delete:");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!UserValidation.isValidProductID(productID)) {
-                return;
-            }
-
-            Product existingProduct = productDAO.getProductByID(productID);
-            if (existingProduct == null) {
+            Product product = productDAO.getProductByID(productID);
+            if (product == null) {
                 System.out.println("Product not found.");
                 return;
             }
 
-            System.out.println("Are you sure you want to delete this product? (y/n)");
-            String confirm = scanner.nextLine();
-            if (confirm.equalsIgnoreCase("y")) {
+            System.out.println("Current product details:");
+            System.out.println(product);
+            System.out.println("Are you sure you want to delete this product?");
+            System.out.println("[1]. Yes");
+            System.out.println("[0]. No");
+            int choice = getValidChoice(0, 1);
+            if (choice == 1) {
                 int result = productDAO.deleteProduct(productID);
                 if (result > 0) {
                     System.out.println("Product deleted successfully.");
                 } else {
                     System.out.println("Failed to delete product.");
                 }
+            } else {
+                System.out.println("Deletion cancelled.");
             }
-        } catch (Exception e) {
-            System.out.println("An error occurred: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid product ID format. Please enter a number.");
         }
     }
 
