@@ -25,7 +25,10 @@ public class ProductDAO {
     private static final String DELETE_PRODUCT = "DELETE FROM Products WHERE ProductID = ?;";
     private static final String GET_PRODUCT_ID = "SELECT MAX(ProductID) AS ProductID FROM Products;";
     private static final String GET_PRODUCT_BY_ID = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE ProductID = ?";
-    private static final String GET_PRODUCT_WITH_CONDITION = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE ";
+    private static final String GET_PRODUCT_WITH_CONDITION = "SELECT p.ProductID, p.ProductName, c.CategoryName, p.Price, p.Description "
+            +
+            "FROM Products p JOIN Category c ON p.CategoryID = c.CategoryID " +
+            "WHERE ";
     private static final String GET_ALL_PRODUCTS = "SELECT ProductID, ProductName, CategoryName, Price, Description FROM Products, Category WHERE Products.CategoryID = Category.CategoryID;";
 
     public int addProduct(Product product, int categoryID) {
@@ -72,22 +75,22 @@ public class ProductDAO {
         }
         return result;
     }
-    
+
     public int getProductID() {
         int productID = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_PRODUCT_ID)) {
-                ResultSet result = statement.executeQuery();
-                if (result != null && result.next()) {
-                    productID = result.getInt("ProductID");
-                }
-            
+            ResultSet result = statement.executeQuery();
+            if (result != null && result.next()) {
+                productID = result.getInt("ProductID");
+            }
+
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return productID;
     }
-    
+
     public Product getProductByID(int productID) {
         Product product = null;
         try (Connection conn = JDBCConnection.getConnection();
@@ -136,7 +139,7 @@ public class ProductDAO {
         }
         return productList;
     }
-    
+
     public ArrayList<Product> viewAllProducts() {
         ArrayList<Product> productList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection();
