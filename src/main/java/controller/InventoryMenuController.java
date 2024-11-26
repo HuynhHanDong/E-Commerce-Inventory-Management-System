@@ -42,7 +42,10 @@ public class InventoryMenuController extends BaseController {
         try {
             System.out.println("Enter Product ID:");
             int productID = Integer.parseInt(scanner.nextLine());
-            
+            if (!UserValidation.isValidProductID(productID)) {
+                return;
+            }
+                        
             System.out.println("Enter current stock level:");
             int stockLevel = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidStockLevel(stockLevel)) {
@@ -70,23 +73,36 @@ public class InventoryMenuController extends BaseController {
     }
 
     private void deleteInventoryItem() {
-        System.out.println("Enter product ID to delete:");
-        int inventoryID = Integer.parseInt(scanner.nextLine());
-        if (!UserValidation.isValidProductID(inventoryID)) {
-            return;
-        }
+        try {
+            System.out.println("Enter inventory ID to delete:");
+            int inventoryID = Integer.parseInt(scanner.nextLine());
 
-        System.out.println("Are you sure you want to delete this inventory item? (y/n)");
-        String confirmation = scanner.nextLine();
-        if (confirmation.equalsIgnoreCase("y")) {
-            int success = inventoryDAO.deleteInventoryItem(inventoryID);
-            if (success > 0) {
-                System.out.println("Inventory item deleted successfully.");
-            } else {
-                System.out.println("Failed to delete inventory item.");
+            if (!UserValidation.isValidInventoryID(inventoryID)) {
+                return;
             }
-        } else {
-            System.out.println("Deletion cancelled.");
+            Inventory inventory = inventoryDAO.getCurrentStockLevelById(inventoryID);
+            if (inventory != null) {
+                System.out.println("Current inventory details:");
+                System.out.println(inventory.toString());
+                System.out.println("\nAre you sure you want to delete this inventory record?");
+                System.out.println("[1]. Yes");
+                System.out.println("[0]. No");
+                int choice = getValidChoice(0, 1);
+                if (choice == 1) {
+                    int result = inventoryDAO.deleteInventoryItem(inventoryID);
+                    if (result > 0) {
+                        System.out.println("Inventory record deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete inventory record.");
+                    }
+                } else {
+                    System.out.println("Deletion cancelled.");
+                }
+            } else {
+                System.out.println("Inventory record not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 

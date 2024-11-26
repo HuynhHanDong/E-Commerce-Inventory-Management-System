@@ -54,8 +54,7 @@ public class InventoryDAO {
         try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_LATEST_INVENTORY_ITEM_BY_ID)) {
             statement.setInt(1, productID);
             ResultSet result = statement.executeQuery();
-            if (result != null) {
-                if (result.next()) {
+            if (result.next()) {
                     int inventoryID = result.getInt("inventoryID");
                     productID = result.getInt("productID");
                     String productName = result.getString("productName");
@@ -63,7 +62,6 @@ public class InventoryDAO {
                     int lowStockThreshold = result.getInt("lowStockThreshold");
                     Date lastUpdate = result.getDate("lastUpdate");
                     inventory = new Inventory(inventoryID, productID, productName, stockLevel, lowStockThreshold, lastUpdate);
-                }
             }
             conn.close();
         } catch (SQLException e) {
