@@ -12,8 +12,8 @@ public class OrderItems implements Serializable {
     private int productID;
     private double unitPrice;
     private int quantity;
-    
-    public OrderItems(){
+
+    public OrderItems() {
     }
 
     public OrderItems(int orderItemID, int orderID, int productID, double unitPrice, int quantity) {
@@ -52,7 +52,7 @@ public class OrderItems implements Serializable {
         return unitPrice;
     }
 
-    public void setUnitPrice(double price) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -67,9 +67,10 @@ public class OrderItems implements Serializable {
     public double getTotalPrice() {
         return this.quantity * this.unitPrice;
     }
-    
+
     @Override
     public String toString() {
-        return "orderItemID: " + orderItemID + ", productID: " + productID + ", unit price: " + unitPrice + ", quantity: " + quantity;
+        return "orderItemID: " + orderItemID + ", productID: " + productID + ", unit price: " + unitPrice
+                + ", quantity: " + quantity;
     }
 }

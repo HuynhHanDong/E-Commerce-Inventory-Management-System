@@ -153,7 +153,7 @@ public class OrderDAO {
             for (OrderItems item : items) {
                 statement.setInt(1, item.getOrderID());
                 statement.setInt(2, item.getProductID());
-                statement.setDouble(3, item.getPrice());
+                statement.setDouble(3, item.getUnitPrice());
                 statement.setInt(4, item.getQuantity());
 
                 result = statement.executeUpdate();

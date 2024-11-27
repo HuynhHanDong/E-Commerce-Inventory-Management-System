@@ -31,8 +31,6 @@ public class UserDAO implements AuthDAO {
 
             if (result.next()) {
                 String hashedPassword = result.getString("Password");
-                System.out.println("DB Password: " + hashedPassword);
-                System.out.println("Password match: " + PasswordHasher.verifyPassword(password, hashedPassword));
                 int userID = result.getInt("UserID");
                 String email = result.getString("Email");
                 String role = result.getString("Role");
