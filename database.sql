@@ -59,6 +59,40 @@ CREATE TABLE Inventory
 	LastUpdate date NOT NULL DEFAULT GETDATE()
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
+GO
+
+-- Trigger
+CREATE TRIGGER trg_UpdateInventoryAfterOrder ON OrderItems AFTER INSERT
+AS
+BEGIN
+	INSERT INTO Inventory(ProductID, StockLevel, LowStockThreshold, LastUpdate)
+	SELECT i.ProductID, (inv.StockLevel - i.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
+	FROM inserted i 
+		INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate FROM Inventory GROUP BY ProductID) latest 
+		ON i.ProductId = latest.ProductId
+		INNER JOIN Inventory inv 
+		ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate;
+END;
+GO
+
+CREATE TRIGGER trg_UpdateInventoryAfterCancel ON Orders AFTER UPDATE
+AS
+BEGIN
+	IF EXISTS (SELECT 1 FROM inserted WHERE Status = 'cancelled')
+	BEGIN
+		INSERT INTO Inventory (ProductID, StockLevel, LowStockThreshold, LastUpdate)
+		SELECT oi.ProductID, (inv.StockLevel + oi.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
+		FROM OrderItems oi 
+			INNER JOIN inserted i 
+			ON oi.OrderID = i.OrderID
+			INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate FROM Inventory GROUP BY ProductID) latest 
+			ON oi.ProductID = latest.ProductID 
+			INNER JOIN Inventory inv 
+			ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate
+		WHERE i.Status = 'cancelled';
+	END
+END;
+GO
 
 -- Insert sample data
 INSERT INTO Users(Username, Email, Password, Role)
