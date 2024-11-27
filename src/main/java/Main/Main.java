@@ -1,22 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Main;
 
-/**
- *
- * @author Huynh Han Dong
- */
-public class Main {
+import controller.LoginMenuController;
 
-    /**
-     * @param args the command line arguments
-     */
+public class Main {
     public static void main(String[] args) {
-        // TODO code application logic here
-        
+        System.out.println("+---------------------------------------------------------+");
+        System.out.println("|        Welcome to E-Commerce-Management-System          |");
+        System.out.println("+---------------------------------------------------------+");
+
+        // Create login menu controller and start the application
+        LoginMenuController loginMenu = new LoginMenuController();
+        loginMenu.displayLoginMenu();
     }
-    
 }
