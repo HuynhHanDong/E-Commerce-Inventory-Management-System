@@ -10,17 +10,17 @@ public class OrderItems implements Serializable {
     private int orderItemID;
     private int orderID;
     private int productID;
-    private double price;
+    private double unitPrice;
     private int quantity;
     
     public OrderItems(){
     }
 
-    public OrderItems(int orderItemID, int orderID, int productID, double price, int quantity) {
+    public OrderItems(int orderItemID, int orderID, int productID, double unitPrice, int quantity) {
         this.orderItemID = orderItemID;
         this.orderID = orderID;
         this.productID = productID;
-        this.price = price;
+        this.unitPrice = unitPrice;
         this.quantity = quantity;
     }
 
@@ -48,12 +48,12 @@ public class OrderItems implements Serializable {
         this.productID = productID;
     }
 
-    public double getPrice() {
-        return price;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setUnitPrice(double price) {
+        this.unitPrice = unitPrice;
     }
 
     public int getQuantity() {
@@ -65,11 +65,11 @@ public class OrderItems implements Serializable {
     }
 
     public double getTotalPrice() {
-        return this.quantity * this.price;
+        return this.quantity * this.unitPrice;
     }
     
     @Override
     public String toString() {
-        return "orderItemID: " + orderItemID + ", productID: " + productID + ", price: " + price + ", quantity: " + quantity;
+        return "orderItemID: " + orderItemID + ", productID: " + productID + ", unit price: " + unitPrice + ", quantity: " + quantity;
     }
 }
