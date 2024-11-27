@@ -4,7 +4,7 @@ import models.User;
 import DAO.UserDAO;
 
 public class LoginMenuController extends BaseController {
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
     public LoginMenuController() {
         super();

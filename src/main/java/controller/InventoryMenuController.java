@@ -2,11 +2,13 @@ package controller;
 
 import java.util.List;
 import DAO.InventoryDAO;
+import DAO.ProductDAO;
 import java.sql.Date;
 import models.Inventory;
+import models.Product;
 
 public class InventoryMenuController extends BaseController {
-    private InventoryDAO inventoryDAO;
+    private final InventoryDAO inventoryDAO;
 
     public InventoryMenuController() {
         super();
@@ -26,10 +28,10 @@ public class InventoryMenuController extends BaseController {
                     deleteInventoryItem();
                     break;
                 case 3:
-                    viewInventoryItemById();
+                    viewCurrentStockLevelById();
                     break;
                 case 4:
-                    viewAllInventoryItems();
+                    viewCurrentStockLevel();
                     break;
                 case 0:
                     System.out.println("Returning to main menu...");
@@ -43,6 +45,12 @@ public class InventoryMenuController extends BaseController {
             System.out.println("Enter Product ID:");
             int productID = Integer.parseInt(scanner.nextLine());
             if (!UserValidation.isValidProductID(productID)) {
+                return;
+            }
+            ProductDAO productDAO = new ProductDAO();
+            Product product = productDAO.getProductByID(productID);
+            if (product == null){
+                System.out.println("Product not found. Please add the product first.");
                 return;
             }
 
@@ -80,16 +88,13 @@ public class InventoryMenuController extends BaseController {
             if (!UserValidation.isValidInventoryID(inventoryID)) {
                 return;
             }
-
-            Inventory inventory = inventoryDAO.getInventoryItemById(inventoryID);
+            Inventory inventory = inventoryDAO.getCurrentStockLevelById(inventoryID);
             if (inventory != null) {
                 System.out.println("Current inventory details:");
                 System.out.println(inventory.toString());
-
                 System.out.println("\nAre you sure you want to delete this inventory record?");
                 System.out.println("[1]. Yes");
                 System.out.println("[0]. No");
-
                 int choice = getValidChoice(0, 1);
                 if (choice == 1) {
                     int result = inventoryDAO.deleteInventoryItem(inventoryID);
@@ -109,33 +114,39 @@ public class InventoryMenuController extends BaseController {
         }
     }
 
-    private void viewInventoryItemById() {
+    private void viewCurrentStockLevelById() {
         System.out.println("Enter product ID to view:");
         int productID = Integer.parseInt(scanner.nextLine());
         if (!UserValidation.isValidProductID(productID)) {
             return;
         }
 
-        Inventory inventory = inventoryDAO.getInventoryItemById(productID);
+        Inventory inventory = inventoryDAO.getCurrentStockLevelById(productID);
         if (inventory != null) {
             System.out.println(inventory.toString());
+            if (inventory.getStockLevel() <= inventory.getLowStockThreshold()) {
+                System.out.println("LOW STOCK ALERT!");
+            }
         } else {
-            System.out.println("Inventory item not found.");
+            System.out.println("Inventory record not found.");
         }
     }
 
-    private void viewAllInventoryItems() {
+    private void viewCurrentStockLevel() {
         System.out.println("All Inventory Items:");
-        System.out.println("----------------------------------------");
-        List<Inventory> inventoryList = inventoryDAO.getAllInventoryItems();
+        List<Inventory> inventoryList = inventoryDAO.getCurrentStockLevel();
 
         if (inventoryList.isEmpty()) {
-            System.out.println("No inventory items found.");
+            System.out.println("No inventory record found.");
         } else {
             for (Inventory inventory : inventoryList) {
                 System.out.println(inventory.toString());
+                if (inventory.getStockLevel() <= inventory.getLowStockThreshold()) {
+                    System.out.println("+--------------------------------------+");
+                    System.out.println("LOW STOCK ALERT! productID: " + inventory.getProductID() + ", productName: " + inventory.getProductName() + ", stockLevel: " + inventory.getStockLevel());
+                    System.out.println("+--------------------------------------+");
+                }
             }
         }
-        System.out.println("----------------------------------------");
     }
 }

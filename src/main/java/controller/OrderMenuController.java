@@ -76,6 +76,7 @@ public class OrderMenuController extends BaseController {
         if (cart.isEmpty()) {
             System.out.println("Nothing in cart");
         } else {
+            boolean changed = false;
             System.out.println("Enter product id to change quantity: ");
             int id = scanner.nextInt();
             for (OrderItems item : cart) {
@@ -86,10 +87,12 @@ public class OrderMenuController extends BaseController {
                     order.setItems(cart);
                     order.setTotalPrice();
                     System.out.println("Updated successfully: " + item.toString());
+                    changed = true;
                     break;
-                } else {
-                    System.out.println("This product is not in the cart.");
                 }
+            }
+            if (!changed) {
+                System.out.println("This product is not in the cart.");
             }
         }
     }
@@ -98,6 +101,7 @@ public class OrderMenuController extends BaseController {
         if (cart.isEmpty()) {
             System.out.println("Nothing in cart");
         } else {
+            boolean removed = false;
             System.out.print("Enter product id to delete: ");
             int id = scanner.nextInt();
             for (OrderItems item : cart) {
@@ -106,10 +110,12 @@ public class OrderMenuController extends BaseController {
                     order.setItems(cart);
                     order.setTotalPrice();
                     System.out.println("Removed successfully");
+                    removed = true;
                     break;
-                } else {
-                    System.out.println("This product is not in the cart.");
                 }
+            }
+            if (!removed) {
+                System.out.println("This product is not in the cart.");
             }
         }
     }
