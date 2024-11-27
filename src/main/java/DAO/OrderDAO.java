@@ -30,7 +30,8 @@ public class OrderDAO {
 
     public int addOrder(int customerID, Date orderDate, Double totalPrice, String status) {
         int result = 0;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
             statement.setInt(1, customerID);
             statement.setDate(2, orderDate);
             statement.setDouble(3, totalPrice);
@@ -45,7 +46,8 @@ public class OrderDAO {
 
     public int updateOrder(String status, int orderID) {
         int result = 0;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(UPDATE_ORDER_STATUS)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(UPDATE_ORDER_STATUS)) {
             statement.setString(1, status);
             statement.setInt(2, orderID);
 
@@ -58,7 +60,8 @@ public class OrderDAO {
 
     public ArrayList<Order> getAllOrders(int customerID) {
         ArrayList<Order> orderList = new ArrayList<>();
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
             statement.setInt(1, customerID);
             ResultSet result = statement.executeQuery();
 
@@ -68,7 +71,7 @@ public class OrderDAO {
                 Date orderDate = result.getDate("orderDate");
                 double totalPrice = result.getDouble("totalPrice");
                 String status = result.getString("status");
-                
+
                 ArrayList<OrderItems> items = getOrderItems(orderID);
                 orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
             }
@@ -81,7 +84,8 @@ public class OrderDAO {
 
     public Order getOrderByID(int orderID, int customerID) {
         Order order = null;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_ID)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_ID)) {
             statement.setInt(1, orderID);
             statement.setInt(2, customerID);
 
@@ -105,7 +109,8 @@ public class OrderDAO {
 
     public ArrayList<Order> getOrderByStatus(int customerID, String status) {
         ArrayList<Order> orderList = new ArrayList<>();
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_STATUS)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDER_BY_STATUS)) {
             statement.setInt(1, customerID);
             statement.setString(2, status);
 
@@ -129,7 +134,8 @@ public class OrderDAO {
 
     public int getOrderID() {
         int orderID = 0;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ORDERID)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ORDERID)) {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 orderID = result.getInt("OrderID");
@@ -142,7 +148,8 @@ public class OrderDAO {
 
     public int addItems(ArrayList<OrderItems> items) {
         int result = 0;
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(ADD_ITEMS)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(ADD_ITEMS)) {
             for (OrderItems item : items) {
                 statement.setInt(1, item.getOrderID());
                 statement.setInt(2, item.getProductID());
@@ -159,7 +166,8 @@ public class OrderDAO {
 
     private ArrayList<OrderItems> getOrderItems(int orderID) {
         ArrayList<OrderItems> itemList = new ArrayList<>();
-        try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ITEMS)) {
+        try (Connection conn = JDBCConnection.getConnection();
+                PreparedStatement statement = conn.prepareStatement(GET_ITEMS)) {
             statement.setInt(1, orderID);
 
             ResultSet result = statement.executeQuery();
@@ -169,7 +177,7 @@ public class OrderDAO {
                 int productID = result.getInt("productID");
                 double price = result.getDouble("price");
                 int quantity = result.getInt("quantity");
-                itemList.add(new OrderItems(orderItemID, orderID, productID, price, quantity));             
+                itemList.add(new OrderItems(orderItemID, orderID, productID, price, quantity));
             }
             conn.close();
         } catch (SQLException e) {

@@ -56,8 +56,8 @@ CREATE TABLE Inventory
     ProductID INT NOT NULL,
     StockLevel INT NOT NULL,
     LowStockThreshold INT NOT NULL,
-	LastUpdate date NOT NULL DEFAULT GETDATE()
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    LastUpdate date NOT NULL DEFAULT GETDATE()
+        FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
 );
 GO
 
@@ -65,71 +65,86 @@ GO
 CREATE TRIGGER trg_UpdateInventoryAfterOrder ON OrderItems AFTER INSERT
 AS
 BEGIN
-	INSERT INTO Inventory(ProductID, StockLevel, LowStockThreshold, LastUpdate)
-	SELECT i.ProductID, (inv.StockLevel - i.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
-	FROM inserted i 
-		INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate FROM Inventory GROUP BY ProductID) latest 
-		ON i.ProductId = latest.ProductId
-		INNER JOIN Inventory inv 
-		ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate;
+    INSERT INTO Inventory
+        (ProductID, StockLevel, LowStockThreshold, LastUpdate)
+    SELECT i.ProductID, (inv.StockLevel - i.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
+    FROM inserted i
+        INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate
+        FROM Inventory
+        GROUP BY ProductID) latest
+        ON i.ProductId = latest.ProductId
+        INNER JOIN Inventory inv
+        ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate;
 END;
 GO
 
 CREATE TRIGGER trg_UpdateInventoryAfterCancel ON Orders AFTER UPDATE
 AS
 BEGIN
-	IF EXISTS (SELECT 1 FROM inserted WHERE Status = 'cancelled')
+    IF EXISTS (SELECT 1
+    FROM inserted
+    WHERE Status = 'cancelled')
 	BEGIN
-		INSERT INTO Inventory (ProductID, StockLevel, LowStockThreshold, LastUpdate)
-		SELECT oi.ProductID, (inv.StockLevel + oi.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
-		FROM OrderItems oi 
-			INNER JOIN inserted i 
-			ON oi.OrderID = i.OrderID
-			INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate FROM Inventory GROUP BY ProductID) latest 
-			ON oi.ProductID = latest.ProductID 
-			INNER JOIN Inventory inv 
-			ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate
-		WHERE i.Status = 'cancelled';
-	END
+        INSERT INTO Inventory
+            (ProductID, StockLevel, LowStockThreshold, LastUpdate)
+        SELECT oi.ProductID, (inv.StockLevel + oi.Quantity) AS NewStockLevel, inv.LowStockThreshold, GETDATE()
+        FROM OrderItems oi
+            INNER JOIN inserted i
+            ON oi.OrderID = i.OrderID
+            INNER JOIN (SELECT ProductID, MAX(LastUpdate) AS LastUpdate
+            FROM Inventory
+            GROUP BY ProductID) latest
+            ON oi.ProductID = latest.ProductID
+            INNER JOIN Inventory inv
+            ON latest.ProductId = inv.ProductId AND latest.LastUpdate = inv.LastUpdate
+        WHERE i.Status = 'cancelled';
+    END
 END;
 GO
 
--- Insert sample data
-INSERT INTO Users(Username, Email, Password, Role)
+-- Thêm tài khoản mới
+-- Password cho cả 2 tài khoản là: Password@123
+INSERT INTO Users
+    (Username, Email, Password, Role)
 VALUES
-    ('Storeowner', 'storeowner@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'STORE_OWNER'),
-    ('Customer', 'customer@example.com', '$2a$10$XQxlOFEZWo9Ej2qAOEXRxuCY3tN8yzqTvPHLwLbJZOGJ7.rnvy4Hy', 'CUSTOMER');
+    ('StoreManager', 'store.manager@example.com', '$2a$10$PH0P6j2.2qgR9K9PkNJmBu7mMmqSxXhvqp9q2mWrE4d8V1.fJNxJi', 'STORE_OWNER'),
+    ('CustomerUser', 'customer.user@example.com', '$2a$10$PH0P6j2.2qgR9K9PkNJmBu7mMmqSxXhvqp9q2mWrE4d8V1.fJNxJi', 'CUSTOMER');
 
-INSERT INTO Category(CategoryName)
+INSERT INTO Category
+    (CategoryName)
 VALUES
     ('electronics'),
     ('vehicle'),
     ('clothes');
 
-INSERT INTO Products(ProductName, CategoryID, Price, Description)
+INSERT INTO Products
+    (ProductName, CategoryID, Price, Description)
 VALUES
     ('tivi', 1, 6590000, 'tivi LG'),
     ('iphone13', 1, 13670000, 'iphone 13') ,
     ('tivi', 1, 7890000, 'tivi SAMSUNG'),
-	('bike', 2, 1999000, 'xe dap');
+    ('bike', 2, 1999000, 'xe dap');
 
-INSERT INTO Inventory(ProductID, StockLevel, LowStockThreshold, LastUpdate)
+INSERT INTO Inventory
+    (ProductID, StockLevel, LowStockThreshold, LastUpdate)
 VALUES
-	(1, 100, 30, '2024-10-15'),
-	(2, 150, 50, '2024-10-15'),
-	(3, 90, 30, '2024-10-15'),
-	(4, 50, 10, '2024-10-30');
+    (1, 100, 30, '2024-10-15'),
+    (2, 150, 50, '2024-10-15'),
+    (3, 90, 30, '2024-10-15'),
+    (4, 50, 10, '2024-10-30');
 
-INSERT INTO Orders(CustomerID, OrderDate, TotalPrice, Status)
-VALUES 
-	(2, '2024-11-01', 6590000, 'Finished'),
-	(2, '2024-11-02', 15669000, 'Finished'),
-	(2, '2024-11-20', 9889000, 'In progress');
-
-INSERT INTO OrderItems(OrderID, ProductID, Quantity, Price)
+INSERT INTO Orders
+    (CustomerID, OrderDate, TotalPrice, Status)
 VALUES
-	(1, 1, 1, 6590000),
-	(2, 2, 1, 13670000),
-	(2, 4, 1, 1999000),
-	(3, 3, 1, 7890000),
-	(3, 4, 1, 1999000);
+    (2, '2024-11-01', 6590000, 'Finished'),
+    (2, '2024-11-02', 15669000, 'Finished'),
+    (2, '2024-11-20', 9889000, 'In progress');
+
+INSERT INTO OrderItems
+    (OrderID, ProductID, Quantity, Price)
+VALUES
+    (1, 1, 1, 6590000),
+    (2, 2, 1, 13670000),
+    (2, 4, 1, 1999000),
+    (3, 3, 1, 7890000),
+    (3, 4, 1, 1999000);

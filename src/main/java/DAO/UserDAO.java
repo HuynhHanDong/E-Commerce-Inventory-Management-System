@@ -29,11 +29,16 @@ public class UserDAO implements AuthDAO {
             statement.setString(1, username);
             ResultSet result = statement.executeQuery();
 
-            if (result.next() && PasswordHasher.verifyPassword(password, result.getString("Password"))) {
+            if (result.next()) {
+                String hashedPassword = result.getString("Password");
+                System.out.println("DB Password: " + hashedPassword);
+                System.out.println("Password match: " + PasswordHasher.verifyPassword(password, hashedPassword));
                 int userID = result.getInt("UserID");
                 String email = result.getString("Email");
                 String role = result.getString("Role");
-                user = new User(userID, username, email, password, role);
+                user = new User(userID, username, email, hashedPassword, role);
+            } else {
+                System.out.println("User not found: " + username);
             }
         } catch (SQLException e) {
             e.printStackTrace();
