@@ -84,14 +84,14 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean isValidPrice(double price) {
+    public static boolean isValidTotalPrice(double totalPrice) {
         try {
-            if (price <= 0) {
-                System.out.println("Price must be greater than 0.");
+            if (totalPrice <= 0) {
+                System.out.println("Total price must be greater than 0.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            System.out.println("Product ID must be a positive integer.");
+            System.out.println("Total price must be a positive integer.");
             return false;
         }
         return true;

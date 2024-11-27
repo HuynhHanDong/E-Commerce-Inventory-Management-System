@@ -14,7 +14,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items, double totalPrice, String status) {
+    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items, double totalPrice,
+            String status) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.orderDate = orderDate;
@@ -22,7 +23,7 @@ public class Order {
         this.totalPrice = totalPrice;
         this.status = status;
     }
-    
+
     public Order(int orderID, int customerID) {
         this.orderID = orderID;
         this.customerID = customerID;
@@ -90,6 +91,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "orderID: " + orderID + ", customerID: " + customerID + ", orderDate: " + orderDate + ", totalPrice: " + totalPrice + ", status: " + status;
+        return String.format("orderID: %d, customerID: %d, orderDate: %s, totalPrice: %.2f, status: %s",
+                orderID, customerID, orderDate, totalPrice, status);
     }
 }

@@ -60,7 +60,7 @@ public class ProductMenuController extends BaseController {
             double price;
             try {
                 price = Double.parseDouble(scanner.nextLine());
-                if (!UserValidation.isValidPrice(price)) {
+                if (!UserValidation.isValidTotalPrice(price)) {
                     return;
                 }
             } catch (NumberFormatException e) {
@@ -73,7 +73,7 @@ public class ProductMenuController extends BaseController {
             if (!UserValidation.isValidDescription(description)) {
                 return;
             }
-            
+
             int categoryID = getCategoryID(categoryName);
             if (categoryID == 0) {
                 System.out.println("Category not found. Please add the category first.");
@@ -121,7 +121,7 @@ public class ProductMenuController extends BaseController {
 
             System.out.println("Enter new price (or -1 to skip): ");
             double price = Double.parseDouble(scanner.nextLine());
-            if (price != -1 && !UserValidation.isValidPrice(price)) {
+            if (price != -1 && !UserValidation.isValidTotalPrice(price)) {
                 return;
             }
 
@@ -176,7 +176,7 @@ public class ProductMenuController extends BaseController {
                 int result = productDAO.deleteProduct(productID);
                 if (result > 0) {
                     System.out.println("Product deleted successfully.");
-                } else if (result == -1){
+                } else if (result == -1) {
                     System.out.println("This product cannot be deleted.");
                 } else {
                     System.out.println("Failed to delete product.");
