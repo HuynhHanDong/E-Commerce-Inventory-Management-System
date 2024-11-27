@@ -1,13 +1,17 @@
 package controller;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 
 import DAO.ReportDAO;
-import java.util.ArrayList;
 import models.Report;
 
 public class ReportMenuController extends BaseController {
+
     private final ReportDAO reportDAO;
 
     public ReportMenuController() {
@@ -50,6 +54,7 @@ public class ReportMenuController extends BaseController {
                 for (Report report : salesReport) {
                     System.out.println(report.printSalesReport());
                 }
+                saveToFile(salesReport, "Sales");
             } else {
                 System.out.println("Nothing to report.");
             }
@@ -75,6 +80,7 @@ public class ReportMenuController extends BaseController {
                 for (Report report : inventoryReport) {
                     System.out.println(report.printInventoryReport());
                 }
+                saveToFile(inventoryReport, "Inventory");
             } else {
                 System.out.println("Nothing to report.");
             }
@@ -84,8 +90,25 @@ public class ReportMenuController extends BaseController {
             System.out.println("Invalid input. Please try again.");
         }
     }
-    
-    private void saveToFile() {
-        
+
+    private void saveToFile(ArrayList<Report> reports, String reportType) {
+        String fileName = reportType + "_report_" + System.currentTimeMillis() + ".txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(reportType + " Report\n");
+            writer.write("Generated on: " + new Date(System.currentTimeMillis()) + "\n\n");
+
+            for (Report report : reports) {
+                if ("Sales".equals(reportType)) {
+                    writer.write(report.printSalesReport() + "\n");
+                } else if ("Inventory".equals(reportType)) {
+                    writer.write(report.printInventoryReport() + "\n");
+                }
+            }
+
+            System.out.println("Report saved to file: " + fileName);
+        } catch (IOException e) {
+            System.out.println("An error occurr while saving the report: " + e.getMessage());
+        }
     }
+
 }
