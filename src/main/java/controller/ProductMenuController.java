@@ -97,7 +97,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to update: ");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!UserValidation.isValidProductID(productID)) {
+            if (!UserValidation.isValidId(productID)) {
                 return;
             }
 
@@ -193,7 +193,7 @@ public class ProductMenuController extends BaseController {
         try {
             System.out.println("Enter product ID to search:");
             int productID = Integer.parseInt(scanner.nextLine());
-            if (!UserValidation.isValidProductID(productID)) {
+            if (!UserValidation.isValidId(productID)) {
                 return;
             }
 

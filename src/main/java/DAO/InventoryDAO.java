@@ -18,7 +18,7 @@ public class InventoryDAO {
     private static final String DELETE_INVENTORY_ITEM = "DELETE FROM Inventory WHERE InventoryID = ?;";
     private static final String GET_LATEST_INVENTORY_ITEM_BY_ID = "SELECT top 1 i.InventoryID, i.ProductID, p.ProductName, i.StockLevel, i.LowStockThreshold, i.LastUpdate " +
                                                                   "FROM Inventory i INNER JOIN Products p ON i.ProductID = p.ProductID " +
-                                                                  "WHERE i.ProductID = ? ORDER BY LastUpdate DESC;";
+                                                                  "WHERE i.ProductID = ? ORDER BY LastUpdate DESC, i.InventoryID DESC;";
     private static final String GET_LATEST_INVENTORY_ITEMS = "WITH LatestInventory AS (SELECT ProductID, MAX(LastUpdate) AS LastUpdate FROM Inventory GROUP BY ProductID) " +
                                                              "SELECT i.InventoryID, i.ProductID, p.ProductName, i.StockLevel, i.LowStockThreshold, i.LastUpdate " +
                                                              "FROM Inventory i INNER JOIN LatestInventory li ON i.ProductID = li.ProductID AND i.LastUpdate = li.LastUpdate " +
@@ -51,7 +51,7 @@ public class InventoryDAO {
         return result;
     }
 
-    public Inventory  getCurrentStockLevelById(int productID) {
+    public Inventory getCurrentStockLevelById(int productID) {
         Inventory inventory = null;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(GET_LATEST_INVENTORY_ITEM_BY_ID)) {

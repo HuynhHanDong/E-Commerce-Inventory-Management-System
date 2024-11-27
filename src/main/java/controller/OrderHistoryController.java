@@ -68,70 +68,92 @@ public class OrderHistoryController extends BaseController {
     }
 
     private void viewAllOrders() {
-        List<Order> orderList = orderDAO.getAllOrders(userID);
-        if (!orderList.isEmpty()) {
-            for (Order order : orderList) {
-                System.out.println(order.toString());
+        try {
+            List<Order> orderList = orderDAO.getAllOrders(userID);
+            if (!orderList.isEmpty()) {
+                for (Order order : orderList) {
+                   System.out.println(order.toString());
+                }
+            } else {
+                System.out.println("No order history.");
             }
-        } else {
-            System.out.println("No order history.");
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
     private void viewOrdersByStatus(String status) {
-        List<Order> orderList = orderDAO.getOrderByStatus(userID, status);
-        if (!orderList.isEmpty()) {
-            for (Order order : orderList) {
-                System.out.println(order.toString());
+        try {
+            List<Order> orderList = orderDAO.getOrderByStatus(userID, status);
+            if (!orderList.isEmpty()) {
+                for (Order order : orderList) {
+                    System.out.println(order.toString());
+                }
+            } else {
+                System.out.println("There is no order with this status.");
             }
-        } else {
-            System.out.println("There is no order with this status.");
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
     public void viewOrderDetails() {
-        System.out.println("Enter orderID to view details: ");
-        int orderID = scanner.nextInt();
-        Order order = orderDAO.getOrderByID(orderID, userID);
-        if (order != null) {
-            System.out.println("--------------------------------------");
-            System.out.println(order.toString()); // Print out order details
-            System.out.println("--------------------------------------");
-            for (OrderItems item : order.getItems()) {
-                System.out.println(item.toString()); // Print out list of orderItems
+        try {
+            System.out.println("Enter orderID to view details: ");
+            int orderID = scanner.nextInt();
+            if (!UserValidation.isValidId(orderID)) {
+                return;
             }
-            System.out.println("--------------------------------------");
-        } else {
-            System.out.println("Order not found.");
+            Order order = orderDAO.getOrderByID(orderID, userID);
+            if (order != null) {
+                System.out.println("--------------------------------------");
+                System.out.println(order.toString()); // Print out order details
+                System.out.println("--------------------------------------");
+                for (OrderItems item : order.getItems()) {
+                    System.out.println(item.toString()); // Print out list of orderItems
+                }
+                System.out.println("--------------------------------------");
+            } else {
+                System.out.println("Order not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
     private void cancelOrder() {
-        System.out.println("Enter orderID to cancel:");
-        int orderID = scanner.nextInt();
-        Order order = orderDAO.getOrderByID(orderID, userID);
-        if (order != null) {
-            System.out.println(order.toString());
-            if (!"In transit".equals(order.getStatus()) || !"Finished".equals(order.getStatus())) {
-                System.out.println("+--------------------------------------+");
-                System.out.println("| Cancel this order?                   |");
-                System.out.println("| 1. YES                               |");
-                System.out.println("| 0. NO                                |");
-                System.out.println("+--------------------------------------+");
-                int choice = getValidChoice(0, 1);
-                if (choice == 1) {
-                    int result = orderDAO.updateOrder("Cancelled", orderID);
-                    if (result > 0) {
-                        System.out.println("Cancelled order.");
-                    } else {
-                        System.out.println("Failed to cancel order.");
+        try{
+            System.out.println("Enter orderID to cancel:");
+            int orderID = scanner.nextInt();
+            if (!UserValidation.isValidId(orderID)) {
+                return;
+            }
+            Order order = orderDAO.getOrderByID(orderID, userID);
+            if (order != null) {
+                System.out.println(order.toString());
+                if (!"In transit".equals(order.getStatus()) || !"Finished".equals(order.getStatus())) {
+                    System.out.println("+--------------------------------------+");
+                    System.out.println("| Cancel this order?                   |");
+                    System.out.println("| 1. YES                               |");
+                    System.out.println("| 0. NO                                |");
+                    System.out.println("+--------------------------------------+");
+                    int choice = getValidChoice(0, 1);
+                    if (choice == 1) {
+                        int result = orderDAO.updateOrder("Cancelled", orderID);
+                        if (result > 0) {
+                            System.out.println("Cancelled order.");
+                        } else {
+                            System.out.println("Failed to cancel order.");
+                        }
                     }
+                } else {
+                    System.out.println("Cannot cancel. This order is in transit or already finished.");
                 }
             } else {
-                System.out.println("Cannot cancel. This order is in transit or already finished.");
+                System.out.println("Order not found.");
             }
-        } else {
-            System.out.println("Order not found.");
+        } catch (Exception e) {
+            System.out.println("OrderID must be a positive integer.");
         }
     }
 }

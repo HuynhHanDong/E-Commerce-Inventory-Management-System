@@ -20,22 +20,6 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean isValidId(int id) {
-        if (String.valueOf(id).isEmpty()) {
-            System.out.println("ID cannot be empty.");
-            return false;
-        }
-        if (String.valueOf(id).length() != 4) {
-            System.out.println("ID must be 4 digits.");
-            return false;
-        }
-        if (!String.valueOf(id).matches("^\\d+$")) {
-            System.out.println("ID must be a number.");
-            return false;
-        }
-        return true;
-    }
-
     public static boolean isValidEmail(String email) {
         if (email.isEmpty()) {
             System.out.println("Email cannot be empty.");
@@ -65,13 +49,13 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean isValidProductID(int productID) {
+    public static boolean isValidId(int id) {
         try {
-            if (String.valueOf(productID).isEmpty()) {
+            if (String.valueOf(id).isEmpty()) {
                 System.out.println("Product ID cannot be empty.");
                 return false;
             }
-            if (productID <= 0) {
+            if (id <= 0) {
                 System.out.println("Product ID must be greater than 0.");
                 return false;
             }
@@ -120,7 +104,7 @@ public class UserValidation {
                 return false;
             }
 
-            if (quantity < 0) {
+            if (quantity <= 0) {
                 System.out.println("Quantity must be greater than 0");
                 return false;
             }
@@ -137,8 +121,8 @@ public class UserValidation {
             return false;
         }
 
-        if (categoryName.length() < 3 || categoryName.length() > 50) {
-            System.out.println("Category must be between 3 and 50 characters.");
+        if (categoryName.length() < 1 || categoryName.length() > 50) {
+            System.out.println("Category must be between 1 and 50 characters.");
             return false;
         }
 
@@ -202,41 +186,14 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean isValidInventoryID(int inventoryID) {
-        try {
-            if (String.valueOf(inventoryID).isEmpty()) {
-                System.out.println("Inventory ID cannot be empty.");
-                return false;
-            }
-
-            if (inventoryID <= 0) {
-                System.out.println("Inventory ID must be greater than 0.");
-                return false;
-            }
-            return true;
-        } catch (NumberFormatException e) {
-            System.out.println("Inventory ID must be the positive integer.");
-            return false;
-        }
-    }
-
-    public static boolean isValidOrderID(int orderID) {
-        if (orderID <= 0) {
-            System.out.println("Order ID must be greater than 0.");
-            return false;
-        }
-        return true;
-    }
-
-    // Utility methods
     public static boolean isValidDate(String date) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             sdf.setLenient(false);
             sdf.parse(date);
             return true;
         } catch (Exception e) {
-            System.out.println("Invalid date format. Use dd/MM/yyyy");
+            System.out.println("Invalid date format. Use YYY-MM-DD");
             return false;
         }
     }

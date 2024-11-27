@@ -1,0 +1,7 @@
+Sales Report
+Generated on: 2024-11-27
+
+product ID: 1, product name:tivi, quantity: 3, revenue: 1.318E7
+product ID: 2, product name:iphone13, quantity: 1, revenue: 1.367E7
+product ID: 3, product name:tivi, quantity: 1, revenue: 7890000.0
+product ID: 4, product name:bike, quantity: 5, revenue: 5997000.0

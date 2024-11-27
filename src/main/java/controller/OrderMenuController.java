@@ -1,9 +1,11 @@
 package controller;
 
+import DAO.InventoryDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
 import java.sql.Date;
 import java.util.ArrayList;
+import models.Inventory;
 import models.Order;
 import models.OrderItems;
 import models.Product;
@@ -54,21 +56,40 @@ public class OrderMenuController extends BaseController {
     }
 
     private void addToCart() {
-        if (order == null) {
-            order = new Order();
-        }
-        System.out.println("Enter product ID: ");
-        int productID = scanner.nextInt();
-        Product product = productDAO.getProductByID(productID);
-        if (product != null) {
+        try { 
+            if (order == null) {
+                order = new Order();
+            }
+            System.out.println("Enter product ID: ");
+            int productID = scanner.nextInt();
+            if (!UserValidation.isValidId(productID)) {
+                    return;
+            }
+        
+            Product product = productDAO.getProductByID(productID);
+            if (product != null) {
             System.out.println("Enter quantity: ");
-            int quantity = scanner.nextInt();
-            cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity)); // initialize orderID and orderItemID as zero
-            order.setItems(cart);
-            order.setTotalPrice();
-            System.out.println("Added to cart.");
-        } else {
-            System.out.println("Product not found.");
+                int quantity = scanner.nextInt();
+                if (!UserValidation.isValidQuantity(quantity)) {
+                    return;
+                }
+            
+                InventoryDAO inventoryDAO = new InventoryDAO();
+                Inventory inventory = inventoryDAO.getCurrentStockLevelById(productID);
+            
+                if (quantity <= inventory.getStockLevel()) {
+                    cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity)); // initialize orderID and orderItemID as zero
+                    order.setItems(cart);
+                    order.setTotalPrice();
+                    System.out.println("Added to cart.");
+                } else {
+                System.out.println("Not enough stock level.");
+                }
+            } else {
+                System.out.println("Product not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
@@ -76,23 +97,42 @@ public class OrderMenuController extends BaseController {
         if (cart.isEmpty()) {
             System.out.println("Nothing in cart");
         } else {
-            boolean changed = false;
-            System.out.println("Enter product id to change quantity: ");
-            int id = scanner.nextInt();
-            for (OrderItems item : cart) {
-                if (item.getProductID() == id) {
-                    System.out.println("Enter quantity: ");
-                    int quantity = scanner.nextInt();
-                    item.setQuanity(quantity);
-                    order.setItems(cart);
-                    order.setTotalPrice();
-                    System.out.println("Updated successfully: " + item.toString());
-                    changed = true;
-                    break;
+            try {
+                boolean changed = false;
+                System.out.println("Enter product id to change quantity: ");
+                int productID = scanner.nextInt();
+                if (!UserValidation.isValidId(productID)) {
+                    return;
                 }
-            }
-            if (!changed) {
-                System.out.println("This product is not in the cart.");
+            
+                for (OrderItems item : cart) {
+                    if (item.getProductID() == productID) {
+                        System.out.println("Enter quantity: ");
+                        int quantity = scanner.nextInt();
+                        if (!UserValidation.isValidQuantity(quantity)) {
+                            return;
+                        }
+                    
+                        InventoryDAO inventoryDAO = new InventoryDAO();
+                        Inventory inventory = inventoryDAO.getCurrentStockLevelById(productID);
+            
+                        if (quantity <= inventory.getStockLevel()) {
+                            item.setQuanity(quantity);
+                            order.setItems(cart);
+                            order.setTotalPrice();
+                            System.out.println("Updated successfully: " + item.toString());
+                            changed = true;
+                            break;
+                        } else {
+                            System.out.println("Not enough stock level.");
+                        }
+                    }
+                }
+                if (!changed) {
+                    System.out.println("This product is not in the cart.");
+                } 
+            } catch (Exception e) {
+                System.out.println("An error occurred: " + e.getMessage());
             }
         }
     }
@@ -101,21 +141,29 @@ public class OrderMenuController extends BaseController {
         if (cart.isEmpty()) {
             System.out.println("Nothing in cart");
         } else {
-            boolean removed = false;
-            System.out.print("Enter product id to delete: ");
-            int id = scanner.nextInt();
-            for (OrderItems item : cart) {
-                if (item.getProductID() == id) {
-                    cart.remove(item);
-                    order.setItems(cart);
-                    order.setTotalPrice();
-                    System.out.println("Removed successfully");
-                    removed = true;
-                    break;
+            try {
+                boolean removed = false;
+                System.out.print("Enter product id to delete: ");
+                int productID = scanner.nextInt();
+                if (!UserValidation.isValidId(productID)) {
+                return;
                 }
-            }
+            
+                for (OrderItems item : cart) {
+                    if (item.getProductID() == productID) {
+                        cart.remove(item);
+                        order.setItems(cart);
+                        order.setTotalPrice();
+                        System.out.println("Removed successfully");
+                        removed = true;
+                        break;
+                    }
+                }
             if (!removed) {
-                System.out.println("This product is not in the cart.");
+                    System.out.println("This product is not in the cart.");
+                }
+            } catch (Exception e) {
+            System.out.println("ProductID must be a positive integer");
             }
         }
     }
@@ -154,22 +202,25 @@ public class OrderMenuController extends BaseController {
     }
 
     private void addOrder() {
-        Date orderDate = new Date(System.currentTimeMillis());
-        int result = orderDAO.addOrder(userID, orderDate, order.getTotalPrice(), "Pending");
-        if (result > 0) {
-            int orderID = orderDAO.getOrderID();
-            for (OrderItems item : cart) {
-                item.setOrderID(orderID);
-            }
-            result = orderDAO.addItems(cart);
+        try {
+            Date orderDate = new Date(System.currentTimeMillis());
+            int result = orderDAO.addOrder(userID, orderDate, order.getTotalPrice(), "Pending");
             if (result > 0) {
-                System.out.println("Placed order successfully. OrderID: " + orderID);
+                int orderID = orderDAO.getOrderID();
+                for (OrderItems item : cart) {
+                   item.setOrderID(orderID);
+                }
+                result = orderDAO.addItems(cart);
+                if (result > 0) {
+                    System.out.println("Placed order successfully. OrderID: " + orderID);
+                } else {
+                    System.out.println("Failed to add orderItems.");
+                }
             } else {
-                System.out.println("Failed to add orderItems.");
+                System.out.println("Failed to add order.");
             }
-
-        } else {
-            System.out.println("Failed to add order.");
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 

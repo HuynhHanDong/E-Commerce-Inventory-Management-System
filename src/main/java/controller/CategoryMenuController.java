@@ -44,6 +44,9 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category Name: ");
             String categoryName = scanner.nextLine();
+            if (!UserValidation.isValidCategoryName(categoryName)) {
+                return;
+            }
 
             Category category = new Category(0, categoryName);
             int result = categoryDAO.addCategory(category);
@@ -64,6 +67,9 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category ID to update: ");
             int categoryID = scanner.nextInt();
+            if (!UserValidation.isValidId(categoryID)) {
+                return;
+            }
             scanner.nextLine();
             System.out.print("Enter new Category Name: ");
             String categoryName = scanner.nextLine();
@@ -84,6 +90,9 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.println("Enter category ID to delete:");
             int categoryID = Integer.parseInt(scanner.nextLine());
+            if (!UserValidation.isValidId(categoryID)) {
+                return;
+            }
             Category category = categoryDAO.getCategory("CategoryID = " + categoryID);
             if (category != null) {
                 System.out.println("Current category details:");
@@ -138,6 +147,9 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category ID to view: ");
             int categoryID = scanner.nextInt();
+            if (!UserValidation.isValidId(categoryID)) {
+                return;
+            }
             Category category = categoryDAO.getCategory("CategoryID = " + categoryID);
             if (category != null) {
                 System.out.println(category.toString());
@@ -153,6 +165,9 @@ public class CategoryMenuController extends BaseController {
         try {
             System.out.print("Enter Category name to view: ");
             String categoryName = scanner.nextLine();
+            if (!UserValidation.isValidCategoryName(categoryName)) {
+                return;
+            }
             Category category = categoryDAO.getCategory("CategoryName = '" + categoryName + "'");
             if (category != null) {
                 System.out.println(category.toString());

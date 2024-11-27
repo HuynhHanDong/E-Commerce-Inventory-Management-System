@@ -43,14 +43,19 @@ public class ReportMenuController extends BaseController {
             System.out.println("Generate Sales Report");
             System.out.println("Enter start date (YYYY-MM-DD):");
             String startDateStr = scanner.nextLine();
+            if (!UserValidation.isValidDate(startDateStr)) {
+                return;
+            }
             System.out.println("Enter end date (YYYY-MM-DD):");
             String endDateStr = scanner.nextLine();
-
+            if (!UserValidation.isValidDate(endDateStr)) {
+                return;
+            }
             Date startDate = Date.valueOf(startDateStr);
             Date endDate = Date.valueOf(endDateStr);
 
             ArrayList<Report> salesReport = reportDAO.generateSalesReport(startDate, endDate);
-            if (salesReport != null) {
+            if (!salesReport.isEmpty()) {
                 for (Report report : salesReport) {
                     System.out.println(report.printSalesReport());
                 }
@@ -70,13 +75,19 @@ public class ReportMenuController extends BaseController {
             System.out.println("Generate Inventory Report");
             System.out.println("Enter start date (YYYY-MM-DD):");
             String startDateStr = scanner.nextLine();
+            if (!UserValidation.isValidDate(startDateStr)) {
+                return;
+            }
             System.out.println("Enter end date (YYYY-MM-DD):");
             String endDateStr = scanner.nextLine();
+            if (!UserValidation.isValidDate(endDateStr)) {
+                return;
+            }
             Date startDate = Date.valueOf(startDateStr);
             Date endDate = Date.valueOf(endDateStr);
 
             ArrayList<Report> inventoryReport = reportDAO.generateInventoryReport(startDate, endDate);
-            if (inventoryReport != null) {
+            if (!inventoryReport.isEmpty()) {
                 for (Report report : inventoryReport) {
                     System.out.println(report.printInventoryReport());
                 }
@@ -93,7 +104,7 @@ public class ReportMenuController extends BaseController {
 
     private void saveToFile(ArrayList<Report> reports, String reportType) {
         String fileName = reportType + "_report_" + System.currentTimeMillis() + ".txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("report-text-file/" + fileName))) {
             writer.write(reportType + " Report\n");
             writer.write("Generated on: " + new Date(System.currentTimeMillis()) + "\n\n");
 
