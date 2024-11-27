@@ -65,8 +65,8 @@ public class Menu {
     public void inventoryMenu() {
         System.out.println("+----------- Inventory Menu -----------+");
         System.out.println("| 1. Add inventory item                |");
-        System.out.println("| 2. Update inventory item             |");
-        System.out.println("| 3. View stock levels by product      |");
+        System.out.println("| 2. Delete inventory item             |");
+        System.out.println("| 3. View stock levels by product ID   |");
         System.out.println("| 4. View stock levels of all products |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
@@ -75,7 +75,7 @@ public class Menu {
     public void reportMenu() {
         System.out.println("+------------ Report Menu -------------+");
         System.out.println("| 1. Generate sales report             |");
-        System.out.println("| 2. Generate invetory report          |");
+        System.out.println("| 2. Generate inventory report          |");
         System.out.println("| 0. Go back                           |");
         System.out.println("+--------------------------------------+");
     }

@@ -132,6 +132,6 @@ public class Report {
     
     public String printInventoryReport() {
         return "product ID: " +  productID + ", product name:" + productName + ", stock level: " + quantity + 
-                ", low stock threshold: " + lowStockThreshold + "last update:" + lastUpdate;
+                ", low stock threshold: " + lowStockThreshold + ", last update: " + lastUpdate;
     }
 }

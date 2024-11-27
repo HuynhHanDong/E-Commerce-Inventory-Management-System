@@ -75,7 +75,7 @@ public class ReportMenuController extends BaseController {
             Date startDate = Date.valueOf(startDateStr);
             Date endDate = Date.valueOf(endDateStr);
 
-            ArrayList<Report> inventoryReport = reportDAO.generateSalesReport(startDate, endDate);
+            ArrayList<Report> inventoryReport = reportDAO.generateInventoryReport(startDate, endDate);
             if (inventoryReport != null) {
                 for (Report report : inventoryReport) {
                     System.out.println(report.printInventoryReport());

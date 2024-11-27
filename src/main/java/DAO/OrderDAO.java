@@ -60,20 +60,17 @@ public class OrderDAO {
         ArrayList<Order> orderList = new ArrayList<>();
         try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ALL_ORDERS)) {
             statement.setInt(1, customerID);
-
             ResultSet result = statement.executeQuery();
 
-            if (result != null) {
-                while (result.next()) {
-                    int orderID = result.getInt("orderID");
-                    customerID = result.getInt("customerID");
-                    Date orderDate = result.getDate("orderDate");
-                    double totalPrice = result.getDouble("totalPrice");
-                    String status = result.getString("status");
-
-                    ArrayList<OrderItems> items = getOrderItems(orderID);
-                    orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
-                }
+            while (result.next()) {
+                int orderID = result.getInt("orderID");
+                customerID = result.getInt("customerID");
+                Date orderDate = result.getDate("orderDate");
+                double totalPrice = result.getDouble("totalPrice");
+                String status = result.getString("status");
+                
+                ArrayList<OrderItems> items = getOrderItems(orderID);
+                orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
             }
             conn.close();
         } catch (SQLException e) {
@@ -89,18 +86,15 @@ public class OrderDAO {
             statement.setInt(2, customerID);
 
             ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                orderID = result.getInt("orderID");
+                customerID = result.getInt("customerID");
+                Date orderDate = result.getDate("orderDate");
+                double totalPrice = result.getDouble("totalPrice");
+                String status = result.getString("status");
 
-            if (result != null) {
-                while (result.next()) {
-                    orderID = result.getInt("orderID");
-                    customerID = result.getInt("customerID");
-                    Date orderDate = result.getDate("orderDate");
-                    double totalPrice = result.getDouble("totalPrice");
-                    String status = result.getString("status");
-
-                    ArrayList<OrderItems> items = getOrderItems(orderID);
-                    order = new Order(orderID, customerID, orderDate, items, totalPrice, status);
-                }
+                ArrayList<OrderItems> items = getOrderItems(orderID);
+                order = new Order(orderID, customerID, orderDate, items, totalPrice, status);
             }
             conn.close();
         } catch (SQLException e) {
@@ -116,18 +110,15 @@ public class OrderDAO {
             statement.setString(2, status);
 
             ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                int orderID = result.getInt("orderID");
+                customerID = result.getInt("customerID");
+                Date orderDate = result.getDate("orderDate");
+                double totalPrice = result.getDouble("totalPrice");
+                status = result.getString("status");
 
-            if (result != null) {
-                while (result.next()) {
-                    int orderID = result.getInt("orderID");
-                    customerID = result.getInt("customerID");
-                    Date orderDate = result.getDate("orderDate");
-                    double totalPrice = result.getDouble("totalPrice");
-                    status = result.getString("status");
-
-                    ArrayList<OrderItems> items = getOrderItems(orderID);
-                    orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
-                }
+                ArrayList<OrderItems> items = getOrderItems(orderID);
+                orderList.add(new Order(orderID, customerID, orderDate, items, totalPrice, status));
             }
             conn.close();
         } catch (SQLException e) {
@@ -140,10 +131,9 @@ public class OrderDAO {
         int orderID = 0;
         try (Connection conn = JDBCConnection.getConnection(); PreparedStatement statement = conn.prepareStatement(GET_ORDERID)) {
             ResultSet result = statement.executeQuery();
-            if (result != null && result.next()) {
+            if (result.next()) {
                 orderID = result.getInt("OrderID");
             }
-
         } catch (SQLException e) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -173,16 +163,13 @@ public class OrderDAO {
             statement.setInt(1, orderID);
 
             ResultSet result = statement.executeQuery();
-
-            if (result != null) {
-                while (result.next()) {
-                    int orderItemID = result.getInt("orderItemID");
-                    orderID = result.getInt("orderID");
-                    int productID = result.getInt("productID");
-                    double price = result.getDouble("price");
-                    int quantity = result.getInt("quantity");
-                    itemList.add(new OrderItems(orderItemID, orderID, productID, price, quantity));
-                }
+            while (result.next()) {
+                int orderItemID = result.getInt("orderItemID");
+                orderID = result.getInt("orderID");
+                int productID = result.getInt("productID");
+                double price = result.getDouble("price");
+                int quantity = result.getInt("quantity");
+                itemList.add(new OrderItems(orderItemID, orderID, productID, price, quantity));             
             }
             conn.close();
         } catch (SQLException e) {

@@ -11,13 +11,15 @@ import java.util.ArrayList;
 
 public class ReportDAO {
     private static final String GENERATE_SALES_REPORT = 
-        "WITH sales as(SELECT Orders.OrderID, ProductID, Price, Quantity, OrderDate, Status" +
-		    "FROM OrderItems join Orders ON OrderItems.OrderID = Orders.OrderID" +
+        "WITH sales as(SELECT Orders.OrderID, ProductID, Price, Quantity, OrderDate, Status " +
+		    "FROM OrderItems INNER JOIN Orders ON OrderItems.OrderID = Orders.OrderID " +
 		    "WHERE OrderDate between ? and ? and Status != 'Cancelled')" +
-        "SELECT sales.ProductID, ProductName, Sum(sales.Price) as Revenue, Sum(Quantity) as Quantity" +
-        "FROM Products join sales ON Products.ProductID = sales.ProductID" +
+        "SELECT sales.ProductID, ProductName, Sum(sales.Price) as Revenue, Sum(Quantity) as Quantity " +
+        "FROM Products INNER JOIN sales ON Products.ProductID = sales.ProductID " +
         "GROUP BY sales.ProductID, productName";
-    private static final String GENERATE_INVENTORY_REPORT = "SELECT * FROM Inventory WHERE LastUpdate between ? and ?";
+    private static final String GENERATE_INVENTORY_REPORT = "SELECT i.productID, productName, StockLevel, lowStockThreshold, lastUpdate " +
+                                                            "FROM Inventory i INNER JOIN Products p ON i.ProductID = p.ProductID " +
+                                                            "WHERE LastUpdate between ? and ? ";
 
     public ArrayList<Report> generateSalesReport(Date startDate, Date endDate) {
         ArrayList<Report> salesReport = new ArrayList<>();
@@ -51,8 +53,8 @@ public class ReportDAO {
                 int productID = result.getInt("ProductID");
                 String productName = result.getString("ProductName");
                 int quantity = result.getInt("StockLevel");
-                int lowStockThreshold = result.getInt("LowStockThreshold");
-                Date lastUpdate = result.getDate("lastUpdate");
+                int lowStockThreshold = result.getInt("lowStockThreshold");
+                Date lastUpdate = result.getDate("LastUpdate");
                 Report report = new Report("INVENTORY", new Date(System.currentTimeMillis()), startDate, endDate, productID, productName, quantity, lowStockThreshold, lastUpdate);
                 inventoryReport.add(report);
             }
