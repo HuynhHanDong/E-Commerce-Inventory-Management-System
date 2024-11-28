@@ -56,34 +56,35 @@ public class OrderMenuController extends BaseController {
     }
 
     private void addToCart() {
-        try { 
+        try {
             if (order == null) {
                 order = new Order();
             }
             System.out.println("Enter product ID: ");
             int productID = scanner.nextInt();
             if (!UserValidation.isValidId(productID)) {
-                    return;
+                return;
             }
-        
+
             Product product = productDAO.getProductByID(productID);
             if (product != null) {
-            System.out.println("Enter quantity: ");
+                System.out.println("Enter quantity: ");
                 int quantity = scanner.nextInt();
                 if (!UserValidation.isValidQuantity(quantity)) {
                     return;
                 }
-            
+
                 InventoryDAO inventoryDAO = new InventoryDAO();
                 Inventory inventory = inventoryDAO.getCurrentStockLevelById(productID);
-            
+
                 if (quantity <= inventory.getStockLevel()) {
-                    cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity)); // initialize orderID and orderItemID as zero
+                    // initialize orderID and orderItemID as zero
+                    cart.add(new OrderItems(cart.size(), 0, product.getProductID(), product.getPrice(), quantity));
                     order.setItems(cart);
                     order.setTotalPrice();
                     System.out.println("Added to cart.");
                 } else {
-                System.out.println("Not enough stock level.");
+                    System.out.println("Not enough stock level.");
                 }
             } else {
                 System.out.println("Product not found.");
@@ -98,13 +99,15 @@ public class OrderMenuController extends BaseController {
             System.out.println("Nothing in cart");
         } else {
             try {
+                // Show cart before changing quantity
+                viewCart();
                 boolean changed = false;
                 System.out.println("Enter product id to change quantity: ");
                 int productID = scanner.nextInt();
                 if (!UserValidation.isValidId(productID)) {
                     return;
                 }
-            
+
                 for (OrderItems item : cart) {
                     if (item.getProductID() == productID) {
                         System.out.println("Enter quantity: ");
@@ -112,10 +115,10 @@ public class OrderMenuController extends BaseController {
                         if (!UserValidation.isValidQuantity(quantity)) {
                             return;
                         }
-                    
+
                         InventoryDAO inventoryDAO = new InventoryDAO();
                         Inventory inventory = inventoryDAO.getCurrentStockLevelById(productID);
-            
+
                         if (quantity <= inventory.getStockLevel()) {
                             item.setQuanity(quantity);
                             order.setItems(cart);
@@ -130,7 +133,7 @@ public class OrderMenuController extends BaseController {
                 }
                 if (!changed) {
                     System.out.println("This product is not in the cart.");
-                } 
+                }
             } catch (Exception e) {
                 System.out.println("An error occurred: " + e.getMessage());
             }
@@ -142,13 +145,15 @@ public class OrderMenuController extends BaseController {
             System.out.println("Nothing in cart");
         } else {
             try {
+                // Show cart before removing
+                viewCart();
                 boolean removed = false;
                 System.out.print("Enter product id to delete: ");
                 int productID = scanner.nextInt();
                 if (!UserValidation.isValidId(productID)) {
-                return;
+                    return;
                 }
-            
+
                 for (OrderItems item : cart) {
                     if (item.getProductID() == productID) {
                         cart.remove(item);
@@ -159,11 +164,11 @@ public class OrderMenuController extends BaseController {
                         break;
                     }
                 }
-            if (!removed) {
+                if (!removed) {
                     System.out.println("This product is not in the cart.");
                 }
             } catch (Exception e) {
-            System.out.println("ProductID must be a positive integer");
+                System.out.println("ProductID must be a positive integer");
             }
         }
     }
@@ -208,7 +213,7 @@ public class OrderMenuController extends BaseController {
             if (result > 0) {
                 int orderID = orderDAO.getOrderID();
                 for (OrderItems item : cart) {
-                   item.setOrderID(orderID);
+                    item.setOrderID(orderID);
                 }
                 result = orderDAO.addItems(cart);
                 if (result > 0) {

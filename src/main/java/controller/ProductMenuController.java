@@ -258,7 +258,7 @@ public class ProductMenuController extends BaseController {
                     "[3]. Category Name \n" +
                     "[0]. Go back");
 
-            int choice = getValidChoice(1, 3);
+            int choice = getValidChoice(0, 3);
 
             switch (choice) {
                 case 1:
@@ -271,6 +271,7 @@ public class ProductMenuController extends BaseController {
                     searchProductByCategory();
                     break;
                 case 0:
+                    System.out.println("Returning to main menu...");
                     break;
             }
         } catch (Exception e) {

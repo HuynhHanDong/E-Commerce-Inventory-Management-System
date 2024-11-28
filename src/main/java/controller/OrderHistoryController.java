@@ -72,7 +72,7 @@ public class OrderHistoryController extends BaseController {
             List<Order> orderList = orderDAO.getAllOrders(userID);
             if (!orderList.isEmpty()) {
                 for (Order order : orderList) {
-                   System.out.println(order.toString());
+                    System.out.println(order.toString());
                 }
             } else {
                 System.out.println("No order history.");
@@ -122,7 +122,8 @@ public class OrderHistoryController extends BaseController {
     }
 
     private void cancelOrder() {
-        try{
+        try {
+            viewAllOrders();
             System.out.println("Enter orderID to cancel:");
             int orderID = scanner.nextInt();
             if (!UserValidation.isValidId(orderID)) {
