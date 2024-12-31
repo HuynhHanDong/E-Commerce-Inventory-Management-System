@@ -193,7 +193,7 @@ public class UserValidation {
             sdf.parse(date);
             return true;
         } catch (Exception e) {
-            System.out.println("Invalid date format. Use YYY-MM-DD");
+            System.out.println("Invalid date format. Use YYYY-MM-DD");
             return false;
         }
     }

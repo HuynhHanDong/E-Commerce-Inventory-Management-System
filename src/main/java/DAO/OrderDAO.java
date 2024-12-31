@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,12 +29,12 @@ public class OrderDAO {
     private static final String ADD_ITEMS = "INSERT INTO OrderItems (OrderID, ProductID, Price, Quantity) VALUES (?,?,?,?);";
     private static final String GET_ITEMS = "SELECT * FROM OrderItems WHERE OrderID = ?;";
 
-    public int addOrder(int customerID, Date orderDate, Double totalPrice, String status) {
+    public int addOrder(int customerID, Timestamp orderDate, Double totalPrice, String status) {
         int result = 0;
         try (Connection conn = JDBCConnection.getConnection();
                 PreparedStatement statement = conn.prepareStatement(ADD_ORDER)) {
             statement.setInt(1, customerID);
-            statement.setDate(2, orderDate);
+            statement.setTimestamp(2, orderDate);
             statement.setDouble(3, totalPrice);
             statement.setString(4, status);
 
@@ -68,7 +69,7 @@ public class OrderDAO {
             while (result.next()) {
                 int orderID = result.getInt("orderID");
                 customerID = result.getInt("customerID");
-                Date orderDate = result.getDate("orderDate");
+                Timestamp orderDate = result.getTimestamp("orderDate");
                 double totalPrice = result.getDouble("totalPrice");
                 String status = result.getString("status");
 
@@ -93,7 +94,7 @@ public class OrderDAO {
             while (result.next()) {
                 orderID = result.getInt("orderID");
                 customerID = result.getInt("customerID");
-                Date orderDate = result.getDate("orderDate");
+                Timestamp orderDate = result.getTimestamp("orderDate");
                 double totalPrice = result.getDouble("totalPrice");
                 String status = result.getString("status");
 
@@ -118,7 +119,7 @@ public class OrderDAO {
             while (result.next()) {
                 int orderID = result.getInt("orderID");
                 customerID = result.getInt("customerID");
-                Date orderDate = result.getDate("orderDate");
+                Timestamp orderDate = result.getTimestamp("orderDate");
                 double totalPrice = result.getDouble("totalPrice");
                 status = result.getString("status");
 

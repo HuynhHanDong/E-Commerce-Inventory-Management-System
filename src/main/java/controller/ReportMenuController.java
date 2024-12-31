@@ -3,11 +3,12 @@ package controller;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
 import DAO.ReportDAO;
+import java.time.LocalDate;
 import models.Report;
 
 public class ReportMenuController extends BaseController {
@@ -51,8 +52,8 @@ public class ReportMenuController extends BaseController {
             if (!UserValidation.isValidDate(endDateStr)) {
                 return;
             }
-            Date startDate = Date.valueOf(startDateStr);
-            Date endDate = Date.valueOf(endDateStr);
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr+ " 23:59:59.999");
 
             ArrayList<Report> salesReport = reportDAO.generateSalesReport(startDate, endDate);
             if (!salesReport.isEmpty()) {
@@ -83,8 +84,8 @@ public class ReportMenuController extends BaseController {
             if (!UserValidation.isValidDate(endDateStr)) {
                 return;
             }
-            Date startDate = Date.valueOf(startDateStr);
-            Date endDate = Date.valueOf(endDateStr);
+            Timestamp startDate = Timestamp.valueOf(startDateStr + " 00:00:00");
+            Timestamp endDate = Timestamp.valueOf(endDateStr+ " 23:59:59.999");
 
             ArrayList<Report> inventoryReport = reportDAO.generateInventoryReport(startDate, endDate);
             if (!inventoryReport.isEmpty()) {
@@ -103,10 +104,10 @@ public class ReportMenuController extends BaseController {
     }
 
     private void saveToFile(ArrayList<Report> reports, String reportType) {
-        String fileName = reportType + "_report_" + System.currentTimeMillis() + ".txt";
+        String fileName = reportType + "_report_" + LocalDate.now() + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("report-text-file/" + fileName))) {
             writer.write(reportType + " Report\n");
-            writer.write("Generated on: " + new Date(System.currentTimeMillis()) + "\n\n");
+            writer.write("Generated on: " + LocalDate.now() + "\n\n");
 
             for (Report report : reports) {
                 if ("Sales".equals(reportType)) {

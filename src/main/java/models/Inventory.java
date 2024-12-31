@@ -1,6 +1,6 @@
 package models;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Inventory {
     private int inventoryID;
@@ -8,12 +8,12 @@ public class Inventory {
     private String productName;
     private int stockLevel; // Mức tồn kho hiện tại
     private int lowStockThreshold; // Cảnh báo mức độ tồn kho thấp
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     public Inventory() {
     }
 
-    public Inventory(int inventoryID, int productID, int stockLevel, int lowStockThreshold, Date lastUpdate) {
+    public Inventory(int inventoryID, int productID, int stockLevel, int lowStockThreshold, Timestamp lastUpdate) {
         this.inventoryID = inventoryID;
         this.productID = productID;
         this.stockLevel = stockLevel;
@@ -21,7 +21,7 @@ public class Inventory {
         this.lastUpdate = lastUpdate;
     }
     
-    public Inventory(int inventoryID, int productID, String productName, int stockLevel, int lowStockThreshold, Date lastUpdate) {
+    public Inventory(int inventoryID, int productID, String productName, int stockLevel, int lowStockThreshold, Timestamp lastUpdate) {
         this.inventoryID = inventoryID;
         this.productID = productID;
         this.productName = productName;
@@ -70,11 +70,11 @@ public class Inventory {
         this.lowStockThreshold = lowStockThreshold;
     }
     
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
     
-    public void setLastUpdated(Date lastUpdate){
+    public void setLastUpdated(Timestamp lastUpdate){
         this.lastUpdate = lastUpdate;
     }
 

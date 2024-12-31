@@ -3,7 +3,8 @@ package controller;
 import java.util.List;
 import DAO.InventoryDAO;
 import DAO.ProductDAO;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import models.Inventory;
 import models.Product;
 
@@ -66,7 +67,8 @@ public class InventoryMenuController extends BaseController {
                 return;
             }
 
-            Date lastUpdate = new Date(System.currentTimeMillis());
+            LocalDateTime dateTime = LocalDateTime.now();
+            Timestamp lastUpdate = Timestamp.valueOf(dateTime);
 
             Inventory inventory = new Inventory(0, productID, stockLevel, lowStockThreshold, lastUpdate);
             int result = inventoryDAO.addInventoryItem(inventory);

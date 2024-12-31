@@ -1,12 +1,12 @@
 package models;
 
 import java.util.ArrayList;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Order {
     private int orderID;
     private int customerID;
-    private Date orderDate;
+    private Timestamp orderDate;
     private ArrayList<OrderItems> items;
     private double totalPrice;
     private String status;
@@ -14,7 +14,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderID, int customerID, Date orderDate, ArrayList<OrderItems> items, double totalPrice,
+    public Order(int orderID, int customerID, Timestamp orderDate, ArrayList<OrderItems> items, double totalPrice,
             String status) {
         this.orderID = orderID;
         this.customerID = customerID;
@@ -49,11 +49,11 @@ public class Order {
         this.customerID = customerID;
     }
 
-    public Date getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
     }
 

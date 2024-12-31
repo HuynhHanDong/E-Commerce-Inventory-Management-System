@@ -1,0 +1,18 @@
+Inventory Report
+Generated on: 2024-12-31
+
+product ID: 4, product name:bike, stock level: 49, low stock threshold: 10, last update: 2024-12-31 22:07:40.457
+product ID: 3, product name:tivi, stock level: 89, low stock threshold: 30, last update: 2024-12-31 22:07:40.457
+product ID: 4, product name:bike, stock level: 49, low stock threshold: 10, last update: 2024-12-31 22:07:40.457
+product ID: 2, product name:iphone13, stock level: 149, low stock threshold: 50, last update: 2024-12-31 22:07:40.457
+product ID: 1, product name:tivi, stock level: 99, low stock threshold: 30, last update: 2024-12-31 22:07:40.457
+product ID: 1, product name:tivi, stock level: 90, low stock threshold: 30, last update: 2024-12-31 22:16:17.84
+product ID: 2, product name:iphone13, stock level: 145, low stock threshold: 50, last update: 2024-12-31 22:16:17.843
+product ID: 4, product name:bike, stock level: 44, low stock threshold: 10, last update: 2024-12-31 22:16:17.843
+product ID: 4, product name:bike, stock level: 44, low stock threshold: 10, last update: 2024-12-31 22:16:17.843
+product ID: 3, product name:tivi, stock level: 84, low stock threshold: 30, last update: 2024-12-31 22:17:23.467
+product ID: 2, product name:iphone13, stock level: 141, low stock threshold: 50, last update: 2024-12-31 22:17:23.467
+product ID: 3, product name:tivi, stock level: 79, low stock threshold: 30, last update: 2024-12-31 22:21:13.69
+product ID: 2, product name:iphone13, stock level: 136, low stock threshold: 50, last update: 2024-12-31 22:21:13.693
+product ID: 3, product name:tivi, stock level: 84, low stock threshold: 30, last update: 2024-12-31 22:22:04.32
+product ID: 2, product name:iphone13, stock level: 140, low stock threshold: 50, last update: 2024-12-31 22:22:04.32

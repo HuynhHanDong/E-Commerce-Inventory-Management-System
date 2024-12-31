@@ -1,10 +1,10 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +31,7 @@ public class InventoryDAO {
             statement.setInt(1, inventory.getProductID());
             statement.setInt(2, inventory.getStockLevel());
             statement.setInt(3, inventory.getLowStockThreshold());
-            statement.setDate(4, inventory.getLastUpdate());
+            statement.setTimestamp(4, inventory.getLastUpdate());
             result = statement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Error adding inventory item", e);
@@ -61,7 +61,7 @@ public class InventoryDAO {
                 int inventoryID = result.getInt("InventoryID");
                 int stockLevel = result.getInt("StockLevel");
                 int lowStockThreshold = result.getInt("LowStockThreshold");
-                Date lastUpdate = result.getDate("LastUpdate");
+                Timestamp lastUpdate = result.getTimestamp("LastUpdate");
                 inventory = new Inventory(inventoryID, productID, stockLevel, lowStockThreshold, lastUpdate);
             }
             conn.close();
@@ -82,7 +82,7 @@ public class InventoryDAO {
                 String productName = result.getString("productName");
                 int stockLevel = result.getInt("StockLevel");
                 int lowStockThreshold = result.getInt("LowStockThreshold");
-                Date lastUpdate = result.getDate("lastUpdate");
+                Timestamp lastUpdate = result.getTimestamp("lastUpdate");
                 Inventory inventory = new Inventory(inventoryID, productID, productName, stockLevel, lowStockThreshold, lastUpdate);
                 inventoryList.add(inventory);
             }

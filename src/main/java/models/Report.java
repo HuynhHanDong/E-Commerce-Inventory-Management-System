@@ -1,23 +1,23 @@
 package models;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Report {
     private String reportType; // "SALES" or "INVENTORY"
-    private Date generatedDate;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp generatedDate;
+    private Timestamp startDate;
+    private Timestamp endDate;
     private int productID;
     private String productName;
     private int quantity;
     private int lowStockThreshold;
     private double revenue;
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 
     public Report() {
     }
 
-    public Report(String reportType, Date generatedDate, Date startDate, Date endDate, int productID, String productName, int quantity, double revenue) {
+    public Report(String reportType, Timestamp generatedDate, Timestamp startDate, Timestamp endDate, int productID, String productName, int quantity, double revenue) {
         this.reportType = reportType;
         this.generatedDate = generatedDate; // tự động tạo ngày báo cáo
         this.startDate = startDate; // ngày báo cáo đầu tiên
@@ -28,7 +28,7 @@ public class Report {
         this.revenue = revenue; // tổng số tiền
     }
     
-    public Report(String reportType, Date generatedDate, Date startDate, Date endDate, int productID, String productName, int quantity, int lowStockThreshold, Date lastUpdate) {
+    public Report(String reportType, Timestamp generatedDate, Timestamp startDate, Timestamp endDate, int productID, String productName, int quantity, int lowStockThreshold, Timestamp lastUpdate) {
         this.reportType = reportType;
         this.generatedDate = generatedDate; // tự động tạo ngày báo cáo
         this.startDate = startDate; // ngày báo cáo đầu tiên
@@ -48,27 +48,27 @@ public class Report {
         this.reportType = reportType;
     }
 
-    public Date getGeneratedDate() {
+    public Timestamp getGeneratedDate() {
         return generatedDate;
     }
 
-    public void setGeneratedDate(Date generatedDate) {
+    public void setGeneratedDate(Timestamp generatedDate) {
         this.generatedDate = generatedDate;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
     
@@ -112,11 +112,11 @@ public class Report {
         this.revenue = revenue;
     }
     
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
     
-    public void setLastUpdate(Date lastUpdate){
+    public void setLastUpdate(Timestamp lastUpdate){
         this.lastUpdate = lastUpdate;
     }
 

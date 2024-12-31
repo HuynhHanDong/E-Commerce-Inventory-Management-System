@@ -3,7 +3,8 @@ package controller;
 import DAO.InventoryDAO;
 import DAO.OrderDAO;
 import DAO.ProductDAO;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import models.Inventory;
 import models.Order;
@@ -208,7 +209,8 @@ public class OrderMenuController extends BaseController {
 
     private void addOrder() {
         try {
-            Date orderDate = new Date(System.currentTimeMillis());
+            LocalDateTime dateTime = LocalDateTime.now();
+            Timestamp orderDate = Timestamp.valueOf(dateTime);
             int result = orderDAO.addOrder(userID, orderDate, order.getTotalPrice(), "Pending");
             if (result > 0) {
                 int orderID = orderDAO.getOrderID();
